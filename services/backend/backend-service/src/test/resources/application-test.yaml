@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:15-alpine:///databasename
+    username: sa
+    password: secret
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+application:
+  cache:
+    file:
+      location: cache
+      size: 10
+      heapSize: 1
+
+logging:
+  level:
+    root: info
+    com.zarowska: debug
+    org.springframework.security: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: debug

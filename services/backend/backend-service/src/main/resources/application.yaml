@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  mvc:
+    throwExceptionIfNoHandlerFound: true
+
+springdoc:
+  swagger-ui:
+    path: /openapi
+  api-docs:
+    path: /api-docs
+
+application:
+  cache:
+    file:
+      location: ${file.cache.location:/cache}
+      size: ${file.cache.size:1000}
+      heapSize: ${file.cache.heap:100}
+      expiration: ${file.cache.expiration:600}
+

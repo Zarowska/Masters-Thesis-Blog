@@ -1,0 +1,1670 @@
+openapi: 3.0.0
+x-stoplight:
+  id: w967mot2wdhbv
+info:
+  title: Cirkle
+  version: '1.0'
+  description: 'The Cirkle Blog Rest API is a powerful and versatile set of endpoints designed to power a social network platform similar to Facebook. This comprehensive API allows developers to integrate Cirkle Blog''s social networking features into their applications, enabling users to connect, share, and interact with one another in a seamless and engaging manner. Whether you''re building a web application, mobile app, or any other digital platform, Cirkle Blog''s Rest API provides the tools you need to create a thriving online community.'
+  contact:
+    name: Oksana Zarowska
+  termsOfService: 'https://circle.blog/terms-of-service'
+servers:
+  - url: 'https://www.cirkle.blog/api/v1'
+    description: Live
+  - url: 'https://stage.cirkle.blog/api/v1'
+    description: Stage environment
+  - url: 'https://qa.cirkle.blog/api/v1'
+    description: QA environment
+  - url: 'https://dev.cirkle.blog/api/v1'
+    description: Dev environment
+  - url: 'http://localhost:8080/api/v1'
+    description: ''
+paths:
+  /info:
+    get:
+      summary: Api Info
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiInfo'
+      operationId: api-info
+      tags:
+        - Api
+      description: Gets Backend API info
+  /user:
+    get:
+      summary: Current user info
+      tags:
+        - User
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      operationId: get-current-user
+      description: Get current user
+      security:
+        - bearer-key: []
+    parameters: []
+  /user/feed:
+    get:
+      summary: User's feed
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostsPage'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      operationId: get-feed
+      security:
+        - bearer-key: []
+      parameters:
+        - schema:
+            type: integer
+            format: int32
+          in: query
+          name: page
+        - schema:
+            type: integer
+            format: int32
+          in: query
+          name: size
+      description: Get current user feed
+      tags:
+        - UserFeed
+    parameters: []
+  /user/requests:
+    get:
+      summary: User's friendship requests
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendshipRequestList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      operationId: find-all-friendship-requests
+      security:
+        - bearer-key: []
+      description: Get incomming frenship requests for current user
+      tags:
+        - Relations
+    parameters: []
+  '/user/requests/{requestId}':
+    parameters:
+      - schema:
+          type: string
+        name: requestId
+        in: path
+        required: true
+    get:
+      summary: Get friendship request by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendshipRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      operationId: get-friendship-request-by-id
+      security:
+        - bearer-key: []
+      description: Get incomming frenship request by id
+      tags:
+        - Relations
+    post:
+      summary: Accept friendship request by id
+      operationId: accept-friendship-request-by-id
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - bearer-key: []
+      description: Accept incomming frenship request for current user by id
+      tags:
+        - Relations
+    delete:
+      summary: Reject friendship request by id
+      operationId: reject-friendship-request-by-id
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      security:
+        - bearer-key: []
+      description: Reject incomming frenship request for current user by id
+      tags:
+        - Relations
+  /user/messages/events:
+    get:
+      summary: Unread messages events
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageEventList'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      operationId: get-unread-message-events
+      security:
+        - bearer-key: []
+      description: 'Get message events '
+      tags:
+        - Messages
+    parameters: []
+  '/user/messages/{messageId}/read':
+    post:
+      parameters:
+        - schema:
+            type: string
+          name: messageId
+          in: path
+          required: true
+      summary: Mark message readed by id
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      operationId: mark-message-read-by-id
+      security:
+        - bearer-key: []
+      description: Mark message as readed
+      tags:
+        - Messages
+    parameters:
+      - schema:
+          type: string
+        name: messageId
+        in: path
+        required: true
+  '/user/messages/{messageId}':
+    parameters:
+      - schema:
+          type: string
+        name: messageId
+        in: path
+        required: true
+    get:
+      summary: Get message by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      operationId: get-message-by-id
+      security:
+        - bearer-key: []
+      description: Get own message by id
+      tags:
+        - Messages
+    put:
+      summary: Update message by id
+      operationId: update-message-by-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserMessageRequest'
+      description: Update own message by id
+      security:
+        - bearer-key: []
+      tags:
+        - Messages
+    delete:
+      summary: Delete message by id
+      operationId: delete-message-by-id
+      responses:
+        '204':
+          description: No Content
+      security:
+        - bearer-key: []
+      description: Delete own message by id
+      tags:
+        - Messages
+  /user/images:
+    get:
+      summary: List images
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilePage'
+      operationId: get-image-info-list
+      parameters:
+        - schema:
+            type: integer
+            format: int32
+            default: 0
+          in: query
+          name: page
+        - schema:
+            type: integer
+            format: int32
+            default: 20
+          in: query
+          name: size
+      security:
+        - bearer-key: []
+      description: List own images
+      tags:
+        - Images
+    post:
+      summary: Upload image
+      operationId: upload-image
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+      security:
+        - bearer-key: []
+      description: Upload new image
+      tags:
+        - Images
+    parameters: []
+  '/user/images/{imageId}':
+    parameters:
+      - schema:
+          type: string
+        name: imageId
+        in: path
+        required: true
+    get:
+      summary: Get image info by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+      operationId: get-image-info-by-id
+      security:
+        - bearer-key: []
+      description: List own image info by id
+      tags:
+        - Images
+  '/images/{imageId}':
+    parameters:
+      - schema:
+          type: string
+        name: imageId
+        in: path
+        required: true
+    get:
+      summary: Download image
+      responses:
+        '200':
+          description: OK
+          content:
+            image/apng:
+              schema:
+                $ref: '#/components/schemas/ImageBody'
+            image/avif:
+              schema:
+                $ref: '#/components/schemas/ImageBody'
+            image/gif:
+              schema:
+                $ref: '#/components/schemas/ImageBody'
+            image/jpeg:
+              schema:
+                $ref: '#/components/schemas/ImageBody'
+            image/png:
+              schema:
+                $ref: '#/components/schemas/ImageBody'
+            image/svg+xml:
+              schema:
+                $ref: '#/components/schemas/ImageBody'
+            image/webp:
+              schema:
+                $ref: '#/components/schemas/ImageBody'
+      operationId: download-image-by-id
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: width
+        - schema:
+            type: integer
+          in: query
+          name: height
+        - schema:
+            type: string
+          name: imageId
+          in: path
+          required: true
+      security:
+        - bearer-key: []
+      description: Download image by id
+      tags:
+        - Images
+  /users:
+    get:
+      summary: List users
+      tags:
+        - Users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPage'
+      operationId: list-users
+      security:
+        - bearer-key: []
+      description: List all users
+  '/users/{userId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      summary: Get user by id
+      tags:
+        - Users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+      operationId: get-user-by-id
+      security:
+        - bearer-key: []
+      description: Get User by id
+  '/users/{userId}/profile':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      description: Get user profile by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+      operationId: get-users-profile-by-id
+      security:
+        - bearer-key: []
+      tags:
+        - Users
+  '/users/{userId}/messages':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    post:
+      description: Send user a message
+      operationId: send-message-to-user-by-id
+      responses:
+        '200':
+          description: OK
+      security:
+        - bearer-key: []
+      tags:
+        - Messages
+    get:
+      description: Get dialog with user
+      operationId: get-messages-by-user-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePage'
+      parameters:
+        - schema:
+            type: number
+          in: query
+          name: page
+        - schema:
+            type: number
+          in: query
+          name: size
+      security:
+        - bearer-key: []
+      tags:
+        - Messages
+  '/users/{userId}/friends':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      description: List user's friends
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPage'
+      operationId: get-users-friends-by-id
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: page
+        - schema:
+            type: integer
+          in: query
+          name: size
+      security:
+        - bearer-key: []
+      tags:
+        - Relations
+    post:
+      description: Send user a friendship request
+      operationId: send-frindship-request
+      responses:
+        '201':
+          description: Created
+      security:
+        - bearer-key: []
+        - bearer-key: []
+      tags:
+        - Relations
+  '/users/{userId}/friends/{friendId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: friendId
+        in: path
+        required: true
+    delete:
+      summary: Unfriend user by id
+      operationId: delete-friend-from-users-friends-by-id
+      responses:
+        '204':
+          description: No Content
+      security:
+        - bearer-key: []
+      description: Delete friend by id
+      tags:
+        - Relations
+  '/users/{userId}/posts':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+    get:
+      summary: Get user's posts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostsPage'
+      operationId: list-users-posts-by-user-id
+      description: List users post by id
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: page
+        - schema:
+            type: integer
+          in: query
+          name: size
+      security:
+        - bearer-key: []
+      tags:
+        - Posts
+    post:
+      summary: Create a post
+      operationId: create-post
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePostRequest'
+      security:
+        - bearer-key: []
+      description: Create a new post
+      tags:
+        - Posts
+  '/users/{userId}/posts/{postId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
+    get:
+      summary: Get user's post by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+      operationId: get-user-post-by-id
+      security:
+        - bearer-key: []
+      description: Get users post by id
+      tags:
+        - Posts
+    put:
+      summary: Update post by id
+      operationId: update-user-post-by-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePostRequest'
+      security:
+        - bearer-key: []
+      description: Update users post by id
+      tags:
+        - Posts
+    delete:
+      summary: Delete post by id
+      operationId: delete-user-post-by-id
+      responses:
+        '204':
+          description: No Content
+      security:
+        - bearer-key: []
+      description: Delete user's post by id
+      tags:
+        - Posts
+  '/users/{userId}/posts/{postId}/reactions':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
+    get:
+      summary: Get post's reaction
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReactionList'
+      operationId: get-post-reactions
+      security:
+        - bearer-key: []
+      description: Get post reactions
+      tags:
+        - PostReactions
+    post:
+      summary: Add posts's reaction
+      operationId: add-post-reaction
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reaction'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReactionRequest'
+      security:
+        - bearer-key: []
+      description: Add reaction to post
+      tags:
+        - PostReactions
+  '/users/{userId}/posts/{postId}/reactions/{reactionId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: reactionId
+        in: path
+        required: true
+    get:
+      summary: Get post reaction by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reaction'
+      operationId: get-post-reaction-by-id
+      security:
+        - bearer-key: []
+      description: Get post reaction by id
+      tags:
+        - PostReactions
+    delete:
+      summary: Delete post reaction by id
+      operationId: delete-post-reaction-by-id
+      responses:
+        '204':
+          description: No Content
+      security:
+        - bearer-key: []
+      description: Delete post reaction by id
+      tags:
+        - PostReactions
+  '/users/{userId}/posts/{postId}/comments':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
+    get:
+      summary: Get post's comment
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentPage'
+      operationId: list-post-comments-by-id
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: page
+        - schema:
+            type: integer
+          in: query
+          name: size
+      security:
+        - bearer-key: []
+      description: List post comments
+      tags:
+        - PostComments
+    post:
+      summary: Create a post comment
+      operationId: add-post-comment
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentRequest'
+        description: ''
+      security:
+        - bearer-key: []
+      description: Add comment to the post
+      tags:
+        - PostComments
+  '/users/{userId}/posts/{postId}/comments/{commentId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: commentId
+        in: path
+        required: true
+    get:
+      summary: Get post's comment
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+      operationId: get-post-comment-by-id
+      security:
+        - bearer-key: []
+      description: Get post comment by id
+      tags:
+        - PostComments
+    delete:
+      summary: Delete post's comment
+      operationId: delete-post-comment-by-id
+      responses:
+        '204':
+          description: No Content
+      security:
+        - bearer-key: []
+      description: Delete post comment by id
+      tags:
+        - PostComments
+    put:
+      summary: Update post's comment
+      operationId: update-post-comment-by-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCommentRequest'
+      security:
+        - bearer-key: []
+      description: Update post comment by id
+      tags:
+        - PostComments
+  '/users/{userId}/posts/{postId}/comments/{commentId}/reactions':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: commentId
+        in: path
+        required: true
+    get:
+      summary: Get comment's reactions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReactionList'
+      operationId: list-comment-reactions-by-id
+      security:
+        - bearer-key: []
+      description: List comment reactions
+      tags:
+        - CommentReactions
+    post:
+      summary: Add reaction to comment
+      operationId: add-comment-reaction
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reaction'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReactionRequest'
+      description: Add reaction to the comment
+      security:
+        - bearer-key: []
+      tags:
+        - CommentReactions
+  '/users/{userId}/posts/{postId}/comments/{commentId}/reactions/{reactionId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: postId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: commentId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: reactionId
+        in: path
+        required: true
+    get:
+      summary: Get comment's reaction by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reaction'
+      operationId: get-comment-reaction-by-id
+      security:
+        - bearer-key: []
+      description: Get comment reaction by id
+      tags:
+        - CommentReactions
+    delete:
+      summary: Delete comment's reaction
+      operationId: delete-comment-reaction-by-id
+      responses:
+        '204':
+          description: No Content
+      security:
+        - bearer-key: []
+      description: Delete comment reaction by id
+      tags:
+        - CommentReactions
+components:
+  schemas:
+    ApiInfo:
+      title: ApiInfo
+      x-stoplight:
+        id: bjen2fq0ihefj
+      type: object
+      properties:
+        version:
+          type: string
+        buildDate:
+          type: string
+        buildNum:
+          type: string
+        environment:
+          type: string
+    Uri:
+      title: Uri
+      x-stoplight:
+        id: dwajn3pmcz11d
+      type: string
+      format: uri
+    AvatarUri:
+      title: AvatarUri
+      x-stoplight:
+        id: ycs2o9789nsej
+      type: string
+      format: uri
+    ApiError:
+      title: ApiError
+      x-stoplight:
+        id: ujsz4e9h9aigo
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ProblemDetail'
+    ProblemDetail:
+      title: ProblemDetail
+      x-stoplight:
+        id: d3d563da6c623
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/Uri'
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          $ref: '#/components/schemas/Uri'
+        properties:
+          type: object
+    User:
+      title: User
+      x-stoplight:
+        id: 181xj2fcmoy3h
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UserId'
+        name:
+          type: string
+        avatarUrl:
+          $ref: '#/components/schemas/AvatarUri'
+      required:
+        - id
+        - name
+        - avatarUrl
+    UserId:
+      title: UserId
+      x-stoplight:
+        id: 9aa32d0bf1d2c
+      type: string
+      format: uuid
+    Profile:
+      title: Profile
+      x-stoplight:
+        id: l9ccjplxwr1x3
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        avatarUrl:
+          $ref: '#/components/schemas/AvatarUri'
+    ImageUri:
+      title: ImageUri
+      x-stoplight:
+        id: 5alp1u6s0ios7
+      type: string
+      format: uri
+    Post:
+      title: Post
+      x-stoplight:
+        id: 3o7lhnvbnzrsy
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/PostId'
+        text:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        author:
+          $ref: '#/components/schemas/User'
+        images:
+          $ref: '#/components/schemas/Images'
+      required:
+        - id
+    PostId:
+      title: PostId
+      x-stoplight:
+        id: zng517jr14olj
+      format: uuid
+      type: string
+    CommentId:
+      title: CommentId
+      x-stoplight:
+        id: 8xm1o0cl52uxe
+      format: uuid
+      type: string
+    ReactionId:
+      title: ReactionId
+      x-stoplight:
+        id: dis4l524lpasg
+      format: uuid
+      type: string
+    Comment:
+      title: Comment
+      x-stoplight:
+        id: rbn1z57gkkg62
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/CommentId'
+        postId:
+          $ref: '#/components/schemas/PostId'
+        text:
+          type: string
+        images:
+          $ref: '#/components/schemas/Images'
+    Reaction:
+      title: Reaction
+      x-stoplight:
+        id: t0tzlg5mncvf6
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ReactionId'
+        author:
+          $ref: '#/components/schemas/User'
+        reactionType:
+          type: integer
+    Images:
+      title: Images
+      x-stoplight:
+        id: rl3ujw8pzeo4o
+      type: array
+      items:
+        $ref: '#/components/schemas/ImageUri'
+    File:
+      title: File
+      x-stoplight:
+        id: bf2g7riei6rp8
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FileId'
+        owner:
+          $ref: '#/components/schemas/User'
+        uploadedAt:
+          type: string
+          format: date-time
+        size:
+          type: integer
+        mediaType:
+          type: string
+        url:
+          $ref: '#/components/schemas/ImageUri'
+    FileId:
+      title: FileId
+      x-stoplight:
+        id: 0vsfllyls2oan
+      type: string
+      format: uuid
+    PostsPage:
+      title: PostsPage
+      x-stoplight:
+        id: 617617vrmr62g
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        last:
+          type: boolean
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    UserPage:
+      title: PostsPage
+      x-stoplight:
+        id: dd13167465558
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        last:
+          type: boolean
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    FriendshipRequest:
+      title: FriendshipRequest
+      x-stoplight:
+        id: uj3ko6n9pxlpz
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/FriendshipRequestId'
+        owner:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+    FriendshipRequestId:
+      title: FriendshipRequestId
+      x-stoplight:
+        id: llwcy9xf6x9jn
+      type: string
+      format: uuid
+    FriendshipRequestList:
+      title: FriendshipRequestList
+      x-stoplight:
+        id: yded7lsg20l1j
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/FriendshipRequest'
+    Message:
+      title: Message
+      x-stoplight:
+        id: c1xg8rbb73wmk
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/MessageId'
+        from:
+          $ref: '#/components/schemas/User'
+        text:
+          type: string
+        images:
+          $ref: '#/components/schemas/Images'
+    MessageId:
+      title: MessageId
+      x-stoplight:
+        id: txwga0d7omh2e
+      type: string
+      format: uuid
+    MessagePage:
+      title: MessagePage
+      x-stoplight:
+        id: hxijnizkohmtu
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        last:
+          type: boolean
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    MessageEvent:
+      title: MessageEvent
+      x-stoplight:
+        id: jxccwpvass4oz
+      type: object
+      properties:
+        author:
+          $ref: '#/components/schemas/User'
+        count:
+          type: integer
+        lastAt:
+          type: string
+          format: date-time
+    MessageEventList:
+      title: MessageEventList
+      x-stoplight:
+        id: at8r9f164nnf6
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageEvent'
+    UpdateUserMessageRequest:
+      title: UpdateUserMessageRequest
+      x-stoplight:
+        id: yo53rygkxv0j0
+      type: object
+      properties:
+        text:
+          type: string
+        images:
+          $ref: '#/components/schemas/Images'
+    CreatePostRequest:
+      title: CreatePostRequest
+      x-stoplight:
+        id: 9hj390jtjxksh
+      type: object
+      properties:
+        text:
+          type: string
+        images:
+          $ref: '#/components/schemas/Images'
+    UpdatePostRequest:
+      title: UpdatePostRequest
+      x-stoplight:
+        id: gfpv687zh8fyw
+      type: object
+      properties:
+        text:
+          type: string
+        images:
+          $ref: '#/components/schemas/Images'
+    CommentPage:
+      title: CommentPage
+      x-stoplight:
+        id: t54r1d5dhp0oj
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        last:
+          type: boolean
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    CreateCommentRequest:
+      title: CreateCommentRequest
+      x-stoplight:
+        id: pprdlihqtfv1c
+      type: object
+      properties:
+        text:
+          type: string
+        images:
+          $ref: '#/components/schemas/Images'
+    UpdateCommentRequest:
+      title: UpdateCommentRequest
+      x-stoplight:
+        id: ej3xzx3uwtszr
+      type: object
+      properties:
+        text:
+          type: string
+        images:
+          $ref: '#/components/schemas/Images'
+    ReactionList:
+      title: ReactionList
+      x-stoplight:
+        id: llm1xgharfi8p
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reaction'
+    CreateReactionRequest:
+      title: CreateReactionRequest
+      x-stoplight:
+        id: m975dy7oyr5w5
+      type: object
+      properties:
+        reactionType:
+          type: integer
+    FilePage:
+      title: FilePage
+      x-stoplight:
+        id: 9rhl2ibdvqgrn
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        first:
+          type: boolean
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        last:
+          type: boolean
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/File'
+        number:
+          type: integer
+          format: int32
+        numberOfElements:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    ImageBody:
+      title: ImageBody
+      x-stoplight:
+        id: f6od4k49a7lwt
+      type: string
+      format: binary
+    PageableObject:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        offset:
+          type: integer
+          format: int64
+    SortObject:
+      type: object
+      properties:
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+        empty:
+          type: boolean
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+  responses: {}
+security:
+  - bearer-key: []
+tags:
+  - name: Api
+  - name: CommentReactions
+  - name: Images
+  - name: Messages
+  - name: PostComments
+  - name: PostReactions
+  - name: Posts
+  - name: Relations
+  - name: User
+  - name: UserFeed
+  - name: Users
