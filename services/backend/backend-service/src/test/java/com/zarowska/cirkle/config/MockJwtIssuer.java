@@ -71,7 +71,7 @@ public class MockJwtIssuer {
 			JWTClaimsSet claimsSet = new JWTClaimsSet.Builder().subject(subject).issuer("https://accounts.google.com")
 					.audience("1008719970978-hb24n2dstb40o45d4feuo2ukqmcc6381.apps.googleusercontent.com")
 					.issueTime(new Date(now)).expirationTime(new Date(now + 1000 * 60 * 60)) // expires in 1 hour
-					.claim("email", userEmail).claim("email_verified", true).claim("name", "Test User")
+					.claim("email", userEmail).claim("email_verified", true).claim("name", userName)
 					.claim("picture", avatarUrl).claim("given_name", firstName).claim("family_name", lastName)
 					.claim("locale", "en").build();
 

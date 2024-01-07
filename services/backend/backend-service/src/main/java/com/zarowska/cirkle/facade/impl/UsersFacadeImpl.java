@@ -19,8 +19,8 @@ public class UsersFacadeImpl implements UsersFacade {
 	private final UserEntityMapper userMapper;
 
 	@Override
-	public Profile getProfileById(String userId) {
-		UserEntity user = userService.findById(UUID.fromString(userId))
+	public Profile getProfileById(UUID userId) {
+		UserEntity user = userService.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User", Map.of("id", userId)));
 		return userMapper.toDto(user.getProfile());
 	}

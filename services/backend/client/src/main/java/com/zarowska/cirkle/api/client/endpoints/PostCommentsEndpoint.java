@@ -5,7 +5,6 @@ import com.zarowska.cirkle.api.model.Comment;
 import com.zarowska.cirkle.api.model.CommentPage;
 import com.zarowska.cirkle.api.model.CreateCommentRequest;
 import com.zarowska.cirkle.api.model.UpdateCommentRequest;
-
 import java.util.Optional;
 
 public class PostCommentsEndpoint extends AbstractClientEndpoint {

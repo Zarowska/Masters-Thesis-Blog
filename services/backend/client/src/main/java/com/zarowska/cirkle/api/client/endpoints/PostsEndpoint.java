@@ -5,7 +5,6 @@ import com.zarowska.cirkle.api.model.CreatePostRequest;
 import com.zarowska.cirkle.api.model.Post;
 import com.zarowska.cirkle.api.model.PostsPage;
 import com.zarowska.cirkle.api.model.UpdatePostRequest;
-
 import java.util.Optional;
 import java.util.UUID;
 

@@ -1,3 +1,4 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 import java.time.Instant
 
 /*
@@ -11,6 +12,10 @@ plugins {
 
 tasks.named("generateBuildInfo") {
     enabled = false
+}
+
+tasks.named<BootJar>("bootJar") {
+    archiveBaseName.set("backend-service-app")
 }
 
 buildInfo {

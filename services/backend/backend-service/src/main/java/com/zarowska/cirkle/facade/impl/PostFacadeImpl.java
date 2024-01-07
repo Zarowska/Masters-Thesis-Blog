@@ -11,6 +11,7 @@ import com.zarowska.cirkle.facade.mapper.PostEntityMapper;
 import com.zarowska.cirkle.security.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +26,10 @@ public class PostFacadeImpl implements PostFacade {
 	private final EntityManager entityManager;
 
 	@Override
-	public Post createPost(String userId, CreatePostRequest createPostRequest) {
+	public Post createPost(UUID userId, CreatePostRequest createPostRequest) {
 		UserEntity user = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
 
-		if (!user.getId().toString().equals(userId)) {
+		if (!user.getId().equals(userId)) {
 			throw new BadRequestException("Not allowed to create post for user id=" + userId);
 		}
 

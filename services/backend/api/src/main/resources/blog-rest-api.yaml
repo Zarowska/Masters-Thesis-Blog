@@ -148,6 +148,7 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: requestId
         in: path
         required: true
@@ -300,6 +301,7 @@ paths:
       parameters:
         - schema:
             type: string
+            format: uuid
           name: messageId
           in: path
           required: true
@@ -340,6 +342,7 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: messageId
         in: path
         required: true
@@ -347,6 +350,7 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: messageId
         in: path
         required: true
@@ -449,6 +453,7 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: imageId
         in: path
         required: true
@@ -471,6 +476,7 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: imageId
         in: path
         required: true
@@ -513,6 +519,7 @@ paths:
           name: height
         - schema:
             type: string
+            format: uuid
           name: imageId
           in: path
           required: true
@@ -541,6 +548,7 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
@@ -569,6 +577,7 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
@@ -590,6 +599,7 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
@@ -630,6 +640,7 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
@@ -671,11 +682,13 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: friendId
         in: path
         required: true
@@ -694,6 +707,7 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
@@ -745,11 +759,13 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: postId
         in: path
         required: true
@@ -803,11 +819,13 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: postId
         in: path
         required: true
@@ -850,16 +868,19 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: postId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: reactionId
         in: path
         required: true
@@ -893,11 +914,13 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: postId
         in: path
         required: true
@@ -950,16 +973,19 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: postId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: commentId
         in: path
         required: true
@@ -1013,16 +1039,19 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: postId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: commentId
         in: path
         required: true
@@ -1065,21 +1094,25 @@ paths:
     parameters:
       - schema:
           type: string
+          format: uuid
         name: userId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: postId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: commentId
         in: path
         required: true
       - schema:
           type: string
+          format: uuid
         name: reactionId
         in: path
         required: true
@@ -1315,8 +1348,6 @@ components:
           format: int64
         first:
           type: boolean
-        pageable:
-          $ref: '#/components/schemas/PageableObject'
         last:
           type: boolean
         sort:
@@ -1350,8 +1381,6 @@ components:
           format: int64
         first:
           type: boolean
-        pageable:
-          $ref: '#/components/schemas/PageableObject'
         last:
           type: boolean
         sort:
@@ -1434,8 +1463,6 @@ components:
           format: int64
         first:
           type: boolean
-        pageable:
-          $ref: '#/components/schemas/PageableObject'
         last:
           type: boolean
         sort:
@@ -1522,8 +1549,6 @@ components:
           format: int64
         first:
           type: boolean
-        pageable:
-          $ref: '#/components/schemas/PageableObject'
         last:
           type: boolean
         sort:
@@ -1595,8 +1620,6 @@ components:
           format: int64
         first:
           type: boolean
-        pageable:
-          $ref: '#/components/schemas/PageableObject'
         last:
           type: boolean
         sort:
@@ -1622,24 +1645,6 @@ components:
         id: f6od4k49a7lwt
       type: string
       format: binary
-    PageableObject:
-      type: object
-      properties:
-        pageNumber:
-          type: integer
-          format: int32
-        pageSize:
-          type: integer
-          format: int32
-        paged:
-          type: boolean
-        unpaged:
-          type: boolean
-        sort:
-          $ref: '#/components/schemas/SortObject'
-        offset:
-          type: integer
-          format: int64
     SortObject:
       type: object
       properties:

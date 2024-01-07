@@ -5,6 +5,7 @@ import com.zarowska.cirkle.api.model.User;
 import com.zarowska.cirkle.api.model.UserPage;
 import com.zarowska.cirkle.api.rest.UsersApiDelegate;
 import com.zarowska.cirkle.facade.UsersFacade;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -16,12 +17,12 @@ public class UsersApiDelegateImpl implements UsersApiDelegate {
 	private final UsersFacade usersFacade;
 
 	@Override
-	public ResponseEntity<User> getUserById(String userId) {
+	public ResponseEntity<User> getUserById(UUID userId) {
 		return UsersApiDelegate.super.getUserById(userId);
 	}
 
 	@Override
-	public ResponseEntity<Profile> getUsersProfileById(String userId) {
+	public ResponseEntity<Profile> getUsersProfileById(UUID userId) {
 		return ResponseEntity.ok(usersFacade.getProfileById(userId));
 	}
 

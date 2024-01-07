@@ -3,6 +3,7 @@ package com.zarowska.cirkle.delegates;
 import com.zarowska.cirkle.api.model.FilePage;
 import com.zarowska.cirkle.api.rest.ImagesApiDelegate;
 import java.io.File;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,12 @@ import org.springframework.stereotype.Component;
 public class ImagesApiDelegateImpl implements ImagesApiDelegate {
 
 	@Override
-	public ResponseEntity<Resource> downloadImageById(String imageId, Integer widht, Integer heigth) {
-		return ImagesApiDelegate.super.downloadImageById(imageId, widht, heigth);
+	public ResponseEntity<Resource> downloadImageById(UUID imageId, Integer width, Integer height) {
+		return ImagesApiDelegate.super.downloadImageById(imageId, width, height);
 	}
 
 	@Override
-	public ResponseEntity<File> getImageInfoById(String imageId) {
+	public ResponseEntity<File> getImageInfoById(UUID imageId) {
 		return ImagesApiDelegate.super.getImageInfoById(imageId);
 	}
 
