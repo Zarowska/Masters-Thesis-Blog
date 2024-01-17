@@ -5,6 +5,7 @@ import com.zarowska.cirkle.api.model.CreateReactionRequest;
 import com.zarowska.cirkle.api.model.Reaction;
 import com.zarowska.cirkle.api.model.ReactionList;
 import java.util.Optional;
+import java.util.UUID;
 
 public class PostReactionsEndpoint extends AbstractClientEndpoint {
 
@@ -12,20 +13,19 @@ public class PostReactionsEndpoint extends AbstractClientEndpoint {
 		super(restTemplateWrapper);
 	}
 
-	public Optional<Reaction> addPostReaction(String userId, String postId,
-			CreateReactionRequest createReactionRequest) {
+	public Optional<Reaction> addPostReaction(UUID userId, UUID postId, CreateReactionRequest createReactionRequest) {
 		return null;
 	}
 
-	public Optional<Void> deletePostReactionById(String userId, String postId, String reactionId) {
+	public Optional<Void> deletePostReactionById(UUID userId, UUID postId, String reactionId) {
 		return null;
 	}
 
-	public Optional<Reaction> getPostReactionById(String userId, String postId, String reactionId) {
+	public Optional<Reaction> getPostReactionById(UUID userId, UUID postId, String reactionId) {
 		return null;
 	}
 
-	public Optional<ReactionList> getPostReactions(String userId, String postId) {
+	public Optional<ReactionList> getPostReactions(UUID userId, UUID postId) {
 		return null;
 	}
 }

@@ -6,6 +6,7 @@ import com.zarowska.cirkle.api.model.MessageEventList;
 import com.zarowska.cirkle.api.model.MessagePage;
 import com.zarowska.cirkle.api.model.UpdateUserMessageRequest;
 import java.util.Optional;
+import java.util.UUID;
 
 public class MessagesEndpoint extends AbstractClientEndpoint {
 
@@ -13,15 +14,15 @@ public class MessagesEndpoint extends AbstractClientEndpoint {
 		super(restTemplateWrapper);
 	}
 
-	public Optional<Void> deleteMessageById(String messageId) {
+	public Optional<Void> deleteMessageById(UUID messageId) {
 		return null;
 	}
 
-	public Optional<Message> getMessageById(String messageId) {
+	public Optional<Message> getMessageById(UUID messageId) {
 		return null;
 	}
 
-	public Optional<MessagePage> getMessagesByUserId(String userId, Integer page, Integer size) {
+	public Optional<MessagePage> getMessagesByUserId(UUID userId, Integer page, Integer size) {
 		return null;
 	}
 
@@ -29,15 +30,15 @@ public class MessagesEndpoint extends AbstractClientEndpoint {
 		return null;
 	}
 
-	public Optional<Void> markMessageReadById(String messageId) {
+	public Optional<Void> markMessageReadById(UUID messageId) {
 		return null;
 	}
 
-	public Optional<Void> sendMessageToUserById(String userId) {
+	public Optional<Void> sendMessageToUserById(UUID userId) {
 		return null;
 	}
 
-	public Optional<Message> updateMessageById(String messageId, UpdateUserMessageRequest updateUserMessageRequest) {
+	public Optional<Message> updateMessageById(UUID messageId, UpdateUserMessageRequest updateUserMessageRequest) {
 		return null;
 	}
 }

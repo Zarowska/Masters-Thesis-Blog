@@ -34,11 +34,11 @@ public class PostsApiDelegateImpl implements PostsApiDelegate {
 
 	@Override
 	public ResponseEntity<PostsPage> listUsersPostsByUserId(UUID userId, Integer page, Integer size) {
-		return PostsApiDelegate.super.listUsersPostsByUserId(userId, page, size);
+		return ResponseEntity.ok(postFacade.listPostsByUserId(userId, page, size));
 	}
 
 	@Override
 	public ResponseEntity<Post> updateUserPostById(UUID userId, UUID postId, UpdatePostRequest updatePostRequest) {
-		return PostsApiDelegate.super.updateUserPostById(userId, postId, updatePostRequest);
+		return ResponseEntity.ok(postFacade.updatePostById(userId, postId, updatePostRequest));
 	}
 }

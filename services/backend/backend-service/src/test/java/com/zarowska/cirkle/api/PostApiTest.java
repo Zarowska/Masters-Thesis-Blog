@@ -9,6 +9,7 @@ import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
 import jakarta.validation.Valid;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -42,10 +43,32 @@ class PostApiTest extends AbstractTest {
 		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
 			CreatePostRequest request = CreatePostRequest.builder().text("Old text").images(Collections.emptyList())
 					.build();
-			Optional<Post> thisPost = ctx.getApi().posts().createPost(ctx.getUserId(), request);
-			assertEquals("Old post", thisPost.get().getText());
+			Post newPost = ctx.getApi().posts().createPost(ctx.getUserId(), request).get();
+			assertEquals("Old text", newPost.getText());
 
-			assertEquals("New post", thisPost.get().getText());
+			UpdatePostRequest updatePostRequest = new UpdatePostRequest().text("New post");
+			Post updatedPost = ctx.getApi().posts()
+					.updateUserPostById(ctx.getUserId(), newPost.getId(), updatePostRequest).get();
+
+			assertEquals("New post", updatedPost.getText());
+
+			Post postAfterUpdate = ctx.getApi().posts().getUserPostById(ctx.getUserId(), updatedPost.getId()).get();
+
+			assertEquals("New post", postAfterUpdate.getText());
+		});
+	}
+
+	@Test
+	void listPost_ShouldSucceed() throws Exception {
+		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
+			List<String> expectedPostText = List.of("Post1", "Post2", "Post3", "Post4");
+			List<Post> createdPosts = expectedPostText.stream()
+					.map(text -> ctx.getApi().posts().createPost(ctx.getUserId(), new CreatePostRequest().text(text)))
+					.map(Optional::get).toList();
+			Optional<PostsPage> postsPage = ctx.getApi().posts().listUsersPostsByUserId(ctx.getUserId());
+			List<String> allPostText = postsPage.get().getContent().stream().map(Post::getText).toList();
+
+			assertThat(allPostText).containsAll(expectedPostText);
 		});
 	}
 

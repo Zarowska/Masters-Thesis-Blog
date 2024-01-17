@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,6 +35,11 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public Optional<PostEntity> findById(UUID postId) {
 		return postEntityRepository.findById(postId);
+	}
+
+	@Override
+	public Page<PostEntity> findByUserId(UUID id, PageRequest pageRequest) {
+		return postEntityRepository.findAllByAuthorId(id, pageRequest);
 	}
 
 }

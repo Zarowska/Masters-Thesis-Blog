@@ -26,7 +26,7 @@ public class UserApiTest extends AbstractTest {
 	void shouldGetCurrentUserProfile() throws Exception {
 		context("Test User", "test@email.com", "http://some/path").apply(ctx -> {
 			Profile expected = new Profile("Test User", "test@email.com", URI.create("http://some/path"));
-			Optional<Profile> actual = ctx.getApi().users().getUsersProfileById(ctx.getUserId().toString());
+			Optional<Profile> actual = ctx.getApi().users().getUsersProfileById(ctx.getUserId());
 			assertThat(actual).isNotEmpty();
 			assertThat(expected).isEqualTo(actual.get());
 		});
@@ -35,14 +35,14 @@ public class UserApiTest extends AbstractTest {
 	@Test
 	void shouldNotGetCurrentUserProfile() throws Exception {
 		context("Test User", "test@email.com", "http://some/path").apply(ctx -> {
-			assertThat(ctx.getApi().users().getUsersProfileById(UUID.randomUUID().toString())).isEmpty();
+			assertThat(ctx.getApi().users().getUsersProfileById(UUID.randomUUID())).isEmpty();
 		});
 	}
 
 	@Test
 	void shouldUpdateProfile() throws Exception {
 		context("Test User", "test@email.com", "http://some/path").apply(ctx -> {
-			assertThat(ctx.getApi().users().getUsersProfileById(UUID.randomUUID().toString())).isEmpty();
+			assertThat(ctx.getApi().users().getUsersProfileById(UUID.randomUUID())).isEmpty();
 		});
 	}
 }

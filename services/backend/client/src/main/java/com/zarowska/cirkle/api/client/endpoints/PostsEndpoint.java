@@ -32,14 +32,19 @@ public class PostsEndpoint extends AbstractClientEndpoint {
 	}
 
 	public Optional<Post> getUserPostById(UUID userId, UUID postId) {
-		return doCall(() -> restTemplateWrapper.get(Post.class, "/users/{userId}/{postId}", userId, postId));
+		return doCall(() -> restTemplateWrapper.get(Post.class, "/users/{userId}/posts/{postId}", userId, postId));
 	}
 
-	public Optional<PostsPage> listUsersPostsByUserId(String userId, Integer page, Integer size) {
+	public Optional<PostsPage> listUsersPostsByUserId(UUID userId) {
+		return doCall(() -> restTemplateWrapper.get(PostsPage.class, "/users/{userId}/posts", userId));
+	}
+
+	public Optional<PostsPage> listUsersPostsByUserId(UUID userId, Integer page, Integer size) {
 		return null;
 	}
 
-	public Optional<Post> updateUserPostById(String userId, String postId, UpdatePostRequest updatePostRequest) {
-		return null;
+	public Optional<Post> updateUserPostById(UUID userId, UUID postId, UpdatePostRequest updatePostRequest) {
+		return doCall(() -> restTemplateWrapper.put(updatePostRequest, Post.class, "/users/{userId}/posts/{postId}",
+				userId, postId));
 	}
 }

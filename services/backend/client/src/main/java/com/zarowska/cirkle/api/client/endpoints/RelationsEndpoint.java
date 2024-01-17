@@ -17,7 +17,7 @@ public class RelationsEndpoint extends AbstractClientEndpoint {
 		return doCall(() -> restTemplateWrapper.post(null, null, "/user/requests/{requestId}", requestId));
 	}
 
-	public Optional<Void> deleteFriendFromUsersFriendsById(String userId, String friendId) {
+	public Optional<Void> deleteFriendFromUsersFriendsById(UUID userId, String friendId) {
 		return null;
 	}
 

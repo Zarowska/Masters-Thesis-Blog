@@ -5,6 +5,7 @@ import com.zarowska.cirkle.api.model.Profile;
 import com.zarowska.cirkle.api.model.User;
 import com.zarowska.cirkle.api.model.UserPage;
 import java.util.Optional;
+import java.util.UUID;
 
 public class UsersEndpoint extends AbstractClientEndpoint {
 
@@ -12,11 +13,11 @@ public class UsersEndpoint extends AbstractClientEndpoint {
 		super(restTemplateWrapper);
 	}
 
-	public Optional<User> getUserById(String userId) {
+	public Optional<User> getUserById(UUID userId) {
 		return null;
 	}
 
-	public Optional<Profile> getUsersProfileById(String userId) {
+	public Optional<Profile> getUsersProfileById(UUID userId) {
 		return doCall(() -> restTemplateWrapper.get(Profile.class, "/users/{userId}/profile", userId));
 	}
 

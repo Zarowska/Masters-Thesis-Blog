@@ -6,6 +6,7 @@ import com.zarowska.cirkle.api.model.CommentPage;
 import com.zarowska.cirkle.api.model.CreateCommentRequest;
 import com.zarowska.cirkle.api.model.UpdateCommentRequest;
 import java.util.Optional;
+import java.util.UUID;
 
 public class PostCommentsEndpoint extends AbstractClientEndpoint {
 
@@ -17,23 +18,23 @@ public class PostCommentsEndpoint extends AbstractClientEndpoint {
 		return new CommentReactionsEndpoint(restTemplateWrapper);
 	}
 
-	public Optional<Comment> addPostComment(String userId, String postId, CreateCommentRequest createCommentRequest) {
+	public Optional<Comment> addPostComment(UUID userId, UUID postId, CreateCommentRequest createCommentRequest) {
 		return null;
 	}
 
-	public Optional<Void> deletePostCommentById(String userId, String postId, String commentId) {
+	public Optional<Void> deletePostCommentById(UUID userId, UUID postId, UUID commentId) {
 		return null;
 	}
 
-	public Optional<Comment> getPostCommentById(String userId, String postId, String commentId) {
+	public Optional<Comment> getPostCommentById(UUID userId, UUID postId, UUID commentId) {
 		return null;
 	}
 
-	public Optional<CommentPage> listPostCommentsById(String userId, String postId, Integer page, Integer size) {
+	public Optional<CommentPage> listPostCommentsById(UUID userId, UUID postId, Integer page, Integer size) {
 		return null;
 	}
 
-	public Optional<Comment> updatePostCommentById(String userId, String postId, String commentId,
+	public Optional<Comment> updatePostCommentById(UUID userId, UUID postId, UUID commentId,
 			UpdateCommentRequest updateCommentRequest) {
 		return null;
 	}
