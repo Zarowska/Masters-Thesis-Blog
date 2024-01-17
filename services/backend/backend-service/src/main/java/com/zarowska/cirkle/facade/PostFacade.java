@@ -13,7 +13,7 @@ public interface PostFacade {
 	Post createPost(UUID userId, CreatePostRequest createPostRequest);
 
 	@Transactional
-	Post getUserPostById(UUID userId, UUID postId);
+	Post getUserPostByPostId(UUID userId, UUID postId);
 
 	@Transactional
 	Post updatePostById(UUID userId, UUID postId, UpdatePostRequest updatePostRequest);

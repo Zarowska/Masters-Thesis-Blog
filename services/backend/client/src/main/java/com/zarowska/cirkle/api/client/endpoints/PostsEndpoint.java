@@ -31,7 +31,7 @@ public class PostsEndpoint extends AbstractClientEndpoint {
 		return null;
 	}
 
-	public Optional<Post> getUserPostById(UUID userId, UUID postId) {
+	public Optional<Post> getUserPostByPostId(UUID userId, UUID postId) {
 		return doCall(() -> restTemplateWrapper.get(Post.class, "/users/{userId}/posts/{postId}", userId, postId));
 	}
 

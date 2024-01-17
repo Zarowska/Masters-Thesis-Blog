@@ -770,7 +770,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Get user's post by id
+      summary: Get user's post by post id
       responses:
         '200':
           description: OK
@@ -778,10 +778,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
-      operationId: get-user-post-by-id
+      operationId: get-user-post-by-post-id
       security:
         - bearer-key: []
-      description: Get users post by id
+      description: Get users post by post id
       tags:
         - Posts
     put:

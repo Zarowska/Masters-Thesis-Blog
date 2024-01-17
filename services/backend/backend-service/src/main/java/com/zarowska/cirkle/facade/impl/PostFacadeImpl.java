@@ -47,7 +47,7 @@ public class PostFacadeImpl implements PostFacade {
 	}
 
 	@Override
-	public Post getUserPostById(UUID userId, UUID postId) {
+	public Post getUserPostByPostId(UUID userId, UUID postId) {
 		PostEntity postEntity = postService.findById(postId)
 				.orElseThrow(() -> new BadRequestException("Post not found with id=" + postId));
 

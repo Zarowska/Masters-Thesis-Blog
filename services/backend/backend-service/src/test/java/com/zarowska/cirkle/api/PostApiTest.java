@@ -26,14 +26,14 @@ class PostApiTest extends AbstractTest {
 	}
 
 	@Test
-	void getUserPostById_ShouldSucceed() throws Exception {
+	void getUserPostByPostId_ShouldSucceed() throws Exception {
 		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
 			CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
 					.build();
 			UUID postId = ctx.getApi().posts().createPost(ctx.getUserId(), request).get().getId();
 			assertNotNull(String.valueOf(postId), "Post ID should not be null");
 			// assertEquals("1", String.valueOf(postId));
-			Optional<Post> thisPost = ctx.getApi().posts().getUserPostById(ctx.getUserId(), postId);
+			Optional<Post> thisPost = ctx.getApi().posts().getUserPostByPostId(ctx.getUserId(), postId);
 			assertThat(thisPost).isNotEmpty();
 		});
 	}
@@ -52,7 +52,7 @@ class PostApiTest extends AbstractTest {
 
 			assertEquals("New post", updatedPost.getText());
 
-			Post postAfterUpdate = ctx.getApi().posts().getUserPostById(ctx.getUserId(), updatedPost.getId()).get();
+			Post postAfterUpdate = ctx.getApi().posts().getUserPostByPostId(ctx.getUserId(), updatedPost.getId()).get();
 
 			assertEquals("New post", postAfterUpdate.getText());
 		});
@@ -62,7 +62,8 @@ class PostApiTest extends AbstractTest {
 	void listPost_ShouldSucceed() throws Exception {
 		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
 			List<String> expectedPostText = List.of("Post1", "Post2", "Post3", "Post4");
-			List<Post> createdPosts = expectedPostText.stream()
+			// List<Post> createdPosts =
+			expectedPostText.stream()
 					.map(text -> ctx.getApi().posts().createPost(ctx.getUserId(), new CreatePostRequest().text(text)))
 					.map(Optional::get).toList();
 			Optional<PostsPage> postsPage = ctx.getApi().posts().listUsersPostsByUserId(ctx.getUserId());
