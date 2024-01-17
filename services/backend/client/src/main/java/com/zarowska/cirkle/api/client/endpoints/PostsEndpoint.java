@@ -27,12 +27,12 @@ public class PostsEndpoint extends AbstractClientEndpoint {
 
 	}
 
-	public Optional<Void> deleteUserPostById(String userId, String postId) {
+	public Optional<Void> deleteUserPostById(UUID userId, UUID postId) {
 		return null;
 	}
 
-	public Optional<Post> getUserPostById(String userId, String postId) {
-		return null;
+	public Optional<Post> getUserPostById(UUID userId, UUID postId) {
+		return doCall(() -> restTemplateWrapper.get(Post.class, "/users/{userId}/{postId}", userId, postId));
 	}
 
 	public Optional<PostsPage> listUsersPostsByUserId(String userId, Integer page, Integer size) {

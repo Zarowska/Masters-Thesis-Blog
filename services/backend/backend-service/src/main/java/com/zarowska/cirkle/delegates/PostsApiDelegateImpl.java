@@ -29,7 +29,7 @@ public class PostsApiDelegateImpl implements PostsApiDelegate {
 
 	@Override
 	public ResponseEntity<Post> getUserPostById(UUID userId, UUID postId) {
-		return PostsApiDelegate.super.getUserPostById(userId, postId);
+		return ResponseEntity.ok(postFacade.getUserPostById(userId, postId));
 	}
 
 	@Override

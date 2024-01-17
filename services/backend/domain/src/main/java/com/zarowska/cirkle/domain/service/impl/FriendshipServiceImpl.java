@@ -59,10 +59,8 @@ public class FriendshipServiceImpl implements FriendshipService {
 				throw new ResourceNotFoundException("FriendshipRequest",
 						Map.of("id", requestId, "receiver", currentUser.getId()));
 			}
-			userFriendshipEntityRepository
-					.save(new FriendshipEntity(req.getSender(), req.getReceiver()));
-			userFriendshipEntityRepository
-					.save(new FriendshipEntity(req.getReceiver(), req.getSender()));
+			userFriendshipEntityRepository.save(new FriendshipEntity(req.getSender(), req.getReceiver()));
+			userFriendshipEntityRepository.save(new FriendshipEntity(req.getReceiver(), req.getSender()));
 			return "";
 		}).orElseThrow(() -> new ResourceNotFoundException("FriendshipRequest",
 				Map.of("id", requestId, "receiver", currentUser.getId())));

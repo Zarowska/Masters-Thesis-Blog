@@ -37,4 +37,12 @@ public class PostFacadeImpl implements PostFacade {
 
 		return postMapper.toDto(postService.save(newPostEntity));
 	}
+
+	@Override
+	public Post getUserPostById(UUID userId, UUID postId) {
+		PostEntity postEntity = postService.findById(postId)
+				.orElseThrow(() -> new BadRequestException("Post not found with id=" + postId));
+
+		return postMapper.toDto(postEntity);
+	}
 }

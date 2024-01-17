@@ -9,4 +9,7 @@ public interface PostFacade {
 
 	@Transactional
 	Post createPost(UUID userId, CreatePostRequest createPostRequest);
+
+	@Transactional
+	Post getUserPostById(UUID userId, UUID postId);
 }

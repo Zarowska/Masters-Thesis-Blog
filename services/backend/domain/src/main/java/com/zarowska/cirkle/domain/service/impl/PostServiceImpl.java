@@ -6,6 +6,7 @@ import com.zarowska.cirkle.domain.service.PostService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,4 +29,10 @@ public class PostServiceImpl implements PostService {
 	public List<PostEntity> findAllByAuthorId(UUID userId) {
 		return postEntityRepository.findAllByAuthorId(userId);
 	}
+
+	@Override
+	public Optional<PostEntity> findById(UUID postId) {
+		return postEntityRepository.findById(postId);
+	}
+
 }

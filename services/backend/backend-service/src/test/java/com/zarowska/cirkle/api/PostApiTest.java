@@ -1,5 +1,8 @@
 package com.zarowska.cirkle.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.zarowska.cirkle.AbstractTest;
@@ -7,6 +10,7 @@ import com.zarowska.cirkle.api.model.*;
 import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class PostApiTest extends AbstractTest {
@@ -17,8 +21,47 @@ class PostApiTest extends AbstractTest {
 					.build();
 			Optional<Post> newPost = ctx.getApi().posts().createPost(ctx.getUserId(), request);
 			assertTrue(newPost.isPresent());
-
 		});
+	}
+
+	@Test
+	void getUserPostById_ShouldSucceed() throws Exception {
+		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
+			CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
+					.build();
+			UUID postId = ctx.getApi().posts().createPost(ctx.getUserId(), request).get().getId();
+			assertNotNull(String.valueOf(postId), "Post ID should not be null");
+			// assertEquals("1", String.valueOf(postId));
+			Optional<Post> thisPost = ctx.getApi().posts().getUserPostById(ctx.getUserId(), postId);
+			assertThat(thisPost).isNotEmpty();
+		});
+	}
+
+	@Test
+	void updatePost_ShouldSucceed() throws Exception {
+		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
+			CreatePostRequest request = CreatePostRequest.builder().text("Old text").images(Collections.emptyList())
+					.build();
+			Optional<Post> thisPost = ctx.getApi().posts().createPost(ctx.getUserId(), request);
+			assertEquals("Old post", thisPost.get().getText());
+
+			assertEquals("New post", thisPost.get().getText());
+		});
+	}
+
+	@Test
+	void updatePost_ShouldThrowException() throws Exception {
+		assertEquals(1, 0);
+	}
+
+	@Test
+	void deletePost_ShouldSucceed() throws Exception {
+		assertEquals(1, 0);
+	}
+
+	@Test
+	void deletePost_ThrowException() throws Exception {
+		assertEquals(1, 0);
 	}
 
 	@Test
