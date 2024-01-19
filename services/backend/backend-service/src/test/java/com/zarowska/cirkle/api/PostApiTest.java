@@ -1,12 +1,12 @@
 package com.zarowska.cirkle.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
+import com.zarowska.cirkle.exception.AccessDeniedException;
 import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.List;
@@ -59,6 +59,25 @@ class PostApiTest extends AbstractTest {
 	}
 
 	@Test
+	void updatePost_ShouldThrowException() throws Exception {
+		context("Bob Marley", "bob@email", "http://avatar").apply(bobContest -> {
+			CreatePostRequest requestCreatePostRequest = CreatePostRequest.builder().text("Old text")
+					.images(Collections.emptyList()).build();
+			Optional<Post> thisPost = bobContest.getApi().posts().createPost(bobContest.getUserId(),
+					requestCreatePostRequest);
+			assertThat(thisPost).isNotEmpty();
+			context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
+				Exception exception = assertThrows(AccessDeniedException.class, () -> {
+					maxContext.getApi().posts().updateUserPostById(maxContext.getUserId(), thisPost.get().getId(),
+							new UpdatePostRequest().text("New post"));
+				});
+				String expectedMessage = "Only the original author of this post has permission to make updates";
+				assertEquals(expectedMessage, exception.getMessage());
+			});
+		});
+	}
+
+	@Test
 	void listPost_ShouldSucceed() throws Exception {
 		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
 			List<String> expectedPostText = List.of("Post1", "Post2", "Post3", "Post4");
@@ -71,11 +90,6 @@ class PostApiTest extends AbstractTest {
 
 			assertThat(allPostText).containsAll(expectedPostText);
 		});
-	}
-
-	@Test
-	void updatePost_ShouldThrowException() throws Exception {
-		assertEquals(1, 0);
 	}
 
 	@Test

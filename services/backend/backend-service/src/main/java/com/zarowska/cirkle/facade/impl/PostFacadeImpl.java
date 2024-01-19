@@ -8,6 +8,7 @@ import com.zarowska.cirkle.domain.entity.PostEntity;
 import com.zarowska.cirkle.domain.entity.UserEntity;
 import com.zarowska.cirkle.domain.service.PostService;
 import com.zarowska.cirkle.domain.service.UserService;
+import com.zarowska.cirkle.exception.AccessDeniedException;
 import com.zarowska.cirkle.exception.BadRequestException;
 import com.zarowska.cirkle.exception.ResourceNotFoundException;
 import com.zarowska.cirkle.facade.PostFacade;
@@ -57,15 +58,26 @@ public class PostFacadeImpl implements PostFacade {
 	@Override
 	public Post updatePostById(UUID userId, UUID postId, UpdatePostRequest updatePostRequest) {
 		UserEntity user = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+
+		// Check if the current user is the same as the one in the parameter
 		if (!user.getId().equals(userId)) {
 			throw new ResourceNotFoundException("User", Map.of("id", userId));
 		}
+
+		// Find the post and check the author's id
 		PostEntity updatedPost = postService.findById(postId).map(postEntity -> {
+			// Check if the user trying to update the post is the author
+			if (!postEntity.getAuthor().getId().equals(userId)) {
+				throw new AccessDeniedException("Only the original author of this post has permission to make updates");
+			}
+
+			// Update the post text if it's provided
 			if (updatePostRequest.getText() != null) {
 				postEntity.setText(updatePostRequest.getText());
 			}
 			return postEntity;
 		}).orElseThrow(() -> new ResourceNotFoundException("Post", Map.of("id", postId)));
+
 		return postMapper.toDto(updatedPost);
 	}
 
