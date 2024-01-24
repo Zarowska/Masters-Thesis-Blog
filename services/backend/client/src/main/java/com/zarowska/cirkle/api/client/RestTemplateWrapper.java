@@ -1,12 +1,12 @@
 package com.zarowska.cirkle.api.client;
 
+import com.zarowska.cirkle.api.model.ApiError;
+import com.zarowska.cirkle.exception.CirkleException;
 import lombok.Setter;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 public class RestTemplateWrapper {
@@ -52,6 +52,14 @@ public class RestTemplateWrapper {
 			return responseEntity;
 		} catch (HttpClientErrorException.NotFound e) {
 			return null;
+		} catch (HttpClientErrorException e) {
+			try {
+				ApiError apiError = e.getResponseBodyAs(ApiError.class);
+				throw new CirkleException(apiError.getError().getDetail(),
+						HttpStatus.resolve(e.getStatusCode().value()));
+			} catch (RestClientException e1) {
+				throw new RuntimeException(e);
+			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

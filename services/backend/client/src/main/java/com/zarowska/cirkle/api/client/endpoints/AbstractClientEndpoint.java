@@ -13,6 +13,8 @@ public abstract class AbstractClientEndpoint {
 	protected <T> Optional<T> doCall(Supplier<ResponseEntity<T>> action) {
 		try {
 			return Optional.ofNullable(action.get()).map(ResponseEntity::getBody);
+		} catch (RuntimeException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

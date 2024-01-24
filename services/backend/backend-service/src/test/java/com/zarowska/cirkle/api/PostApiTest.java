@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
-import com.zarowska.cirkle.exception.AccessDeniedException;
+import com.zarowska.cirkle.exception.CirkleException;
 import jakarta.validation.Valid;
 import java.util.Collections;
 import java.util.List;
@@ -67,7 +67,7 @@ class PostApiTest extends AbstractTest {
 					requestCreatePostRequest);
 			assertThat(thisPost).isNotEmpty();
 			context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
-				Exception exception = assertThrows(AccessDeniedException.class, () -> {
+				Exception exception = assertThrows(CirkleException.class, () -> {
 					maxContext.getApi().posts().updateUserPostById(maxContext.getUserId(), thisPost.get().getId(),
 							new UpdatePostRequest().text("New post"));
 				});

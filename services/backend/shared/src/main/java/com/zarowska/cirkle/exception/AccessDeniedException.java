@@ -8,6 +8,6 @@ public class AccessDeniedException extends CirkleException {
 	}
 
 	public AccessDeniedException(String message) {
-		super(message, HttpStatus.UNAUTHORIZED);
+		super(message, HttpStatus.FORBIDDEN);
 	}
 }
