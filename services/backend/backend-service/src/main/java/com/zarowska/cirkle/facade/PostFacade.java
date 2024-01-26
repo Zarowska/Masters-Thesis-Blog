@@ -20,4 +20,7 @@ public interface PostFacade {
 
 	@Transactional
 	PostsPage listPostsByUserId(UUID userId, Integer page, Integer size);
+
+	@Transactional
+	void deleteUserPostById(UUID userId, UUID postId);
 }

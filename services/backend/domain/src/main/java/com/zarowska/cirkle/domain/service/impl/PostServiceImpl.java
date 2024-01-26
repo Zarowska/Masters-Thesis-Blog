@@ -42,4 +42,9 @@ public class PostServiceImpl implements PostService {
 		return postEntityRepository.findAllByAuthorId(id, pageRequest);
 	}
 
+	@Override
+	public void delete(PostEntity postEntity) {
+		postEntityRepository.delete(postEntity);
+	}
+
 }

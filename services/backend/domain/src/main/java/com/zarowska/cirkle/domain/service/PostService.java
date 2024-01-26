@@ -14,4 +14,7 @@ public interface PostService {
 	Optional<PostEntity> findById(UUID postId);
 
 	Page<PostEntity> findByUserId(UUID id, PageRequest pageRequest);
+
+	void delete(PostEntity postEntity);
+
 }

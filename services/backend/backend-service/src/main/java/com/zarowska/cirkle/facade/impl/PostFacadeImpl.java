@@ -97,4 +97,23 @@ public class PostFacadeImpl implements PostFacade {
 				.content(postPage.getContent().stream().map(postMapper::toDto).toList());
 
 	}
+
+	@Override
+	public void deleteUserPostById(UUID userId, UUID postId) {
+		UserEntity user = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+
+		if (!user.getId().equals(userId)) {
+			throw new ResourceNotFoundException("User", Map.of("id", userId));
+		}
+
+		PostEntity postEntity = postService.findById(postId)
+				.orElseThrow(() -> new ResourceNotFoundException("Post", Map.of("id", postId)));
+
+		if (!postEntity.getAuthor().getId().equals(userId)) {
+			throw new AccessDeniedException("Only the original author of this post has permission to delete it");
+		}
+
+		postService.delete(postEntity);
+	}
+
 }

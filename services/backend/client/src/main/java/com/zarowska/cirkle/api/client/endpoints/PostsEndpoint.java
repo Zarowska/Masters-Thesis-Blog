@@ -28,7 +28,7 @@ public class PostsEndpoint extends AbstractClientEndpoint {
 	}
 
 	public Optional<Void> deleteUserPostById(UUID userId, UUID postId) {
-		return null;
+		return doCall(() -> restTemplateWrapper.delete(Void.class, "/users/{userId}/posts/{postId}", userId, postId));
 	}
 
 	public Optional<Post> getUserPostByPostId(UUID userId, UUID postId) {
@@ -37,10 +37,6 @@ public class PostsEndpoint extends AbstractClientEndpoint {
 
 	public Optional<PostsPage> listUsersPostsByUserId(UUID userId) {
 		return doCall(() -> restTemplateWrapper.get(PostsPage.class, "/users/{userId}/posts", userId));
-	}
-
-	public Optional<PostsPage> listUsersPostsByUserId(UUID userId, Integer page, Integer size) {
-		return null;
 	}
 
 	public Optional<Post> updateUserPostById(UUID userId, UUID postId, UpdatePostRequest updatePostRequest) {

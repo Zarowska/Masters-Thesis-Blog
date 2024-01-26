@@ -24,7 +24,8 @@ public class PostsApiDelegateImpl implements PostsApiDelegate {
 
 	@Override
 	public ResponseEntity<Void> deleteUserPostById(UUID userId, UUID postId) {
-		return PostsApiDelegate.super.deleteUserPostById(userId, postId);
+		postFacade.deleteUserPostById(userId, postId);
+		return ResponseEntity.ok().build();
 	}
 
 	@Override

@@ -94,12 +94,37 @@ class PostApiTest extends AbstractTest {
 
 	@Test
 	void deletePost_ShouldSucceed() throws Exception {
-		assertEquals(1, 0);
+		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
+			CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
+					.build();
+			Optional<Post> newPost = ctx.getApi().posts().createPost(ctx.getUserId(), request);
+			assertTrue(newPost.isPresent());
+			UUID postId = newPost.get().getId();
+			ctx.getApi().posts().deleteUserPostById(ctx.getUserId(), postId);
+			Exception exception = assertThrows(CirkleException.class, () -> {
+				ctx.getApi().posts().getUserPostByPostId(ctx.getUserId(), postId);
+			});
+			String expectedMessage = "Post not found with id=" + postId.toString();
+			assertEquals(expectedMessage, exception.getMessage());
+		});
 	}
 
 	@Test
 	void deletePost_ThrowException() throws Exception {
-		assertEquals(1, 0);
+		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
+			CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
+					.build();
+			Optional<Post> newPost = ctx.getApi().posts().createPost(ctx.getUserId(), request);
+			assertTrue(newPost.isPresent());
+			UUID postId = newPost.get().getId();
+			context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
+				Exception exception = assertThrows(CirkleException.class, () -> {
+					maxContext.getApi().posts().deleteUserPostById(maxContext.getUserId(), postId);
+				});
+				String expectedMessage = "Only the original author of this post has permission to delete it";
+				assertEquals(expectedMessage, exception.getMessage());
+			});
+		});
 	}
 
 	@Test
