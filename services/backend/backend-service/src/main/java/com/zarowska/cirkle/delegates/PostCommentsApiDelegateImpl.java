@@ -5,9 +5,8 @@ import com.zarowska.cirkle.api.model.CommentPage;
 import com.zarowska.cirkle.api.model.CreateCommentRequest;
 import com.zarowska.cirkle.api.model.UpdateCommentRequest;
 import com.zarowska.cirkle.api.rest.PostCommentsApiDelegate;
-import java.util.UUID;
-
 import com.zarowska.cirkle.facade.PostCommentFacade;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

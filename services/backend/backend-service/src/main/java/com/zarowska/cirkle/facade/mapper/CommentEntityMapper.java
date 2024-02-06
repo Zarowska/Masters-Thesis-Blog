@@ -5,6 +5,7 @@ import com.zarowska.cirkle.domain.entity.CommentEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
@@ -16,17 +17,15 @@ public class CommentEntityMapper {
 
     private final UserEntityMapper userEntityMapper;
 
-    //TODO
     public Comment toDto(CommentEntity entity) {
         Comment comment = new Comment();
         comment.setId(entity.getId());
         comment.setText(entity.getText());
-//        comment.setImages(entity.getImages().stream()
-//                .map(postImage -> postImage.getImage())
-//                        .map()
-//                .collect(Collectors.toList()));
+        comment.setImages(entity.getImages().stream()
+                .map(postImage -> postImage.getImage())
+                .map(it -> "/api/v1/images/%s".formatted(it.getId()))
+                .map(URI::create)
+                .toList());
         return comment;
     }
 }
-
-
