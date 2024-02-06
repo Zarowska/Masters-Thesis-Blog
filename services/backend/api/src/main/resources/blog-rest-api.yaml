@@ -435,14 +435,19 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileDto'
       requestBody:
         content:
           multipart/form-data:
             schema:
               type: object
               properties:
-                fileName:
+                file:
                   type: string
+                  format: binary
       security:
         - bearer-key: []
       description: Upload new image
@@ -465,7 +470,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/FileDto'
       operationId: get-image-info-by-id
       security:
         - bearer-key: []
@@ -1309,7 +1314,7 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/ImageUri'
-    File:
+    FileDto:
       title: File
       x-stoplight:
         id: bf2g7riei6rp8
@@ -1630,7 +1635,7 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/File'
+            $ref: '#/components/schemas/FileDto'
         number:
           type: integer
           format: int32

@@ -46,4 +46,24 @@ public class FileInfoEntity {
 	@OneToOne(mappedBy = "info", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "file_content_id")
 	private FileContentEntity content;
+
+	public FileInfoEntity(UserEntity owner, MediaType mediaType, Integer size, String originalName,
+			FileContentEntity content) {
+		this.owner = owner;
+		this.mediaType = mediaType;
+		this.size = size;
+		this.originalName = originalName;
+		this.content = content;
+	}
+
+	public FileInfoEntity(UserEntity owner, MediaType mediaType, Integer size, Integer width, Integer height,
+			String originalName, FileContentEntity content) {
+		this.owner = owner;
+		this.mediaType = mediaType;
+		this.size = size;
+		this.width = width;
+		this.height = height;
+		this.originalName = originalName;
+		this.content = content;
+	}
 }

@@ -21,7 +21,7 @@ public class RestTemplateWrapper {
 		this.baseUrl = baseUrl;
 	}
 
-	private MultiValueMap<String, String> createHeaders() {
+	private HttpHeaders createHeaders() {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBearerAuth(bearerToken);
 		return headers;
@@ -35,6 +35,13 @@ public class RestTemplateWrapper {
 		return exchange(HttpMethod.POST, body, outClass, url, params);
 	}
 
+	public <OUT> ResponseEntity<OUT> postForm(MultiValueMap<String, Object> body, Class<OUT> outClass, String url,
+			Object... params) {
+		HttpHeaders headers = createHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		return exchange(HttpMethod.POST, body, outClass, url, headers, params);
+	}
+
 	public <IN, OUT> ResponseEntity<OUT> put(IN body, Class<OUT> outClass, String url, Object... params) {
 		return exchange(HttpMethod.PUT, body, outClass, url, params);
 	}
@@ -45,11 +52,14 @@ public class RestTemplateWrapper {
 
 	private <IN, OUT> ResponseEntity<OUT> exchange(HttpMethod method, IN body, Class<OUT> outClass, String url,
 			Object... params) {
+		return exchange(method, body, outClass, url, createHeaders(), params);
+	}
+
+	private <IN, OUT> ResponseEntity<OUT> exchange(HttpMethod method, IN body, Class<OUT> outClass, String url,
+			MultiValueMap<String, String> headers, Object... params) {
 		try {
-			HttpEntity<IN> httpEntity = new HttpEntity<>(body, createHeaders());
-			ResponseEntity<OUT> responseEntity = restTemplate.exchange(baseUrl + url, method, httpEntity, outClass,
-					params);
-			return responseEntity;
+			HttpEntity<IN> httpEntity = new HttpEntity<>(body, headers);
+			return restTemplate.exchange(baseUrl + url, method, httpEntity, outClass, params);
 		} catch (HttpClientErrorException.NotFound e) {
 			return null;
 		} catch (HttpClientErrorException e) {

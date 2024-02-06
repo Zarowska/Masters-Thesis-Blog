@@ -2,9 +2,13 @@ package com.zarowska.cirkle.api.client.endpoints;
 
 import com.zarowska.cirkle.api.client.RestTemplateWrapper;
 import com.zarowska.cirkle.api.model.File;
+import com.zarowska.cirkle.api.model.FileDto;
 import com.zarowska.cirkle.api.model.FilePage;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.core.io.Resource;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 public class ImagesEndpoint extends AbstractClientEndpoint {
 
@@ -12,8 +16,8 @@ public class ImagesEndpoint extends AbstractClientEndpoint {
 		super(restTemplateWrapper);
 	}
 
-	public Resource downloadImageById(String imageId, Integer widht, Integer heigth) {
-		return null;
+	public Resource downloadImageById(UUID imageId, Integer widht, Integer heigth) {
+		return doCall(() -> restTemplateWrapper.get(Resource.class, "/images/{imageId}", imageId)).get();
 	}
 
 	public Optional<File> getImageInfoById(String imageId) {
@@ -24,7 +28,13 @@ public class ImagesEndpoint extends AbstractClientEndpoint {
 		return null;
 	}
 
-	public Void uploadImage(String fileName) {
-		return null;
+	public FileDto uploadImage(Resource imageResource) {
+		return doCall(() -> {
+			// Create body
+			MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+			body.add("file", imageResource);
+
+			return restTemplateWrapper.postForm(body, FileDto.class, "/user/images");
+		}).get();
 	}
 }

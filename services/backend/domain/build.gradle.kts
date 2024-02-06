@@ -15,7 +15,6 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.ehcache:ehcache:$ehcacheVersion")
     implementation("org.apache.tika:tika-core:$tikaVersion")
-
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.springframework.security:spring-security-test")
