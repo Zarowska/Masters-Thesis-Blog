@@ -6,6 +6,8 @@ import com.zarowska.cirkle.api.model.CreateCommentRequest;
 import com.zarowska.cirkle.api.model.UpdateCommentRequest;
 import com.zarowska.cirkle.api.rest.PostCommentsApiDelegate;
 import java.util.UUID;
+
+import com.zarowska.cirkle.facade.PostCommentFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -14,9 +16,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PostCommentsApiDelegateImpl implements PostCommentsApiDelegate {
 
+	private final PostCommentFacade postCommentFacade;
+
 	@Override
 	public ResponseEntity<Comment> addPostComment(UUID userId, UUID postId, CreateCommentRequest createCommentRequest) {
-		return PostCommentsApiDelegate.super.addPostComment(userId, postId, createCommentRequest);
+		return ResponseEntity.ok(postCommentFacade.createPostComment(userId, postId, createCommentRequest));
 	}
 
 	@Override
