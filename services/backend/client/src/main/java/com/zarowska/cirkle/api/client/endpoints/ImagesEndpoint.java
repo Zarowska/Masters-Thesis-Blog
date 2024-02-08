@@ -1,7 +1,6 @@
 package com.zarowska.cirkle.api.client.endpoints;
 
 import com.zarowska.cirkle.api.client.RestTemplateWrapper;
-import com.zarowska.cirkle.api.model.File;
 import com.zarowska.cirkle.api.model.FileDto;
 import com.zarowska.cirkle.api.model.FilePage;
 import java.util.Optional;
@@ -20,7 +19,7 @@ public class ImagesEndpoint extends AbstractClientEndpoint {
 		return doCall(() -> restTemplateWrapper.get(Resource.class, "/images/{imageId}", imageId)).get();
 	}
 
-	public Optional<File> getImageInfoById(String imageId) {
+	public Optional<FileDto> getImageInfoById(String imageId) {
 		return null;
 	}
 
