@@ -4,9 +4,11 @@ import com.zarowska.cirkle.api.model.CreatePostRequest;
 import com.zarowska.cirkle.api.model.Post;
 import com.zarowska.cirkle.api.model.PostsPage;
 import com.zarowska.cirkle.api.model.UpdatePostRequest;
+import com.zarowska.cirkle.domain.entity.FileInfoEntity;
 import com.zarowska.cirkle.domain.entity.PostEntity;
 import com.zarowska.cirkle.domain.entity.PostImage;
 import com.zarowska.cirkle.domain.entity.UserEntity;
+import com.zarowska.cirkle.domain.service.FileService;
 import com.zarowska.cirkle.domain.service.PostService;
 import com.zarowska.cirkle.domain.service.UserService;
 import com.zarowska.cirkle.exception.AccessDeniedException;
@@ -17,10 +19,12 @@ import com.zarowska.cirkle.facade.mapper.PostEntityMapper;
 import com.zarowska.cirkle.security.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
+import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.*;
-
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +37,7 @@ public class PostFacadeImpl implements PostFacade {
 	private final PostService postService;
 	private final PostEntityMapper postMapper;
 	private final UserService userService;
+	private final FileService fileService;
 
 	@PersistenceContext
 	private final EntityManager entityManager;
@@ -45,9 +50,11 @@ public class PostFacadeImpl implements PostFacade {
 			throw new BadRequestException("Not allowed to create post for user id=" + userId);
 		}
 
-		PostEntity newPostEntity = new PostEntity().setAuthor(user).setText(createPostRequest.getText());
+		PostEntity newPostEntity = postService
+				.save(new PostEntity().setAuthor(user).setText(createPostRequest.getText()));
+		newPostEntity.setImages(convertToFileInfoList(newPostEntity, createPostRequest.getImages()));
 
-		return postMapper.toDto(postService.save(newPostEntity));
+		return postMapper.toDto(newPostEntity);
 	}
 
 	@Override
@@ -68,7 +75,14 @@ public class PostFacadeImpl implements PostFacade {
 		}
 
 		// Find the post and check the author's id
-		PostEntity updatedPost = postService.findById(postId).map(postEntity -> {
+		PostEntity updatedPost = postService.findById(postId).map(updatePost(userId, updatePostRequest))
+				.orElseThrow(() -> new ResourceNotFoundException("Post", Map.of("id", postId)));
+
+		return postMapper.toDto(updatedPost);
+	}
+
+	private Function<PostEntity, PostEntity> updatePost(UUID userId, UpdatePostRequest updatePostRequest) {
+		return postEntity -> {
 			// Check if the user trying to update the post is the author
 			if (!postEntity.getAuthor().getId().equals(userId)) {
 				throw new AccessDeniedException("Only the original author of this post has permission to make updates");
@@ -79,21 +93,42 @@ public class PostFacadeImpl implements PostFacade {
 			}
 
 			if (updatePostRequest.getImages() != null) {
-				List<URI> imagesListURI = updatePostRequest.getImages();
-//				URI testURL= imagesListURI.get(0);
-//				PostImage postImage  = new PostImage();
-				List<PostImage> test = new ArrayList<>();
-				postEntity.setImages(test);
+				List<PostImage> postImages = convertToFileInfoList(postEntity, updatePostRequest.getImages());
+				// important to clear the list first
+				// gpt: However, if the images collection reference in the PostEntity,
+				// is reassigned (maybe to a new ArrayList or HashSet, etc.), then Hibernate
+				// might
+				// lose track of the original collection and its constituent entities.
+				// This would then cause this exception to trigger because of the dangling
+				// references.
+				postEntity.getImages().clear();
+				postEntity.getImages().addAll(postImages);
 			}
 
 			return postEntity;
-		}).orElseThrow(() -> new ResourceNotFoundException("Post", Map.of("id", postId)));
-
-		return postMapper.toDto(updatedPost);
+		};
 	}
 
+	private List<PostImage> convertToFileInfoList(PostEntity postEntity, List<@Valid URI> imageUriList) {
+		if (imageUriList == null || imageUriList.isEmpty()) {
+			return List.of();
+		}
+		try {
+			// Extract the fileName from the URIs.
+			List<UUID> fileNames = imageUriList.stream().map(URI::getPath)
+					.map(it -> it.substring(it.lastIndexOf('/') + 1)).map(UUID::fromString).toList();
 
+			// Fetch the FileInfoEntity from the service.
+			List<FileInfoEntity> fileList = fileNames.stream().map(it -> fileService.findById(it)
+					.orElseThrow(() -> new ResourceNotFoundException("Image", Map.of("id", it)))).toList();
 
+			// Use the FileInfoEntity to create PostImage objects.
+			return fileList.stream().map(it -> new PostImage().setPost(postEntity).setImage(it)).toList();
+		} catch (Exception e) {
+			throw new BadRequestException(e.getMessage());
+		}
+
+	}
 
 	@Override
 	public PostsPage listPostsByUserId(UUID userId, Integer page, Integer size) {
