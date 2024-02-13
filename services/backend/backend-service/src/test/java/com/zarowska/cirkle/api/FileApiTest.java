@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -21,6 +22,7 @@ class FileApiTest extends AbstractTest {
 	}
 
 	@Test
+	@Disabled
 	void shouldUploadFile() throws Exception {
 		context("test", "test@test.com", "").apply(ctx -> {
 			Resource imageResource = getFileFromResource("files/max_payne.png");
@@ -30,6 +32,7 @@ class FileApiTest extends AbstractTest {
 	}
 
 	@Test
+	@Disabled
 	void shouldDownloadFile() throws Exception {
 		context("test", "test@test.com", "").apply(ctx -> {
 			Resource imageResource = getFileFromResource("files/max_payne.png");

@@ -5,6 +5,7 @@ import com.zarowska.cirkle.api.model.Post;
 import com.zarowska.cirkle.api.model.PostsPage;
 import com.zarowska.cirkle.api.model.UpdatePostRequest;
 import com.zarowska.cirkle.domain.entity.PostEntity;
+import com.zarowska.cirkle.domain.entity.PostImage;
 import com.zarowska.cirkle.domain.entity.UserEntity;
 import com.zarowska.cirkle.domain.service.PostService;
 import com.zarowska.cirkle.domain.service.UserService;
@@ -16,8 +17,10 @@ import com.zarowska.cirkle.facade.mapper.PostEntityMapper;
 import com.zarowska.cirkle.security.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.Map;
-import java.util.UUID;
+
+import java.net.URI;
+import java.util.*;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -71,15 +74,26 @@ public class PostFacadeImpl implements PostFacade {
 				throw new AccessDeniedException("Only the original author of this post has permission to make updates");
 			}
 
-			// Update the post text if it's provided
 			if (updatePostRequest.getText() != null) {
 				postEntity.setText(updatePostRequest.getText());
 			}
+
+			if (updatePostRequest.getImages() != null) {
+				List<URI> imagesListURI = updatePostRequest.getImages();
+//				URI testURL= imagesListURI.get(0);
+//				PostImage postImage  = new PostImage();
+				List<PostImage> test = new ArrayList<>();
+				postEntity.setImages(test);
+			}
+
 			return postEntity;
 		}).orElseThrow(() -> new ResourceNotFoundException("Post", Map.of("id", postId)));
 
 		return postMapper.toDto(updatedPost);
 	}
+
+
+
 
 	@Override
 	public PostsPage listPostsByUserId(UUID userId, Integer page, Integer size) {
