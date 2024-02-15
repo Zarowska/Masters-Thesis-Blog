@@ -5,6 +5,7 @@ import com.zarowska.cirkle.api.model.CreateCommentRequest;
 import com.zarowska.cirkle.domain.entity.CommentEntity;
 import com.zarowska.cirkle.domain.entity.UserEntity;
 import com.zarowska.cirkle.domain.service.CommentService;
+import com.zarowska.cirkle.exception.BadRequestException;
 import com.zarowska.cirkle.facade.PostCommentFacade;
 import com.zarowska.cirkle.facade.mapper.CommentEntityMapper;
 import com.zarowska.cirkle.security.SecurityUtils;
@@ -28,8 +29,13 @@ public class PostCommentFacadeImpl implements PostCommentFacade {
 	public Comment createPostComment(UUID userId, UUID postId, CreateCommentRequest createCommentRequest) {
 		UserEntity user = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
 
-		CommentEntity commentEntity = new CommentEntity().setAuthor(user).setText(createCommentRequest.getText());
+		if (!user.getId().equals(userId)) {
+			throw new BadRequestException("Not allowed to create post for user id=" + userId);
+		}
 
-		return commentEntityMapper.toDto(commentService.save(commentEntity));
+		CommentEntity newCommentEntity = commentService
+				.save(new CommentEntity().setAuthor(user).setText(createCommentRequest.getText()));
+
+		return commentEntityMapper.toDto(newCommentEntity);
 	}
 }

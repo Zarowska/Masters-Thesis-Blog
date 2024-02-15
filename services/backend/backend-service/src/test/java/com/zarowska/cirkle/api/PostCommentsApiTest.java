@@ -9,13 +9,11 @@ import com.zarowska.cirkle.api.model.CreatePostRequest;
 import com.zarowska.cirkle.api.model.Post;
 import java.util.Collections;
 import java.util.Optional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class PostCommentsApiTest extends AbstractTest {
 
 	@Test
-	@Disabled
 	void shouldCreatePostComment() throws Exception {
 		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
 

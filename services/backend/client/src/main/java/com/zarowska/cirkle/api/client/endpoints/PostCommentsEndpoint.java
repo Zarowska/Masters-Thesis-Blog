@@ -1,10 +1,7 @@
 package com.zarowska.cirkle.api.client.endpoints;
 
 import com.zarowska.cirkle.api.client.RestTemplateWrapper;
-import com.zarowska.cirkle.api.model.Comment;
-import com.zarowska.cirkle.api.model.CommentPage;
-import com.zarowska.cirkle.api.model.CreateCommentRequest;
-import com.zarowska.cirkle.api.model.UpdateCommentRequest;
+import com.zarowska.cirkle.api.model.*;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,7 +16,9 @@ public class PostCommentsEndpoint extends AbstractClientEndpoint {
 	}
 
 	public Optional<Comment> addPostComment(UUID userId, UUID postId, CreateCommentRequest createCommentRequest) {
-		return null;
+		return doCall(() -> restTemplateWrapper.post(createCommentRequest, Comment.class,
+				"/users/{userId}/posts/{postId}/comments", userId, postId));
+
 	}
 
 	public Optional<Void> deletePostCommentById(UUID userId, UUID postId, UUID commentId) {
