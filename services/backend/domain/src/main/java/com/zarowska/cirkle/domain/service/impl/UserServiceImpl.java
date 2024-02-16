@@ -6,6 +6,8 @@ import com.zarowska.cirkle.domain.service.UserService;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,5 +19,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Optional<UserEntity> findById(UUID userId) {
 		return userEntityRepository.findById(userId);
+	}
+
+	@Override
+	public Page<UserEntity> findAll(PageRequest pageRequest) {
+		return userEntityRepository.findAll(pageRequest);
 	}
 }

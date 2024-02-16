@@ -1,6 +1,7 @@
 package com.zarowska.cirkle.facade.impl;
 
 import com.zarowska.cirkle.api.model.Profile;
+import com.zarowska.cirkle.api.model.UserPage;
 import com.zarowska.cirkle.domain.entity.UserEntity;
 import com.zarowska.cirkle.domain.service.UserService;
 import com.zarowska.cirkle.exception.ResourceNotFoundException;
@@ -9,6 +10,7 @@ import com.zarowska.cirkle.facade.mapper.UserEntityMapper;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,4 +26,10 @@ public class UsersFacadeImpl implements UsersFacade {
 				.orElseThrow(() -> new ResourceNotFoundException("User", Map.of("id", userId)));
 		return userMapper.toDto(user.getProfile());
 	}
+
+	@Override
+	public UserPage listUsers(PageRequest pageRequest) {
+		return userMapper.toDto(userService.findAll(pageRequest));
+	}
+
 }

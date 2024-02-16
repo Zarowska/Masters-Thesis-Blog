@@ -27,9 +27,18 @@ class PostCommentsApiTest extends AbstractTest {
 
 			Optional<Comment> newComment = ctx.getApi().posts().comments().addPostComment(ctx.getUserId(),
 					newPost.get().getId(), commentRequest);
-			// delegate method not implemented
 			assertTrue(newComment.isPresent());
 		});
 	}
+
+	// Get post's comment
+
+	// Create a post comment
+
+	// Get post's comment
+
+	// Delete post's comment
+
+	// Update post's comment
 
 }

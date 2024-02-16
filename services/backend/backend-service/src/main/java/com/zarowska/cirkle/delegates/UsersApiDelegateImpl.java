@@ -7,6 +7,7 @@ import com.zarowska.cirkle.api.rest.UsersApiDelegate;
 import com.zarowska.cirkle.facade.UsersFacade;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,9 @@ public class UsersApiDelegateImpl implements UsersApiDelegate {
 
 	@Override
 	public ResponseEntity<UserPage> listUsers() {
-		return UsersApiDelegate.super.listUsers();
+		Integer pageValue = 0;
+		Integer sizeValue = 100;
+		return ResponseEntity.ok(usersFacade.listUsers(PageRequest.of(pageValue, sizeValue)));
 	}
+
 }

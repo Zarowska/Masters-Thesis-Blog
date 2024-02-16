@@ -14,14 +14,14 @@ public class UsersEndpoint extends AbstractClientEndpoint {
 	}
 
 	public Optional<User> getUserById(UUID userId) {
-		return null;
+		return doCall(() -> restTemplateWrapper.get(User.class, "/users/{userId}", userId));
 	}
 
 	public Optional<Profile> getUsersProfileById(UUID userId) {
 		return doCall(() -> restTemplateWrapper.get(Profile.class, "/users/{userId}/profile", userId));
 	}
 
-	public UserPage listUsers() {
-		return null;
+	public Optional<UserPage> listUsers() {
+		return doCall(() -> restTemplateWrapper.get(UserPage.class, "/users"));
 	}
 }
