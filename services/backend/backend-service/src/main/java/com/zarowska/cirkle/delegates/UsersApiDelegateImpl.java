@@ -5,6 +5,8 @@ import com.zarowska.cirkle.api.model.User;
 import com.zarowska.cirkle.api.model.UserPage;
 import com.zarowska.cirkle.api.rest.UsersApiDelegate;
 import com.zarowska.cirkle.facade.UsersFacade;
+import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -28,10 +30,9 @@ public class UsersApiDelegateImpl implements UsersApiDelegate {
 	}
 
 	@Override
-	public ResponseEntity<UserPage> listUsers() {
-		Integer pageValue = 0;
-		Integer sizeValue = 100;
-		return ResponseEntity.ok(usersFacade.listUsers(PageRequest.of(pageValue, sizeValue)));
+	public ResponseEntity<UserPage> listUsers(BigDecimal page, BigDecimal size) {
+		int pageNumber = Optional.ofNullable(page).map(BigDecimal::intValue).orElse(0);
+		int pageSize = Optional.ofNullable(size).map(BigDecimal::intValue).orElse(20);
+		return ResponseEntity.ok(usersFacade.listUsers(PageRequest.of(pageNumber, pageSize)));
 	}
-
 }

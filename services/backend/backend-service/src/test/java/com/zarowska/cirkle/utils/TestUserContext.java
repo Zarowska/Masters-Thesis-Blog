@@ -9,7 +9,6 @@ public class TestUserContext {
 	@Getter
 	private final BlogClient api;
 
-	@Getter
 	private UUID userId = null;
 
 	public TestUserContext(BlogClient client) {

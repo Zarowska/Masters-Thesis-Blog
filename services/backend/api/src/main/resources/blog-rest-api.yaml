@@ -534,6 +534,15 @@ paths:
       tags:
         - Images
   /users:
+    parameters:
+      - schema:
+          type: number
+        in: query
+        name: page
+      - schema:
+          type: number
+        in: query
+        name: size
     get:
       summary: List users
       tags:
@@ -679,7 +688,6 @@ paths:
         '201':
           description: Created
       security:
-        - bearer-key: []
         - bearer-key: []
       tags:
         - Relations

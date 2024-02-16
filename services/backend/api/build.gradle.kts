@@ -1,9 +1,11 @@
 import plugin.AddLombokConstructorProcessor
 import plugin.ModelsPreProcessorConfig
+import java.time.Instant
 
 plugins {
     id("blog.java.module.conventions")
     id("org.openapi.generator")
+    id("com.opencastsoftware.gradle.buildinfo")
 }
 
 apply<plugin.ModelsPreProcessorPlugin>()
@@ -16,6 +18,22 @@ sourceSets {
             srcDir("$generatedSourcesDir/src/main/java")
         }
     }
+}
+
+tasks.named("generateBuildInfo") {
+    enabled = true
+}
+
+buildInfo {
+    packageName.set("com.zarowska.cirkle")
+    className.set("BuildInfo")
+    properties.set(
+        mapOf(
+            "VERSION" to project.version.toString(),
+            "BUILD_NUM" to (System.getenv("BUILD_NUM") ?: "local"),
+            "BUILD_DATE" to Instant.now().toString(),
+        ),
+    )
 }
 
 dependencies {

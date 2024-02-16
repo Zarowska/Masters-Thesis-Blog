@@ -7,6 +7,7 @@ import com.zarowska.cirkle.api.model.Profile;
 import com.zarowska.cirkle.api.model.User;
 import com.zarowska.cirkle.api.model.UserPage;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -29,22 +30,23 @@ public class UserApiTest extends AbstractTest {
 
 	@Test
 	void shouldListAllUsers() throws Exception {
+		context("Bob Marley", "bob@email", "http://avatar")
+				.apply(bobContest -> context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
+					// max should call api at least once to be created
+					maxContext.getApi().users().listUsers();
 
+					Optional<UserPage> allUsers = bobContest.getApi().users().listUsers();
 
-		context("Bob Marley", "bob@email", "http://avatar").apply(bobContest -> {
-			context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
-				Optional<UserPage> allUsers = bobContest.getApi().users().listUsers();
+					assertThat(allUsers).isNotEmpty();
 
-				assertThat(allUsers).isNotEmpty();
+					List<String> expected = List.of("Bob Marley", "Max Payne");
+					List<String> actual = allUsers.get().getContent().stream().map(User::getName).toList();
 
-				String testBob = allUsers.stream().map(UserPage::getContent).findFirst().get().get(0).getName();
-
-				assertThat(testBob).isEqualTo("Bob Marley");
-
-			});
-		});
+					assertThat(actual).containsAll(expected);
+				}));
 
 	}
+
 	@Test
 	void shouldGetCurrentUserProfile() throws Exception {
 		context("Test User", "test@email.com", "http://some/path").apply(ctx -> {
@@ -57,15 +59,13 @@ public class UserApiTest extends AbstractTest {
 
 	@Test
 	void shouldNotGetCurrentUserProfile() throws Exception {
-		context("Test User", "test@email.com", "http://some/path").apply(ctx -> {
-			assertThat(ctx.getApi().users().getUsersProfileById(UUID.randomUUID())).isEmpty();
-		});
+		context("Test User", "test@email.com", "http://some/path")
+				.apply(ctx -> assertThat(ctx.getApi().users().getUsersProfileById(UUID.randomUUID())).isEmpty());
 	}
 
 	@Test
 	void shouldUpdateProfile() throws Exception {
-		context("Test User", "test@email.com", "http://some/path").apply(ctx -> {
-			assertThat(ctx.getApi().users().getUsersProfileById(UUID.randomUUID())).isEmpty();
-		});
+		context("Test User", "test@email.com", "http://some/path")
+				.apply(ctx -> assertThat(ctx.getApi().users().getUsersProfileById(UUID.randomUUID())).isEmpty());
 	}
 }
