@@ -30,6 +30,7 @@ public class UserApiTest extends AbstractTest {
 	@Test
 	void shouldListAllUsers() throws Exception {
 
+
 		context("Bob Marley", "bob@email", "http://avatar").apply(bobContest -> {
 			context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
 				Optional<UserPage> allUsers = bobContest.getApi().users().listUsers();
