@@ -6,66 +6,71 @@ import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.Profile;
 import com.zarowska.cirkle.api.model.User;
 import com.zarowska.cirkle.api.model.UserPage;
+import com.zarowska.cirkle.utils.TestUserContext;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class UserApiTest extends AbstractTest {
+class UserApiTest extends AbstractTest {
+	TestUserContext testUserContext;
 
-	// done //Current user info -get-current-user getCurrentUser
-	// done // List users - List all users -operationId: list-users listUsers
-	// Get user by id - operationId: get-user-by-id getUserById
-	// done //get-users-profile-by-id getUsersProfileById
-	@Test
-	void shouldGetCurrentUser() throws Exception {
-		context("Test User", "test@email.com", "http://some/path").apply(ctx -> {
-			User actual = ctx.getApi().user().getCurrentUser();
-			User expected = new User(null, "Test User", URI.create("http://some/path"));
-
-			assertThat(actual).usingRecursiveComparison().ignoringFields("id").isEqualTo(expected);
-		});
+	@BeforeEach
+	void setUp() {
+		testUserContext = context("Test User", "test@email.com", "http://some/path");
+		testUserContext.getApi().api().apiInfo(); // Simulating API call to setup user
 	}
 
 	@Test
-	void shouldListAllUsers() throws Exception {
-		context("Bob Marley", "bob@email", "http://avatar")
-				.apply(bobContest -> context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
-					// max should call api at least once to be created
-					maxContext.getApi().users().listUsers();
-
-					Optional<UserPage> allUsers = bobContest.getApi().users().listUsers();
-
-					assertThat(allUsers).isNotEmpty();
-
-					List<String> expected = List.of("Bob Marley", "Max Payne");
-					List<String> actual = allUsers.get().getContent().stream().map(User::getName).toList();
-
-					assertThat(actual).containsAll(expected);
-				}));
-
+	void shouldGetCurrentUser() {
+		User actual = testUserContext.getApi().user().getCurrentUser();
+		User expected = new User(null, "Test User", URI.create("http://some/path"));
+		assertThat(actual).usingRecursiveComparison().ignoringFields("id").isEqualTo(expected);
 	}
 
 	@Test
-	void shouldGetCurrentUserProfile() throws Exception {
-		context("Test User", "test@email.com", "http://some/path").apply(ctx -> {
-			Profile expected = new Profile("Test User", "test@email.com", URI.create("http://some/path"));
-			Optional<Profile> actual = ctx.getApi().users().getUsersProfileById(ctx.getUserId());
-			assertThat(actual).isNotEmpty();
-			assertThat(expected).isEqualTo(actual.get());
-		});
+	void shouldGetUserById() {
+		Optional<User> userMax = testUserContext.getApi().users()
+				.getUserById(testUserContext.getApi().user().getCurrentUser().getId());
+		assertThat(userMax).isNotEmpty();
+		assertThat(userMax.get().getName()).isEqualTo("Test User");
 	}
 
 	@Test
-	void shouldNotGetCurrentUserProfile() throws Exception {
-		context("Test User", "test@email.com", "http://some/path")
-				.apply(ctx -> assertThat(ctx.getApi().users().getUsersProfileById(UUID.randomUUID())).isEmpty());
+	void shouldListAllUsers() {
+		TestUserContext maxContext = context("Bob Marley", "bob@email", "http://avatar");
+		TestUserContext bobContext = context("Max Payne", "max@email", "http://avatar2");
+		maxContext.getApi().api().apiInfo();
+		bobContext.getApi().api().apiInfo();
+
+		Optional<UserPage> allUsers = bobContext.getApi().users().listUsers();
+
+		assertThat(allUsers).isNotEmpty();
+
+		List<String> expected = List.of("Bob Marley", "Max Payne", "Test User");
+		List<String> actual = allUsers.get().getContent().stream().map(User::getName).toList();
+
+		assertThat(actual).containsAll(expected);
 	}
 
 	@Test
-	void shouldUpdateProfile() throws Exception {
-		context("Test User", "test@email.com", "http://some/path")
-				.apply(ctx -> assertThat(ctx.getApi().users().getUsersProfileById(UUID.randomUUID())).isEmpty());
+	void shouldGetCurrentUserProfile() {
+		Profile expected = new Profile("Test User", "test@email.com", URI.create("http://some/path"));
+		Optional<Profile> actual = testUserContext.getApi().users().getUsersProfileById(testUserContext.getUserId());
+		assertThat(actual).isNotEmpty();
+		assertThat(expected).isEqualTo(actual.get());
+	}
+
+	@Test
+	void shouldNotGetCurrentUserProfile() {
+		assertThat(testUserContext.getApi().users().getUsersProfileById(UUID.randomUUID())).isEmpty();
+	}
+
+	// TODO
+	@Test
+	void shouldUpdateProfile() {
+		assertThat(testUserContext.getApi().users().getUsersProfileById(UUID.randomUUID())).isEmpty();
 	}
 }

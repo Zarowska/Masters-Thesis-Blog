@@ -1,6 +1,7 @@
 package com.zarowska.cirkle.facade;
 
 import com.zarowska.cirkle.api.model.Profile;
+import com.zarowska.cirkle.api.model.User;
 import com.zarowska.cirkle.api.model.UserPage;
 import java.util.UUID;
 import org.springframework.data.domain.PageRequest;
@@ -13,4 +14,7 @@ public interface UsersFacade {
 
 	@Transactional(readOnly = true)
 	UserPage listUsers(PageRequest pageRequest);
+
+	@Transactional(readOnly = true)
+	User getUserById(UUID userId);
 }
