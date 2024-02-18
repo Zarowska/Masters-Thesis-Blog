@@ -1,157 +1,160 @@
 package com.zarowska.cirkle.api;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.exception.CirkleException;
+import com.zarowska.cirkle.utils.TestUserContext;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 
 class PostApiTest extends AbstractTest {
-	@Test
-	void shouldCreatePost() throws Exception {
-		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
-			CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
-					.build();
-			Optional<Post> newPost = ctx.getApi().posts().createPost(ctx.getUserId(), request);
-			assertTrue(newPost.isPresent());
-		});
+
+	TestUserContext testUserContext;
+
+	@BeforeEach
+	void setUp() {
+		testUserContext = context("Bob Marley", "bob@marley.com", "http:/some/avatar");
+		testUserContext.getApi().api().apiInfo(); // Simulating API call to setup user
 	}
 
 	@Test
-	void shouldCreatePostWithPhotos() throws Exception {
-		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
-			List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
-					.map(it -> getFileFromResource("files/" + it))
-					.map(imageResource -> ctx.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
-					.toList();
-
-			CreatePostRequest request = CreatePostRequest.builder().text("New post").images(imagesListURI).build();
-			Optional<Post> newPost = ctx.getApi().posts().createPost(ctx.getUserId(), request);
-			assertTrue(newPost.isPresent());
-			Assertions.assertEquals("New post", newPost.get().getText());
-			Assertions.assertNotNull(newPost.get().getImages()); // OK
-			Assertions.assertEquals(imagesListURI, newPost.get().getImages()); // NOT OK
-			// List<URI> test = newPost.get().getImages();
-			// Assertions.assertEquals(imagesListURI,test);
-		});
+	void shouldCreatePost() {
+		CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
+				.build();
+		Optional<Post> newPost = testUserContext.getApi().posts().createPost(testUserContext.getUserId(), request);
+		assertTrue(newPost.isPresent());
 	}
 
 	@Test
-	void getUserPostByPostId_ShouldSucceed() throws Exception {
-		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
-			CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
-					.build();
-			UUID postId = ctx.getApi().posts().createPost(ctx.getUserId(), request).get().getId();
-			assertNotNull(String.valueOf(postId), "Post ID should not be null");
-			Optional<Post> thisPost = ctx.getApi().posts().getUserPostByPostId(ctx.getUserId(), postId);
-			assertThat(thisPost).isNotEmpty();
-		});
+	void shouldCreatePostWithPhotos() {
+		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
+				.map(it -> getFileFromResource("files/" + it))
+				.map(imageResource -> testUserContext.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
+				.toList();
+		CreatePostRequest request = CreatePostRequest.builder().text("New post").images(imagesListURI).build();
+		Optional<Post> newPost = testUserContext.getApi().posts().createPost(testUserContext.getUserId(), request);
+		assertTrue(newPost.isPresent());
+		assertEquals("New post", newPost.get().getText());
+		assertNotNull(newPost.get().getImages());
+		assertEquals(imagesListURI, newPost.get().getImages());
 	}
 
 	@Test
-	void updatePost_ShouldSucceed() throws Exception {
-		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
-			CreatePostRequest request = CreatePostRequest.builder().text("Old text").images(Collections.emptyList())
-					.build();
-			Post post = ctx.getApi().posts().createPost(ctx.getUserId(), request).get();
-			assertEquals("Old text", post.getText());
+	void getUserPostByPostId_ShouldSucceed() {
+		CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
+				.build();
+		UUID postId = testUserContext.getApi().posts().createPost(testUserContext.getUserId(), request).get().getId();
+		assertNotNull(String.valueOf(postId), "Post ID should not be null");
+		Optional<Post> thisPost = testUserContext.getApi().posts().getUserPostByPostId(testUserContext.getUserId(),
+				postId);
+		assertThat(thisPost).isNotEmpty();
+	}
 
-			Resource imageResource = getFileFromResource("files/max_payne.png");
-			FileDto response = ctx.getApi().images().uploadImage(imageResource);
+	@Test
+	void updatePost_ShouldSucceed() {
+		CreatePostRequest request = CreatePostRequest.builder().text("Old text").images(Collections.emptyList())
+				.build();
+		Post post = testUserContext.getApi().posts().createPost(testUserContext.getUserId(), request).get();
+		assertEquals("Old text", post.getText());
 
-			UpdatePostRequest updateTextRequest = new UpdatePostRequest().text("New post");
-			Post updatedPost = ctx.getApi().posts().updateUserPostById(ctx.getUserId(), post.getId(), updateTextRequest)
-					.get();
-			assertEquals("New post", updatedPost.getText()); // OK
-			assertEquals(Collections.emptyList(), updatedPost.getImages());
+		UpdatePostRequest updateTextRequest = new UpdatePostRequest().text("New post");
+		Post updatedPost = testUserContext.getApi().posts()
+				.updateUserPostById(testUserContext.getUserId(), post.getId(), updateTextRequest).get();
+		assertEquals("New post", updatedPost.getText());
 
-			// TODO
-			UpdatePostRequest addImagesItemRequest = new UpdatePostRequest().addImagesItem(response.getUrl());
-			updatedPost = ctx.getApi().posts().updateUserPostById(ctx.getUserId(), post.getId(), addImagesItemRequest)
-					.get();
+		Resource imageResource = getFileFromResource("files/max_payne.png");
+		FileDto response = testUserContext.getApi().images().uploadImage(imageResource);
 
-			// ok updatedPost.addImagesItem(URI.create("http://example.com/photo1.jpg"));
-			// ok assertNotEquals(Collections.emptyList(), updatedPost.getImages());
-			// ok assertEquals("http://example.com/photo1.jpg",
-			// updatedPost.getImages().get(0).toString());
-		});
+		assertEquals(Collections.emptyList(), updatedPost.getImages());
+		UpdatePostRequest updateImagesItemRequest = new UpdatePostRequest().addImagesItem(response.getUrl());
+		updatedPost = testUserContext.getApi().posts()
+				.updateUserPostById(testUserContext.getUserId(), post.getId(), updateImagesItemRequest).get(); // addImagesItemRequest
+		List<String> oneImage = updatedPost.getImages().stream().map(URI::getPath).toList();
+		assertEquals(1, oneImage.size());
+
+		// UpdatePostRequest updateImagesItemRequest2 = new
+		// UpdatePostRequest().addImagesItem(null);
+		// updatedPost = testUserContext.getApi().posts()
+		// .updateUserPostById(testUserContext.getUserId(), post.getId(),
+		// updateImagesItemRequest2).get(); //deleteImagesItemRequest
+		// List<String> zeroImage =
+		// updatedPost.getImages().stream().map(URI::getPath).toList();
+		// assertEquals(0,zeroImage.size());
+
+		// TODO
+		// assertThat(oneImage).containsAll(Collections.singleton("files/max_payne.png"));
+		// updatedPost = testUserContext.getApi().posts()
+		// .updateUserPostById(testUserContext.getUserId(), post.getId(),
+		// updateImagesItemRequest).get();
+
 	}
 
 	@Test
 	void updatePost_ShouldThrowException() throws Exception {
-		context("Bob Marley", "bob@email", "http://avatar").apply(bobContest -> {
-			CreatePostRequest requestCreatePostRequest = CreatePostRequest.builder().text("Old text")
-					.images(Collections.emptyList()).build();
-			Optional<Post> thisPost = bobContest.getApi().posts().createPost(bobContest.getUserId(),
-					requestCreatePostRequest);
-			assertThat(thisPost).isNotEmpty();
-			context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
-				Exception exception = assertThrows(CirkleException.class, () -> {
-					maxContext.getApi().posts().updateUserPostById(maxContext.getUserId(), thisPost.get().getId(),
-							new UpdatePostRequest().text("New post"));
-				});
-				String expectedMessage = "Only the original author of this post has permission to make updates";
-				assertEquals(expectedMessage, exception.getMessage());
-			});
-		});
-	}
-
-	@Test
-	void listPost_ShouldSucceed() throws Exception {
-		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
-			List<String> expectedPostText = List.of("Post1", "Post2", "Post3", "Post4");
-			// List<Post> createdPosts =
-			expectedPostText.stream()
-					.map(text -> ctx.getApi().posts().createPost(ctx.getUserId(), new CreatePostRequest().text(text)))
-					.map(Optional::get).toList();
-			Optional<PostsPage> postsPage = ctx.getApi().posts().listUsersPostsByUserId(ctx.getUserId());
-			List<String> allPostText = postsPage.get().getContent().stream().map(Post::getText).toList();
-
-			assertThat(allPostText).containsAll(expectedPostText);
-		});
-	}
-
-	@Test
-	void deletePost_ShouldSucceed() throws Exception {
-		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
-			CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
-					.build();
-			Optional<Post> newPost = ctx.getApi().posts().createPost(ctx.getUserId(), request);
-			assertTrue(newPost.isPresent());
-			UUID postId = newPost.get().getId();
-			ctx.getApi().posts().deleteUserPostById(ctx.getUserId(), postId);
+		CreatePostRequest requestCreatePostRequest = CreatePostRequest.builder().text("Old text")
+				.images(Collections.emptyList()).build();
+		Optional<Post> thisPost = testUserContext.getApi().posts().createPost(testUserContext.getUserId(),
+				requestCreatePostRequest);
+		assertThat(thisPost).isNotEmpty();
+		context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
 			Exception exception = assertThrows(CirkleException.class, () -> {
-				ctx.getApi().posts().getUserPostByPostId(ctx.getUserId(), postId);
+				maxContext.getApi().posts().updateUserPostById(maxContext.getUserId(), thisPost.get().getId(),
+						new UpdatePostRequest().text("New post"));
 			});
-			String expectedMessage = "Post not found with id=" + postId.toString();
+			String expectedMessage = "Only the original author of this post has permission to make updates";
 			assertEquals(expectedMessage, exception.getMessage());
 		});
 	}
 
 	@Test
+	void listPost_ShouldSucceed() throws Exception {
+		List<String> expectedPostText = List.of("Post1", "Post2", "Post3", "Post4");
+		expectedPostText.stream().map(text -> testUserContext.getApi().posts().createPost(testUserContext.getUserId(),
+				new CreatePostRequest().text(text))).map(Optional::get).toList();
+		Optional<PostsPage> postsPage = testUserContext.getApi().posts()
+				.listUsersPostsByUserId(testUserContext.getUserId());
+		List<String> allPostText = postsPage.get().getContent().stream().map(Post::getText).toList();
+
+		assertThat(allPostText).containsAll(expectedPostText);
+
+	}
+
+	@Test
+	void deletePost_ShouldSucceed() throws Exception {
+		CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
+				.build();
+		Optional<Post> newPost = testUserContext.getApi().posts().createPost(testUserContext.getUserId(), request);
+		assertTrue(newPost.isPresent());
+		UUID postId = newPost.get().getId();
+		testUserContext.getApi().posts().deleteUserPostById(testUserContext.getUserId(), postId);
+		Exception exception = assertThrows(CirkleException.class, () -> {
+			testUserContext.getApi().posts().getUserPostByPostId(testUserContext.getUserId(), postId);
+		});
+		String expectedMessage = "Post not found with id=" + postId.toString();
+		assertEquals(expectedMessage, exception.getMessage());
+	}
+
+	@Test
 	void deletePost_ThrowException() throws Exception {
-		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
-			CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
-					.build();
-			Optional<Post> newPost = ctx.getApi().posts().createPost(ctx.getUserId(), request);
-			assertTrue(newPost.isPresent());
-			UUID postId = newPost.get().getId();
-			context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
-				Exception exception = assertThrows(CirkleException.class, () -> {
-					maxContext.getApi().posts().deleteUserPostById(maxContext.getUserId(), postId);
-				});
-				String expectedMessage = "Only the original author of this post has permission to delete it";
-				assertEquals(expectedMessage, exception.getMessage());
+		CreatePostRequest request = CreatePostRequest.builder().text("New post").images(Collections.emptyList())
+				.build();
+		Optional<Post> newPost = testUserContext.getApi().posts().createPost(testUserContext.getUserId(), request);
+		assertTrue(newPost.isPresent());
+		UUID postId = newPost.get().getId();
+		context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
+			Exception exception = assertThrows(CirkleException.class, () -> {
+				maxContext.getApi().posts().deleteUserPostById(maxContext.getUserId(), postId);
 			});
+			String expectedMessage = "Only the original author of this post has permission to delete it";
+			assertEquals(expectedMessage, exception.getMessage());
 		});
 	}
 
