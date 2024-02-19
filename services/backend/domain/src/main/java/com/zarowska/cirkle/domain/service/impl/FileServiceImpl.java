@@ -63,6 +63,16 @@ public class FileServiceImpl implements FileService {
 		}
 	}
 
+	// @Override
+	// public Page<FileInfoEntity> getImageInfoList(Integer page, Integer size) {
+	// return fileInfoEntityRepository.getImageInfoList(page, size);
+	// }
+	//
+	// @Override
+	// public FileInfoEntity getImageInfoById(UUID imageId) {
+	// return fileInfoEntityRepository.getImageInfoById(imageId);
+	// }
+
 	private void parseImage(FileInfoEntity entity, byte[] content) {
 		try (InputStream inputStream = new ByteArrayInputStream(content)) {
 			BufferedImage image = ImageIO.read(inputStream);

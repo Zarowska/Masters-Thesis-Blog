@@ -15,5 +15,8 @@ public interface FileService {
 	void deleteById(UUID id);
 
 	FileInfoEntity upload(UserEntity principal, MultipartFile file);
-
+	//
+	// Page<FileInfoEntity> getImageInfoList(Integer page, Integer size);
+	//
+	// FileInfoEntity getImageInfoById(UUID imageId);
 }

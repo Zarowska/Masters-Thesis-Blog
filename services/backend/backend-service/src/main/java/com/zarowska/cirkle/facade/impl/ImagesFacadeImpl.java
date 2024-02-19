@@ -44,4 +44,17 @@ public class ImagesFacadeImpl implements ImagesFacade {
 				.size(entity.getSize()).owner(mapper.toDto(user)).mediaType(entity.getMediaType().toString())
 				.uploadedAt(entity.getUploadedAt().atOffset(ZoneOffset.UTC));
 	}
+	//
+	// @Override
+	// public FileDto getImageInfoById(UUID imageId) {
+	// FileInfoEntity fileInfoEntity = imagesService.getImageInfoById(imageId);
+	// return null;
+	// }
+	//
+	// @Override
+	// public FilePage getImageInfoList(Integer page, Integer size) {
+	// imagesService.getImageInfoList(page, size);
+	// return null;
+	// }
+
 }

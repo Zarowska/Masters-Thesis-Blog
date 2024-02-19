@@ -1,7 +1,6 @@
 package com.zarowska.cirkle.delegates;
 
 import com.zarowska.cirkle.api.model.FileDto;
-import com.zarowska.cirkle.api.model.FilePage;
 import com.zarowska.cirkle.api.rest.ImagesApiDelegate;
 import com.zarowska.cirkle.domain.model.ImageDto;
 import com.zarowska.cirkle.facade.ImagesFacade;
@@ -32,15 +31,16 @@ public class ImagesApiDelegateImpl implements ImagesApiDelegate {
 		return ImagesApiDelegate.super.getRequest();
 	}
 
-	@Override
-	public ResponseEntity<FileDto> getImageInfoById(UUID imageId) {
-		return ImagesApiDelegate.super.getImageInfoById(imageId);
-	}
-
-	@Override
-	public ResponseEntity<FilePage> getImageInfoList(Integer page, Integer size) {
-		return ImagesApiDelegate.super.getImageInfoList(page, size);
-	}
+	// @Override
+	// public ResponseEntity<FileDto> getImageInfoById(UUID imageId) {
+	// return ResponseEntity.ok(imagesFacade.getImageInfoById(imageId));
+	// }
+	//
+	// @Override
+	// public ResponseEntity<FilePage> getImageInfoList(Integer page, Integer size)
+	// {
+	// return ResponseEntity.ok(imagesFacade.getImageInfoList(page, size));
+	// }
 
 	@Override
 	public ResponseEntity<FileDto> uploadImage(MultipartFile file) {

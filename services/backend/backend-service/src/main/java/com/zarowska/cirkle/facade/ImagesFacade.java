@@ -12,4 +12,9 @@ public interface ImagesFacade {
 
 	@Transactional
 	FileDto save(MultipartFile image);
+	//
+	// @Transactional
+	// FileDto getImageInfoById(UUID imageId);
+	// @Transactional
+	// FilePage getImageInfoList(Integer page, Integer size);
 }

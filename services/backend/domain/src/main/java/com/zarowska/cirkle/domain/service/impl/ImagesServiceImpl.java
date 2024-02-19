@@ -43,8 +43,19 @@ public class ImagesServiceImpl implements ImagesService {
 
 	@Override
 	public FileInfoEntity save(UserEntity user, MultipartFile image) {
+
 		return fileService.upload(user, image);
 	}
+
+	// @Override
+	// public Page<FileInfoEntity> getImageInfoList(Integer page, Integer size) {
+	// return fileService.getImageInfoList(page, size);
+	// }
+	//
+	// @Override
+	// public FileInfoEntity getImageInfoById(UUID imageId) {
+	// return fileService.getImageInfoById(imageId);
+	// }
 
 	private byte[] resizeIfNeeded(Integer width, Integer height, FileInfoEntity fileInfo, String imageKey) {
 		byte[] newContent = fileInfo.getContent().getContent();

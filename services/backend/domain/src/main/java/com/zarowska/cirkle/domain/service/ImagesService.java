@@ -10,4 +10,8 @@ public interface ImagesService {
 	ImageDto findById(UserEntity user, UUID imageId, Integer width, Integer height);
 
 	FileInfoEntity save(UserEntity user, MultipartFile image);
+
+	// Page<FileInfoEntity> getImageInfoList(Integer page, Integer size);
+	//
+	// FileInfoEntity getImageInfoById(UUID imageId);
 }
