@@ -115,7 +115,7 @@ class PostApiTest extends AbstractTest {
 	}
 
 	@Test
-	void listPost_ShouldSucceed() throws Exception {
+	void listPost_ShouldSucceed() {
 		List<String> expectedPostText = List.of("Post1", "Post2", "Post3", "Post4");
 		expectedPostText.stream().map(text -> testUserContext.getApi().posts().createPost(testUserContext.getUserId(),
 				new CreatePostRequest().text(text))).map(Optional::get).toList();

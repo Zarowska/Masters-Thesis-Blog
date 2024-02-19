@@ -3,9 +3,7 @@ package com.zarowska.cirkle.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.zarowska.cirkle.AbstractTest;
-import com.zarowska.cirkle.api.model.Profile;
-import com.zarowska.cirkle.api.model.User;
-import com.zarowska.cirkle.api.model.UserPage;
+import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.utils.TestUserContext;
 import java.net.URI;
 import java.util.List;
@@ -21,6 +19,25 @@ class UserApiTest extends AbstractTest {
 	void setUp() {
 		testUserContext = context("Test User", "test@email.com", "http://some/path");
 		testUserContext.getApi().api().apiInfo(); // Simulating API call to setup user
+	}
+
+	@Test
+	void shouldGetApiInfo() {
+		assertThat(testUserContext.getApi().api().apiInfo().toString()).contains("version:", "buildDate:", "buildNum:",
+				"environment:");
+	}
+
+	@Test
+	void shouldGetFeed() {
+		List<String> expectedPostText = List.of("Post1", "Post2", "Post3", "Post4");
+		expectedPostText.stream().map(text -> testUserContext.getApi().posts().createPost(testUserContext.getUserId(),
+				new CreatePostRequest().text(text))).map(Optional::get).toList();
+
+		Optional<PostsPage> postsPage = testUserContext.getApi().userFeed().getFeed();
+
+		List<String> allPostText = postsPage.get().getContent().stream().map(Post::getText).toList();
+
+		assertThat(allPostText).containsAll(expectedPostText);
 	}
 
 	@Test
