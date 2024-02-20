@@ -18,10 +18,6 @@ public class PostsEndpoint extends AbstractClientEndpoint {
 		return new PostCommentsEndpoint(restTemplateWrapper);
 	}
 
-	public PostReactionsEndpoint reactions() {
-		return new PostReactionsEndpoint(restTemplateWrapper);
-	}
-
 	public Optional<Post> createPost(UUID userId, CreatePostRequest createPostRequest) {
 		return doCall(() -> restTemplateWrapper.post(createPostRequest, Post.class, "/users/{userId}/posts", userId));
 
