@@ -17,4 +17,7 @@ public interface UsersFacade {
 
 	@Transactional(readOnly = true)
 	User getUserById(UUID userId);
+
+	@Transactional
+	Profile updateProfileById(UUID userId, Profile profile);
 }

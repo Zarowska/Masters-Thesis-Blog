@@ -2,6 +2,8 @@ package com.zarowska.cirkle.api.client.endpoints;
 
 import com.zarowska.cirkle.api.client.RestTemplateWrapper;
 import com.zarowska.cirkle.api.model.FileDto;
+import com.zarowska.cirkle.api.model.FilePage;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.core.io.Resource;
 import org.springframework.util.LinkedMultiValueMap;
@@ -36,5 +38,18 @@ public class ImagesEndpoint extends AbstractClientEndpoint {
 
 			return restTemplateWrapper.postForm(body, FileDto.class, "/user/images");
 		}).get();
+	}
+
+	public Optional<FileDto> getImageInfoById(UUID imageId) {
+		return doCall(() -> restTemplateWrapper.get(FileDto.class, "/user/images/{imageId}", imageId));
+	}
+
+	public Optional<FilePage> getImageInfoList(int page, int size) {
+		return doCall(
+				() -> restTemplateWrapper.get(FilePage.class, "/user/images?page=%d&size=%d".formatted(page, size)));
+	}
+
+	public void deleteImage(UUID imageId) {
+		doCall(() -> restTemplateWrapper.delete(String.class, "/user/images/{imageId}", imageId));
 	}
 }

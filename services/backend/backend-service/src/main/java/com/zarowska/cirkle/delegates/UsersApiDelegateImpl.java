@@ -35,4 +35,9 @@ public class UsersApiDelegateImpl implements UsersApiDelegate {
 		int pageSize = Optional.ofNullable(size).map(BigDecimal::intValue).orElse(20);
 		return ResponseEntity.ok(usersFacade.listUsers(PageRequest.of(pageNumber, pageSize)));
 	}
+
+	@Override
+	public ResponseEntity<Profile> updateUsersProfileById(UUID userId, Profile profile) {
+		return ResponseEntity.ok(usersFacade.updateProfileById(userId, profile));
+	}
 }

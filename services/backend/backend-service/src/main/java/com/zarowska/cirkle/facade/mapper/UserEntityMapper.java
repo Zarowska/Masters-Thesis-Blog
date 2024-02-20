@@ -49,4 +49,8 @@ public class UserEntityMapper {
 				.content(users.stream().map(this::toDto).toList()).build();
 	}
 
+	public UserProfileEntity toEntity(Profile profile) {
+		return new UserProfileEntity().setName(profile.getName()).setEmail(profile.getEmail())
+				.setAvatarUrl(profile.getAvatarUrl().toString());
+	}
 }

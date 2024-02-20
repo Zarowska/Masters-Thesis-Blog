@@ -1,6 +1,7 @@
 package com.zarowska.cirkle.facade;
 
 import com.zarowska.cirkle.api.model.FileDto;
+import com.zarowska.cirkle.api.model.FilePage;
 import com.zarowska.cirkle.domain.model.ImageDto;
 import java.util.UUID;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +13,12 @@ public interface ImagesFacade {
 
 	@Transactional
 	FileDto save(MultipartFile image);
-	//
-	// @Transactional
-	// FileDto getImageInfoById(UUID imageId);
-	// @Transactional
-	// FilePage getImageInfoList(Integer page, Integer size);
+
+	@Transactional
+	FileDto getImageInfoById(UUID imageId);
+	@Transactional
+	FilePage getImageInfoList(Integer page, Integer size);
+
+	@Transactional
+	void deleteById(UUID imageId);
 }

@@ -1,6 +1,7 @@
 package com.zarowska.cirkle.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
@@ -86,16 +87,15 @@ class UserApiTest extends AbstractTest {
 	}
 
 	@Test
-	void shoulUpdateProfile() { // editing data about yourself
-		User currentUser = testUserContext.getApi().user().getCurrentUser();
-		assertThat(currentUser.getName()).isEqualTo("Test User");
-		assertThat(currentUser.getAvatarUrl()).isEqualTo(URI.create("http://some/path"));
-
-		currentUser.setName("New User Name");
-		currentUser.setAvatarUrl(URI.create("http://some/new_path"));
-
-		assertThat(currentUser.getName()).isEqualTo("New User Name");
-		assertThat(currentUser.getAvatarUrl()).isEqualTo(URI.create("http://some/new_path"));
+	void shouldUpdateProfile() { // editing data about yourself
+		Profile expected = new Profile().name("New User Name").avatarUrl(URI.create("http://some/new_path"))
+				.email("new@new.com");
+		Profile before = testUserContext.getApi().users().getUsersProfileById(testUserContext.getUserId()).get();
+		assertThat(before).isNotEqualTo(expected);
+		// update
+		testUserContext.getApi().users().updateUsersProfileById(testUserContext.getUserId(), expected);
+		Profile after = testUserContext.getApi().users().getUsersProfileById(testUserContext.getUserId()).get();
+		assertThat(after).isEqualTo(expected);
 	}
 
 	@Test
@@ -106,18 +106,11 @@ class UserApiTest extends AbstractTest {
 
 		// try {
 		context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
-			// Exception exception = assertThrows(CirkleException.class, () -> {
-			currentUser.setName("New User Name");
-			currentUser.setAvatarUrl(URI.create("http://some/new_path"));
-			// });
-			// String expectedMessage = "Only the original author of this post has
-			// permission to make updates";
-			// assertEquals(expectedMessage, exception.getMessage());
+			Profile newProfile = new Profile().name("New User Name").avatarUrl(URI.create("http://some/new_path"))
+					.email("new@new.com");
+			assertThatThrownBy(
+					() -> testUserContext.getApi().users().updateUsersProfileById(maxContext.getUserId(), newProfile))
+					.hasMessage("You can only update your own profile");
 		});
-		// } catch (Exception e) {
-		// throw new RuntimeException(e);
-		// }
-		assertThat(currentUser.getName()).isEqualTo("Test User");
-		assertThat(currentUser.getAvatarUrl()).isEqualTo(URI.create("http://some/path"));
 	}
 }

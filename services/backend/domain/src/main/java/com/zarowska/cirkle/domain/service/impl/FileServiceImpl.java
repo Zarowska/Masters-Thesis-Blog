@@ -16,6 +16,8 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,8 +34,8 @@ public class FileServiceImpl implements FileService {
 	}
 
 	@Override
-	public List<FileInfoEntity> findByOwner(UUID ownerId) {
-		return fileInfoEntityRepository.findByOwnerId(ownerId);
+	public List<FileInfoEntity> findByOwner(UserEntity owner) {
+		return fileInfoEntityRepository.findByOwnerId(owner);
 	}
 
 	@Override
@@ -42,7 +44,7 @@ public class FileServiceImpl implements FileService {
 	}
 
 	@Override
-	public FileInfoEntity upload(UserEntity principal, MultipartFile file) {
+	public FileInfoEntity upload(UserEntity owner, MultipartFile file) {
 		try {
 			byte[] content = file.getBytes();
 			String mediaType = tikaService.detectMediaType(content);
@@ -50,8 +52,8 @@ public class FileServiceImpl implements FileService {
 			FileInfoEntity entity = null;
 			FileContentEntity fileContent = new FileContentEntity(content);
 
-			entity = new FileInfoEntity(principal, MediaType.valueOf(mediaType), content.length,
-					file.getOriginalFilename(), fileContent);
+			entity = new FileInfoEntity(owner, MediaType.valueOf(mediaType), content.length, file.getOriginalFilename(),
+					fileContent);
 			entity.getContent().setInfo(entity);
 
 			if (types.length > 0 && types[0].equals("image")) {
@@ -72,6 +74,11 @@ public class FileServiceImpl implements FileService {
 	// public FileInfoEntity getImageInfoById(UUID imageId) {
 	// return fileInfoEntityRepository.getImageInfoById(imageId);
 	// }
+
+	@Override
+	public Page<FileInfoEntity> findAllByOwner(UserEntity owner, Pageable pageable) {
+		return fileInfoEntityRepository.findAllByOwner(owner, pageable);
+	}
 
 	private void parseImage(FileInfoEntity entity, byte[] content) {
 		try (InputStream inputStream = new ByteArrayInputStream(content)) {

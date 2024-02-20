@@ -24,4 +24,8 @@ public class UsersEndpoint extends AbstractClientEndpoint {
 	public Optional<UserPage> listUsers() {
 		return doCall(() -> restTemplateWrapper.get(UserPage.class, "/users"));
 	}
+
+	public Optional<Profile> updateUsersProfileById(UUID userId, Profile profile) {
+		return doCall(() -> restTemplateWrapper.post(profile, Profile.class, "/users/{userId}/profile", userId));
+	}
 }
