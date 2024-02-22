@@ -14,6 +14,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class UserApiTest extends AbstractTest {
+
+	// done //Api Info //GET ///info
+	// done //get Current user info
+	// done //User's feed
+	// done //List users
+	// done //Get user by id
+	// done //get-users-profile-by-id
+	// done//update-users-profile-by-id
+
 	TestUserContext testUserContext;
 
 	@BeforeEach

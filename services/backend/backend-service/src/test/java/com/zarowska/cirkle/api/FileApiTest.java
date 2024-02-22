@@ -18,6 +18,11 @@ import org.springframework.core.io.Resource;
 
 class FileApiTest extends AbstractTest {
 
+	// done //List images
+	// done //Upload image
+	// done //Get image info by id
+	// done //Delete image by id
+	// done //Download image
 	TestUserContext testUserContext;
 
 	@BeforeEach

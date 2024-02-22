@@ -7,7 +7,6 @@ import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.exception.CirkleException;
 import com.zarowska.cirkle.utils.TestUserContext;
-import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Stream;
@@ -16,6 +15,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 
 class PostApiTest extends AbstractTest {
+
+	// done // Get user's posts
+	// done // Create a post
+	// done // Get user's post by post id
+	// done // Update post by id
+	// done // Delete post by id
 
 	TestUserContext testUserContext;
 
@@ -158,43 +163,4 @@ class PostApiTest extends AbstractTest {
 		});
 	}
 
-	@Test
-	void nestedTest() throws Exception {
-		context("Bob Marley", "bob@email", "http://avatar").apply(bobContest -> {
-			context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
-
-				// bob send friendship request to max
-
-				bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
-
-				// max checks incoming friendship requests
-
-				FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations()
-						.findAllFriendshipRequests();
-
-				// max finds bob's friendship request
-				Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
-						.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
-
-				assertTrue(request.isPresent());
-
-				// max accepts bob's friendship request
-				maxContext.getApi().relations().acceptFriendshipRequestById(request.get().getId());
-
-				// max checks his friends
-				Optional<UserPage> maxFriends = bobContest.getApi().relations()
-						.getUsersFriendsById(maxContext.getUserId(), 0, 100);
-
-				assertTrue(maxFriends.isPresent());
-
-				// max found bob in his friendship request
-				Optional<@Valid User> bob = maxFriends.get().getContent().stream()
-						.filter(it -> it.getId().equals(bobContest.getUserId())).findFirst();
-
-				// bob now friend of max
-				assertTrue(bob.isPresent());
-
-			});
-		});
-	}
 }

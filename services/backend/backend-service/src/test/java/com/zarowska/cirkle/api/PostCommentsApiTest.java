@@ -13,6 +13,12 @@ import org.junit.jupiter.api.Test;
 
 class PostCommentsApiTest extends AbstractTest {
 
+	// Get post's comment
+	// done // Create a post comment
+	// Get post's comment
+	// Delete post's comment
+	// Update post's comment
+
 	@Test
 	void shouldCreatePostComment() throws Exception {
 		context("Bob Marley", "bob@marley.com", "http:/some/avatar").apply(ctx -> {
@@ -30,15 +36,5 @@ class PostCommentsApiTest extends AbstractTest {
 			assertTrue(newComment.isPresent());
 		});
 	}
-
-	// Get post's comment
-
-	// Create a post comment
-
-	// Get post's comment
-
-	// Delete post's comment
-
-	// Update post's comment
 
 }
