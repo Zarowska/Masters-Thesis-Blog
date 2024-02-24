@@ -1,8 +1,6 @@
 package com.zarowska.cirkle.api;
 
 import com.zarowska.cirkle.AbstractTest;
-import com.zarowska.cirkle.utils.TestUserContext;
-import org.junit.jupiter.api.BeforeEach;
 
 public class MessagesApiTest extends AbstractTest {
 

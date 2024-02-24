@@ -34,8 +34,7 @@ public class ImagesFacadeImpl implements ImagesFacade {
 	@Override
 	@Transactional(readOnly = true)
 	public ImageDto downloadById(UUID imageId, Integer width, Integer height) {
-		UserEntity user = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
-		return imagesService.findById(user, imageId, width, height)
+		return imagesService.findById(imageId, width, height)
 				.orElseThrow(() -> new ResourceNotFoundException("image", Map.of("id", imageId)));
 	}
 

@@ -26,7 +26,7 @@ public class ImagesServiceImpl implements ImagesService {
 	private final ImageResizeHelper imageResizeHelper;
 	private final PostImageRepository postImageRepository;
 	@Override
-	public Optional<ImageDto> findById(UserEntity user, UUID imageId, Integer width, Integer height) {
+	public Optional<ImageDto> findById(UUID imageId, Integer width, Integer height) {
 		return fileService.findById(imageId).map(fileInfo -> {
 			String imageKey = buildKey(imageId, width, height);
 

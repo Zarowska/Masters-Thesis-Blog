@@ -6,6 +6,7 @@ import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.utils.TestUserContext;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,13 +44,12 @@ public class RelationsApiTest extends AbstractTest {
 		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
 
 		// max finds bob's friendship request
-		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
+		List<FriendshipRequest> allRequests = allFriendshipRequests.getItems();
+		Optional<FriendshipRequest> request = allRequests.stream()
 				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
 
 		assertTrue(request.isPresent());
 	}
-
-
 
 	@Test
 	void sendFrindshipRequest_ShouldSucceed() {

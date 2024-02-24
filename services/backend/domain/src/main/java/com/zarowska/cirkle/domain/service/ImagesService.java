@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ImagesService {
-	Optional<ImageDto> findById(UserEntity user, UUID imageId, Integer width, Integer height);
+	Optional<ImageDto> findById(UUID imageId, Integer width, Integer height);
 
 	FileInfoEntity save(UserEntity user, MultipartFile image);
 
