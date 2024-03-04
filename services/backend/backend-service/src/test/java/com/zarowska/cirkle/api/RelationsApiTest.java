@@ -1,75 +1,66 @@
 package com.zarowska.cirkle.api;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.utils.TestUserContext;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class RelationsApiTest extends AbstractTest {
 
-	// User's friendship requests
-	// Get friendship request by id
-	// Accept friendship request by id
-	// Reject friendship request by id
-	// get-users-friends-by-id
-	// send-frindship-request
+	// acceptFriendshipRequestById
+	// deleteFriendFromUsersFriendsByIds
+	// findAllFriendshipRequests
+	// getFriendshipRequestById
+	// getUsersFriendsById
+	// rejectFriendshipRequestById
+	// done sendFriendshipRequest
 	// Unfriend user by id
 
-	TestUserContext testUserContext;
+	TestUserContext bobContest, maxContext;
 
 	@BeforeEach
 	void setUp() {
-		testUserContext = context("Test User", "test@email.com", "http://some/path");
-		testUserContext.getApi().api().apiInfo(); // Simulating API call to setup user
-	}
-
-	@Test
-	void getFrindshipRequestById_ShouldSucceed() {
-		TestUserContext bobContest = context("Bob Marley", "bob@email", "http://avatar");
+		bobContest = context("Bob Marley", "bob@email", "http://avatar");
 		bobContest.getApi().api().apiInfo(); // Simulating API call to setup user
-		TestUserContext maxContext = context("Max Payne", "max@email", "http://avatar2");
+		maxContext = context("Max Payne", "max@email", "http://avatar2");
 		maxContext.getApi().api().apiInfo(); // Simulating API call to setup user
-
-		// bob send friendship request to max
-		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
-
-		// max checks incoming friendship requests
-
-		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
-
-		// max finds bob's friendship request
-		List<FriendshipRequest> allRequests = allFriendshipRequests.getItems();
-		Optional<FriendshipRequest> request = allRequests.stream()
-				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
-
-		assertTrue(request.isPresent());
 	}
 
 	@Test
 	void sendFrindshipRequest_ShouldSucceed() {
-		TestUserContext bobContest = context("Bob Marley", "bob@email", "http://avatar");
-		bobContest.getApi().api().apiInfo(); // Simulating API call to setup user
-		TestUserContext maxContext = context("Max Payne", "max@email", "http://avatar2");
-		maxContext.getApi().api().apiInfo(); // Simulating API call to setup user
-
 		// bob send friendship request to max
 		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
-
 		// max checks incoming friendship requests
-		//
 		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
-
 		// max finds bob's friendship request
 		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
 				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
-
 		assertTrue(request.isPresent());
+	}
+
+	// TODO
+	@Test
+	void getFrindshipRequestById_ShouldSucceed() {
+		// bob send friendship request to max
+		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
+		// max checks incoming friendship requests
+		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
+		// max finds bob's friendship request
+		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
+				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
+		assertTrue(request.isPresent());
+		UUID requestId = request.get().getId();
+		Optional<FriendshipRequest> requestById = maxContext.getApi().relations()
+				.getFriendshipRequestById(requestId.toString());
+		assertEquals(request.get(), requestById.get());
+
 	}
 
 	@Test

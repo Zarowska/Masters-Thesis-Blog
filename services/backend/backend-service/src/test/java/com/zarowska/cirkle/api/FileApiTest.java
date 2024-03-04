@@ -75,6 +75,8 @@ class FileApiTest extends AbstractTest {
 
 		List<FileDto> actualList = filePage.getContent();
 
+		assertThat(actualList.size()).isEqualTo(expectedList.size());
+
 		assertThat(actualList).containsAll(expectedList);
 	}
 
