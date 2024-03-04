@@ -60,7 +60,6 @@ public class RelationsApiTest extends AbstractTest {
 		Optional<FriendshipRequest> requestById = maxContext.getApi().relations()
 				.getFriendshipRequestById(requestId.toString());
 		assertEquals(request.get(), requestById.get());
-
 	}
 
 	@Test
