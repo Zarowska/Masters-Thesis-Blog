@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.CreatePostRequest;
 import com.zarowska.cirkle.api.model.FileDto;
-import com.zarowska.cirkle.api.model.FilePage;
 import com.zarowska.cirkle.api.model.Post;
 import com.zarowska.cirkle.utils.TestUserContext;
 import java.util.List;
@@ -18,7 +17,7 @@ import org.springframework.core.io.Resource;
 
 class FileApiTest extends AbstractTest {
 
-	// done //List images
+	// TODO //List images
 	// done //Upload image
 	// done //Get image info by id
 	// done //Delete image by id
@@ -63,19 +62,24 @@ class FileApiTest extends AbstractTest {
 		assertThat(imageInfo).isNotNull();
 	}
 
+	// TODO
 	@Test
 	void shouldGetImageInfoList() {
 		List<FileDto> expectedList = Stream.of("max_payne.png", "blazkovic.png")
 				.map(it -> getFileFromResource("files/" + it))
 				.map(imageResource -> testUserContext.getApi().images().uploadImage(imageResource)).toList();
 
-		Optional<FilePage> filePageOptional = testUserContext.getApi().images().getImageInfoList(0, 20);
+		List<FileDto> actualList = testUserContext.getApi().images().getImageInfoList(0, 20).get().getContent();
 
-		FilePage filePage = filePageOptional.get();
+		assertThat(actualList).hasSameSizeAs(expectedList);
 
-		List<FileDto> actualList = filePage.getContent();
+		assertThat(actualList.get(0).getUrl()).isEqualTo(expectedList.get(0).getUrl());
+		assertThat(actualList.get(0).getMediaType()).isEqualTo(expectedList.get(0).getMediaType());
+		assertThat(actualList.get(0).getOwner()).isEqualTo(expectedList.get(0).getOwner());
 
-		assertThat(actualList.size()).isEqualTo(expectedList.size());
+		assertThat(actualList.get(1).getUrl()).isEqualTo(expectedList.get(1).getUrl());
+		assertThat(actualList.get(1).getMediaType()).isEqualTo(expectedList.get(1).getMediaType());
+		assertThat(actualList.get(1).getOwner()).isEqualTo(expectedList.get(1).getOwner());
 
 		assertThat(actualList).containsAll(expectedList);
 	}

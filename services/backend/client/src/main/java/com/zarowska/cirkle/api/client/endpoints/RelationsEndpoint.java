@@ -25,8 +25,8 @@ public class RelationsEndpoint extends AbstractClientEndpoint {
 		return doCall(() -> restTemplateWrapper.get(FriendshipRequestList.class, "/user/requests")).get();
 	}
 
-	public Optional<FriendshipRequest> getFriendshipRequestById(String requestId) {
-		return null;
+	public Optional<FriendshipRequest> getFriendshipRequestById(UUID requestId) {
+		return doCall(() -> restTemplateWrapper.get(FriendshipRequest.class, "/user/requests/{requestId}", requestId));
 	}
 
 	public Optional<UserPage> getUsersFriendsById(UUID userId, Integer page, Integer size) {

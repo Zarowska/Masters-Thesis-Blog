@@ -10,4 +10,13 @@ public class test {
 	// 5. Wrapper
 	// 6. exception
 
+	// 1 co to - ResponseEntity.ok?
+	// @Override
+	// public ResponseEntity<FriendshipRequestList> findAllFriendshipRequests() {
+	// return ResponseEntity.ok(friendshipFacade.findAllFriendshipRequests());
+	// }
+
+	// 2. private final EntityManager em;
+
+	// 3. public class WebConfig implements WebMvcConfigurer
 }

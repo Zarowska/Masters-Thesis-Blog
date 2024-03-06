@@ -1,5 +1,6 @@
 package com.zarowska.cirkle.facade;
 
+import com.zarowska.cirkle.api.model.FriendshipRequest;
 import com.zarowska.cirkle.api.model.FriendshipRequestList;
 import com.zarowska.cirkle.api.model.UserPage;
 import java.util.UUID;
@@ -18,4 +19,7 @@ public interface FriendshipFacade {
 
 	@Transactional(readOnly = true)
 	UserPage findAllFriendsByUserId(UUID userId, PageRequest pageRequest);
+
+	@Transactional
+	FriendshipRequest getFriendshipRequestById(UUID requestId);
 }

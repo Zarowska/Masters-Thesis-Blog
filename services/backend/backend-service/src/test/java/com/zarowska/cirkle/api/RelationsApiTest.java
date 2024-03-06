@@ -1,10 +1,10 @@
 package com.zarowska.cirkle.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
+import com.zarowska.cirkle.exception.CirkleException;
 import com.zarowska.cirkle.utils.TestUserContext;
 import jakarta.validation.Valid;
 import java.util.Optional;
@@ -17,10 +17,10 @@ public class RelationsApiTest extends AbstractTest {
 	// acceptFriendshipRequestById
 	// deleteFriendFromUsersFriendsByIds
 	// findAllFriendshipRequests
-	// getFriendshipRequestById
+	// done // getFriendshipRequestById
 	// getUsersFriendsById
 	// rejectFriendshipRequestById
-	// done sendFriendshipRequest
+	// done //sendFriendshipRequest
 	// Unfriend user by id
 
 	TestUserContext bobContest, maxContext;
@@ -45,21 +45,27 @@ public class RelationsApiTest extends AbstractTest {
 		assertTrue(request.isPresent());
 	}
 
-	// TODO
 	@Test
 	void getFrindshipRequestById_ShouldSucceed() {
-		// bob send friendship request to max
 		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
-		// max checks incoming friendship requests
 		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
-		// max finds bob's friendship request
 		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
 				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
 		assertTrue(request.isPresent());
 		UUID requestId = request.get().getId();
-		Optional<FriendshipRequest> requestById = maxContext.getApi().relations()
-				.getFriendshipRequestById(requestId.toString());
+		Optional<FriendshipRequest> requestById = maxContext.getApi().relations().getFriendshipRequestById(requestId);
 		assertEquals(request.get(), requestById.get());
+	}
+
+	@Test
+	void getFrindshipRequestById_ShouldThrowException() {
+		UUID requestId = UUID.randomUUID();
+		Exception exception = assertThrows(CirkleException.class, () -> {
+			maxContext.getApi().relations().getFriendshipRequestById(requestId);
+		});
+		String expectedMessage = "Friendship request not found with id=" + requestId;
+		assertEquals(expectedMessage, exception.getMessage());
+
 	}
 
 	@Test

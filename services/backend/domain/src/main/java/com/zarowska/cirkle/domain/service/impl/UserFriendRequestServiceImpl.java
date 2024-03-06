@@ -5,6 +5,7 @@ import com.zarowska.cirkle.domain.entity.UserEntity;
 import com.zarowska.cirkle.domain.repository.UserFriendshipRequestEntityRepository;
 import com.zarowska.cirkle.domain.service.UserFriendRequestService;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,8 +33,8 @@ public class UserFriendRequestServiceImpl implements UserFriendRequestService {
 	}
 
 	@Override
-	public FriendshipRequestEntity getRequestById(UUID requestId) {
-		return userFriendshipRequestEntityRepository.getRequestById(requestId);
+	public Optional<FriendshipRequestEntity> findById(UUID requestId) {
+		return Optional.ofNullable(userFriendshipRequestEntityRepository.getRequestById(requestId));
 	}
 
 }
