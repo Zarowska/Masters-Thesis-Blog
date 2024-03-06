@@ -33,8 +33,8 @@ public class RelationsEndpoint extends AbstractClientEndpoint {
 		return doCall(() -> restTemplateWrapper.get(UserPage.class, "/users/{userId}/friends", userId));
 	}
 
-	public Optional<Void> rejectFriendshipRequestById(UUID requestId) {
-		return null;
+	public void rejectFriendshipRequestById(UUID requestId) {
+		doCall(() -> restTemplateWrapper.delete(Void.class, "/user/requests/{requestId}", requestId));
 	}
 
 	public Optional<Void> sendFriendshipRequest(UUID userId) {

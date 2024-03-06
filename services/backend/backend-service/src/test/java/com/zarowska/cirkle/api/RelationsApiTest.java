@@ -1,5 +1,6 @@
 package com.zarowska.cirkle.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 import com.zarowska.cirkle.AbstractTest;
@@ -7,6 +8,7 @@ import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.exception.CirkleException;
 import com.zarowska.cirkle.utils.TestUserContext;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,13 +16,17 @@ import org.junit.jupiter.api.Test;
 
 public class RelationsApiTest extends AbstractTest {
 
-	// acceptFriendshipRequestById
-	// deleteFriendFromUsersFriendsByIds
-	// findAllFriendshipRequests
-	// done // getFriendshipRequestById
-	// getUsersFriendsById
-	// rejectFriendshipRequestById
 	// done //sendFriendshipRequest
+	// done // getFriendshipRequestById
+	// done // findAllFriendshipRequests
+
+	// TODO //You cannot send a Request if you are already Friends
+
+	// done // acceptFriendshipRequestById
+	// done //rejectFriendshipRequestById
+
+	// getUsersFriendsById
+	// deleteFriendFromUsersFriendsByIds
 	// Unfriend user by id
 
 	TestUserContext bobContest, maxContext;
@@ -65,7 +71,55 @@ public class RelationsApiTest extends AbstractTest {
 		});
 		String expectedMessage = "Friendship request not found with id=" + requestId;
 		assertEquals(expectedMessage, exception.getMessage());
+	}
 
+	@Test
+	void listAllFriendshipRequests_ShouldSucceed() {
+		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
+		TestUserContext johnContest = context("John Lennon", "john@email", "http://avatar3");
+		johnContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
+		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
+		List<String> owners = allFriendshipRequests.getItems().stream().map(it -> it.getOwner().getName()).toList();
+		assertThat(owners).contains("John Lennon", "Bob Marley");
+	}
+
+	@Test
+	void acceptFriendshipRequestById_ShouldSucceed() {
+		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
+		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
+		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
+				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
+		assertTrue(request.isPresent());
+
+		maxContext.getApi().relations().acceptFriendshipRequestById(request.get().getId());
+
+		Optional<UserPage> maxFriends = bobContest.getApi().relations().getUsersFriendsById(maxContext.getUserId(), 0,
+				100);
+
+		assertTrue(maxFriends.isPresent());
+
+		Optional<User> bob = maxFriends.get().getContent().stream()
+				.filter(it -> it.getId().equals(bobContest.getUserId())).findFirst();
+
+		assertTrue(bob.isPresent());
+	}
+
+	@Test
+	void rejectFriendshipRequestById_ShouldSucceed() {
+		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
+		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
+		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
+				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
+
+		assertTrue(request.isPresent());
+
+		maxContext.getApi().relations().rejectFriendshipRequestById(request.get().getId());
+
+		Exception exception = assertThrows(CirkleException.class, () -> {
+			maxContext.getApi().relations().rejectFriendshipRequestById(request.get().getId());
+		});
+		String expectedMessage = "Friendship request not found with id=" + request.get().getId();
+		assertEquals(expectedMessage, exception.getMessage());
 	}
 
 	@Test

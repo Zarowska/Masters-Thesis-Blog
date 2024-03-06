@@ -15,4 +15,5 @@ public interface UserFriendRequestService {
 
 	Optional<FriendshipRequestEntity> findById(UUID requestId);
 
+	void delete(FriendshipRequestEntity friendshipRequestEntity);
 }

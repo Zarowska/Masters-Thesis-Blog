@@ -37,4 +37,9 @@ public class UserFriendRequestServiceImpl implements UserFriendRequestService {
 		return Optional.ofNullable(userFriendshipRequestEntityRepository.getRequestById(requestId));
 	}
 
+	@Override
+	public void delete(FriendshipRequestEntity friendshipRequestEntity) {
+		userFriendshipRequestEntityRepository.delete(friendshipRequestEntity);
+	}
+
 }

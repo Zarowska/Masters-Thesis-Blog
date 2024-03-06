@@ -48,7 +48,8 @@ public class RelationsApiDelegateImpl implements RelationsApiDelegate {
 
 	@Override
 	public ResponseEntity<Void> rejectFriendshipRequestById(UUID requestId) {
-		return RelationsApiDelegate.super.rejectFriendshipRequestById(requestId);
+		friendshipFacade.deleteFriendshipRequestById(requestId);
+		return ResponseEntity.ok().build();
 	}
 
 	@Override

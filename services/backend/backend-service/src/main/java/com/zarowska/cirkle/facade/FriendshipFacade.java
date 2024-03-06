@@ -22,4 +22,6 @@ public interface FriendshipFacade {
 
 	@Transactional
 	FriendshipRequest getFriendshipRequestById(UUID requestId);
+	@Transactional
+	void deleteFriendshipRequestById(UUID requestId);
 }

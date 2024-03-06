@@ -68,4 +68,12 @@ public class FriendshipFacadeImpl implements FriendshipFacade {
 				.orElseThrow(() -> new BadRequestException("Friendship request not found with id=" + requestId));
 		return friendshipRequestMapper.toDto(friendshipRequestEntity);
 	}
+
+	@Override
+	public void deleteFriendshipRequestById(UUID requestId) {
+		FriendshipRequestEntity friendshipRequestEntity = userFriendRequestService.findById(requestId)
+				.orElseThrow(() -> new BadRequestException("Friendship request not found with id=" + requestId));
+		userFriendRequestService.delete(friendshipRequestEntity);
+	}
+
 }
