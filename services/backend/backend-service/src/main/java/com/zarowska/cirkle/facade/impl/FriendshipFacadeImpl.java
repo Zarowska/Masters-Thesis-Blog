@@ -39,6 +39,11 @@ public class FriendshipFacadeImpl implements FriendshipFacade {
 	public void sendFriendshipRequest(UUID userId) {
 		userEntityService.findById(userId).map(targetUser -> {
 			UserEntity currentUser = em.merge(SecurityUtils.getCurrentUser().getPrincipal());
+			boolean alreadyFriends = friendshipService.findAllFriendsByUserId(currentUser.getId(), null).stream()
+					.anyMatch(it -> it.getSender().getId().equals(targetUser.getId()));
+			if (alreadyFriends) {
+				throw new BadRequestException("Users are already friends");
+			}
 			FriendshipRequestEntity request = new FriendshipRequestEntity(currentUser, targetUser);
 			return friendshipService.saveRequest(request);
 		}).orElseThrow(() -> new ResourceNotFoundException("user", "id=%s".formatted(userId)));

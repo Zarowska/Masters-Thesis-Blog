@@ -2,6 +2,7 @@ package com.zarowska.cirkle.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
@@ -20,14 +21,14 @@ public class RelationsApiTest extends AbstractTest {
 	// done // getFriendshipRequestById
 	// done // findAllFriendshipRequests
 
-	// TODO //You cannot send a Request if you are already Friends
+	// done //You cannot send a Friendship Request if you are already Friends
+	// TODO //only Receiver can seen Requests
 
-	// done // acceptFriendshipRequestById
+	// done //acceptFriendshipRequestById
 	// done //rejectFriendshipRequestById
 
-	// getUsersFriendsById
-	// deleteFriendFromUsersFriendsByIds
-	// Unfriend user by id
+	// done // getUsersFriendsById
+	// deleteFriendFromUsersFriendsByIds - Unfriend user by id
 
 	TestUserContext bobContest, maxContext;
 
@@ -74,6 +75,50 @@ public class RelationsApiTest extends AbstractTest {
 	}
 
 	@Test
+	void getFrindshipRequestById_ShouldThrowException_OnlyReceiverCanSeenRequests() {
+		String ownerRequest;
+		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
+		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
+		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
+				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
+		assertTrue(request.isPresent());
+
+		UUID requestId = request.get().getId();
+		TestUserContext johnContest = context("John Lennon", "john@email", "http://avatar3");
+		johnContest.getApi().api().apiInfo();
+
+		Exception exception = assertThrows(CirkleException.class, () -> {
+			Optional<FriendshipRequest> friendshipRequestById = johnContest.getApi().relations()
+					.getFriendshipRequestById(requestId);
+		});
+		// assertEquals(friendshipRequestById.get().getOwner().getName(), "Bob Marley");
+		// assertEquals(friendshipRequestById.get().getReceiver(), "Max Payne");
+		String expectedMessage = " Only receiver can seen friendship requests";
+		assertEquals(expectedMessage, exception.getMessage());
+	}
+
+	@Test
+	void sendFrindshipRequest_ShouldThrowException() {
+		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
+		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
+		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
+				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
+		maxContext.getApi().relations().acceptFriendshipRequestById(request.get().getId());
+
+		Exception exception = assertThrows(CirkleException.class, () -> {
+			maxContext.getApi().relations().sendFriendshipRequest(bobContest.getUserId());
+		});
+
+		String expectedMessage = "Users are already friends";
+		assertEquals(expectedMessage, exception.getMessage());
+
+		Exception exception2 = assertThrows(CirkleException.class, () -> {
+			bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
+		});
+		assertEquals(expectedMessage, exception2.getMessage());
+	}
+
+	@Test
 	void listAllFriendshipRequests_ShouldSucceed() {
 		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
 		TestUserContext johnContest = context("John Lennon", "john@email", "http://avatar3");
@@ -84,7 +129,7 @@ public class RelationsApiTest extends AbstractTest {
 	}
 
 	@Test
-	void acceptFriendshipRequestById_ShouldSucceed() {
+	void acceptFriendshipRequestById_and_getUsersFriendsById_ShouldSucceed() {
 		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
 		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
 		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
