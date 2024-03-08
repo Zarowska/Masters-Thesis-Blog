@@ -93,7 +93,7 @@ public class RelationsApiTest extends AbstractTest {
 		});
 		// assertEquals(friendshipRequestById.get().getOwner().getName(), "Bob Marley");
 		// assertEquals(friendshipRequestById.get().getReceiver(), "Max Payne");
-		String expectedMessage = " Only receiver can seen friendship requests";
+		String expectedMessage = "Only receiver can seen friendship requests";
 		assertEquals(expectedMessage, exception.getMessage());
 	}
 

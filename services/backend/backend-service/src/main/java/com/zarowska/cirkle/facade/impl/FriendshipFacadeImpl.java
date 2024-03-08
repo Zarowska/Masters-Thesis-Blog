@@ -69,8 +69,14 @@ public class FriendshipFacadeImpl implements FriendshipFacade {
 
 	@Override
 	public FriendshipRequest getFriendshipRequestById(UUID requestId) {
+		UserEntity currentUser = SecurityUtils.getCurrentUser().getPrincipal();
 		FriendshipRequestEntity friendshipRequestEntity = userFriendRequestService.findById(requestId)
 				.orElseThrow(() -> new BadRequestException("Friendship request not found with id=" + requestId));
+
+		if (!friendshipRequestEntity.getReceiver().getId().equals(currentUser.getId())) {
+			throw new BadRequestException("Only receiver can seen friendship requests");
+		}
+
 		return friendshipRequestMapper.toDto(friendshipRequestEntity);
 	}
 
