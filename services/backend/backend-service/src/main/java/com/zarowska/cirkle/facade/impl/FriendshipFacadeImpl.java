@@ -3,6 +3,7 @@ package com.zarowska.cirkle.facade.impl;
 import com.zarowska.cirkle.api.model.FriendshipRequest;
 import com.zarowska.cirkle.api.model.FriendshipRequestList;
 import com.zarowska.cirkle.api.model.UserPage;
+import com.zarowska.cirkle.domain.entity.FriendshipEntity;
 import com.zarowska.cirkle.domain.entity.FriendshipRequestEntity;
 import com.zarowska.cirkle.domain.entity.UserEntity;
 import com.zarowska.cirkle.domain.service.FriendshipService;
@@ -85,6 +86,21 @@ public class FriendshipFacadeImpl implements FriendshipFacade {
 		FriendshipRequestEntity friendshipRequestEntity = userFriendRequestService.findById(requestId)
 				.orElseThrow(() -> new BadRequestException("Friendship request not found with id=" + requestId));
 		userFriendRequestService.delete(friendshipRequestEntity);
+	}
+
+	@Override
+	public void deleteFriendFromUsersFriendsById(UUID userId, UUID friendId) {
+		// FriendshipEntity friendshipEntity =
+		// friendshipService.getUserFriendshipWith(userId, friendId);
+
+		FriendshipEntity friendshipEntity = friendshipService.getUserFriendshipWith(userId, friendId)
+		// .orElseThrow(() -> new BadRequestException("Friendship not found with id="))
+		;
+		if (friendshipEntity.equals(null)) {
+			throw new ResourceNotFoundException("FriendshipEntity", "userId= " + userId + " friendId= " + friendId);
+		}
+
+		friendshipService.deleteById(friendshipEntity.getId());
 	}
 
 }

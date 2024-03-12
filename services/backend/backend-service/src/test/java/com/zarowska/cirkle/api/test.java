@@ -19,4 +19,10 @@ public class test {
 	// 2. private final EntityManager em;
 
 	// 3. public class WebConfig implements WebMvcConfigurer
+
+	// 4. public FriendshipRequestList findAllFriendshipRequests() {
+	// return doCall(() -> restTemplateWrapper.get(FriendshipRequestList.class,
+	// "/user/requests")).get();
+	// }
+	// doCall(() ->
 }

@@ -22,9 +22,14 @@ public class FriendshipServiceImpl implements FriendshipService {
 	private final UserFriendshipEntityRepository userFriendshipEntityRepository;
 	private final UserFriendshipRequestEntityRepository friendshipRequestEntityRepository;
 
+	// @Override
+	// public void removeFriendship(UUID friendshipId) {
+	// userFriendshipEntityRepository.removeFriendship(friendshipId);
+	// }
+
 	@Override
-	public void removeFriend(UUID friendId) {
-		userFriendshipEntityRepository.removeFriend(friendId);
+	public void deleteById(UUID id) {
+		userFriendshipEntityRepository.deleteById(id);
 	}
 
 	@Override

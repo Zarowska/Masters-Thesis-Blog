@@ -10,7 +10,9 @@ import org.springframework.data.domain.PageRequest;
 
 public interface FriendshipService {
 
-	void removeFriend(UUID friendId);
+	// void removeFriendship(UUID friendId);
+
+	void deleteById(UUID id);
 
 	List<FriendshipEntity> getUserFriends(UUID currentUserId);
 

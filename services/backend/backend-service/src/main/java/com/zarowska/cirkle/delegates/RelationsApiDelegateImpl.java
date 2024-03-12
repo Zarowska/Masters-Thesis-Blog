@@ -26,7 +26,8 @@ public class RelationsApiDelegateImpl implements RelationsApiDelegate {
 
 	@Override
 	public ResponseEntity<Void> deleteFriendFromUsersFriendsById(UUID userId, UUID friendId) {
-		return RelationsApiDelegate.super.deleteFriendFromUsersFriendsById(userId, friendId);
+		friendshipFacade.deleteFriendFromUsersFriendsById(userId, friendId);
+		return ResponseEntity.ok().build();
 	}
 
 	@Override

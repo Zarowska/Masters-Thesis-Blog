@@ -11,8 +11,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserFriendshipEntityRepository extends JpaRepository<FriendshipEntity, UUID> {
 
-	@Query("DELETE FROM FriendshipEntity f WHERE f.id = :friendId")
-	void removeFriend(@Param("friendId") UUID friendId);
+	// @Query("DELETE FROM FriendshipEntity f WHERE f.id = :friendshipId")
+	// void removeFriendship(@Param("friendshipId") UUID friendshipId);
 
 	@Query("SELECT f FROM FriendshipEntity f WHERE f.sender.id = :userId")
 	List<FriendshipEntity> getUserFriends(@Param("userId") UUID userId);
