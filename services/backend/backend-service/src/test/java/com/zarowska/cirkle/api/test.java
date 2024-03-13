@@ -25,4 +25,9 @@ public class test {
 	// "/user/requests")).get();
 	// }
 	// doCall(() ->
+
+	// 5 . @PersistenceContext
+	// private final EntityManager entityManager;
+	// UserEntity currentUser =
+	// entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
 }

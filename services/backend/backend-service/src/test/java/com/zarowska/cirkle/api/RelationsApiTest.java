@@ -8,12 +8,10 @@ import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.exception.CirkleException;
 import com.zarowska.cirkle.utils.TestUserContext;
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class RelationsApiTest extends AbstractTest {
@@ -29,7 +27,7 @@ public class RelationsApiTest extends AbstractTest {
 	// done //rejectFriendshipRequestById
 
 	// done // getUsersFriendsById
-	// deleteFriendFromUsersFriendsByIds - Unfriend user by id
+	// done deleteFriendFromUsersFriendsByIds - Unfriend user by id
 
 	TestUserContext bobContest, maxContext;
 
@@ -42,7 +40,7 @@ public class RelationsApiTest extends AbstractTest {
 	}
 
 	@Test
-	void sendFrindshipRequest_ShouldSucceed() {
+	void testSendingFriendRequest_Succeeds() {
 		// bob send friendship request to max
 		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
 		// max checks incoming friendship requests
@@ -54,7 +52,7 @@ public class RelationsApiTest extends AbstractTest {
 	}
 
 	@Test
-	void getFrindshipRequestById_ShouldSucceed() {
+	void testGetingFrindshipRequestById_Succeeds() {
 		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
 		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
 		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
@@ -66,7 +64,7 @@ public class RelationsApiTest extends AbstractTest {
 	}
 
 	@Test
-	void getFrindshipRequestById_ShouldThrowException() {
+	void testGetFriendshipRequestById_ShouldThrowException_NotFound() {
 		UUID requestId = UUID.randomUUID();
 		Exception exception = assertThrows(CirkleException.class, () -> {
 			maxContext.getApi().relations().getFriendshipRequestById(requestId);
@@ -148,7 +146,7 @@ public class RelationsApiTest extends AbstractTest {
 	}
 
 	@Test
-	void rejectFriendshipRequestById_ShouldSucceed() {
+	void rejectFriendshipRequestById_Succeeds() {
 		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
 		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
 		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
@@ -166,52 +164,19 @@ public class RelationsApiTest extends AbstractTest {
 	}
 
 	@Test
-	void deleteFriendFromUsersFriendsById_ShouldSucceed() {
-
-		// create Max and Bob friendship
-		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
-		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
-		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
-				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
-		assertTrue(request.isPresent());
-		maxContext.getApi().relations().acceptFriendshipRequestById(request.get().getId());
-		Optional<UserPage> maxFriends = bobContest.getApi().relations().getUsersFriendsById(maxContext.getUserId(), 0,
-				100);
-		assertTrue(maxFriends.isPresent());
-		Optional<User> bob = maxFriends.get().getContent().stream()
-				.filter(it -> it.getId().equals(bobContest.getUserId())).findFirst();
-		assertTrue(bob.isPresent());
-
+	void testDeleteFriendFromUsersFriendsById_Succeeds() {
+		createMaxBobFriendship();
+		assertTrue(checkMaxBobFriendshipExit());
 		bobContest.getApi().relations().deleteFriendFromUsersFriendsById(bobContest.getUserId(),
 				maxContext.getUserId());
-
-		Optional<UserPage> maxFriendsAfterDelete = bobContest.getApi().relations()
-				.getUsersFriendsById(maxContext.getUserId(), 0, 100);
-
-		// assertFalse(maxFriendsAfter.isPresent());
-
-		Optional<User> bobAfterDelete = maxFriendsAfterDelete.get().getContent().stream()
-				.filter(it -> it.getId().equals(bobContest.getUserId())).findFirst();
-		assertFalse(bobAfterDelete.isPresent());
+		assertFalse(checkMaxBobFriendshipExit());
 
 	}
 
-	@Disabled
 	@Test
-	void deleteFriendFromUsersFriendsById_ShouldThrowException() {
-		// create Max and Bob friendship
-		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
-		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
-		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
-				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
-		assertTrue(request.isPresent());
-		maxContext.getApi().relations().acceptFriendshipRequestById(request.get().getId());
-		Optional<UserPage> maxFriends = bobContest.getApi().relations().getUsersFriendsById(maxContext.getUserId(), 0,
-				100);
-		assertTrue(maxFriends.isPresent());
-		Optional<User> bob = maxFriends.get().getContent().stream()
-				.filter(it -> it.getId().equals(bobContest.getUserId())).findFirst();
-		assertTrue(bob.isPresent());
+	void testDeleteFriend_ShouldThrowExceptionForNonFriends() {
+		createMaxBobFriendship();
+		assertTrue(checkMaxBobFriendshipExit());
 
 		TestUserContext johnContest = context("John Lennon", "john@email", "http://avatar3");
 		johnContest.getApi().api().apiInfo();
@@ -220,54 +185,26 @@ public class RelationsApiTest extends AbstractTest {
 			johnContest.getApi().relations().deleteFriendFromUsersFriendsById(bobContest.getUserId(),
 					maxContext.getUserId());
 		});
-		String expectedMessage = "Exception friendship with id=" + request.get().getId();
-		assertEquals(expectedMessage, exception.getMessage());
-
-		Optional<UserPage> maxFriendsAfter = bobContest.getApi().relations().getUsersFriendsById(maxContext.getUserId(),
-				0, 100);
-		Optional<User> bobAfter = maxFriendsAfter.get().getContent().stream()
-				.filter(it -> it.getId().equals(bobContest.getUserId())).findFirst();
-		assertTrue(bobAfter.isPresent());
+		assertEquals("Only friends can delete own friendship.", exception.getMessage());
+		assertTrue(checkMaxBobFriendshipExit());
 	}
 
-	@Test
-	void nestedTest() throws Exception {
-		context("Bob Marley", "bob@email", "http://avatar").apply(bobContest -> {
-			context("Max Payne", "max@email", "http://avatar2").apply(maxContext -> {
+	private void createMaxBobFriendship() {
+		bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
+		FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations().findAllFriendshipRequests();
+		Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
+				.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
+		assertTrue(request.isPresent());
+		maxContext.getApi().relations().acceptFriendshipRequestById(request.get().getId());
+	}
 
-				// bob send friendship request to max
-
-				bobContest.getApi().relations().sendFriendshipRequest(maxContext.getUserId());
-
-				// max checks incoming friendship requests
-
-				FriendshipRequestList allFriendshipRequests = maxContext.getApi().relations()
-						.findAllFriendshipRequests();
-
-				// max finds bob's friendship request
-				Optional<FriendshipRequest> request = allFriendshipRequests.getItems().stream()
-						.filter(it -> it.getOwner().getId().equals(bobContest.getUserId())).findFirst();
-
-				assertTrue(request.isPresent());
-
-				// max accepts bob's friendship request
-				maxContext.getApi().relations().acceptFriendshipRequestById(request.get().getId());
-
-				// max checks his friends
-				Optional<UserPage> maxFriends = bobContest.getApi().relations()
-						.getUsersFriendsById(maxContext.getUserId(), 0, 100);
-
-				assertTrue(maxFriends.isPresent());
-
-				// max found bob in his friendship request
-				Optional<@Valid User> bob = maxFriends.get().getContent().stream()
-						.filter(it -> it.getId().equals(bobContest.getUserId())).findFirst();
-
-				// bob now friend of max
-				assertTrue(bob.isPresent());
-
-			});
-		});
+	private boolean checkMaxBobFriendshipExit() {
+		Optional<UserPage> maxFriends = bobContest.getApi().relations().getUsersFriendsById(maxContext.getUserId(), 0,
+				100);
+		assertTrue(maxFriends.isPresent());
+		Optional<User> bob = maxFriends.get().getContent().stream()
+				.filter(it -> it.getId().equals(bobContest.getUserId())).findFirst();
+		return bob.isPresent();
 	}
 
 }

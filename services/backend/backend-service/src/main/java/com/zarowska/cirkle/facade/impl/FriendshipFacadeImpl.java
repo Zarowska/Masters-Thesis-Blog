@@ -9,6 +9,7 @@ import com.zarowska.cirkle.domain.entity.UserEntity;
 import com.zarowska.cirkle.domain.service.FriendshipService;
 import com.zarowska.cirkle.domain.service.UserEntityService;
 import com.zarowska.cirkle.domain.service.UserFriendRequestService;
+import com.zarowska.cirkle.exception.AccessDeniedException;
 import com.zarowska.cirkle.exception.BadRequestException;
 import com.zarowska.cirkle.exception.ResourceNotFoundException;
 import com.zarowska.cirkle.facade.FriendshipFacade;
@@ -34,12 +35,12 @@ public class FriendshipFacadeImpl implements FriendshipFacade {
 	private final FriendshipEntityMapper friendshipEntityMapper;
 
 	@PersistenceContext
-	private final EntityManager em;
+	private final EntityManager entityManager;
 
 	@Override
 	public void sendFriendshipRequest(UUID userId) {
 		userEntityService.findById(userId).map(targetUser -> {
-			UserEntity currentUser = em.merge(SecurityUtils.getCurrentUser().getPrincipal());
+			UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
 			boolean alreadyFriends = friendshipService.findAllFriendsByUserId(currentUser.getId(), null).stream()
 					.anyMatch(it -> it.getSender().getId().equals(targetUser.getId()));
 			if (alreadyFriends) {
@@ -52,14 +53,14 @@ public class FriendshipFacadeImpl implements FriendshipFacade {
 
 	@Override
 	public FriendshipRequestList findAllFriendshipRequests() {
-		UserEntity currentUser = em.merge(SecurityUtils.getCurrentUser().getPrincipal());
+		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
 		List<FriendshipRequestEntity> requests = friendshipService.findAllFriendshipRequestsByReceiver(currentUser);
 		return friendshipRequestMapper.toDto(requests);
 	}
 
 	@Override
 	public void acceptFriendshipRequest(UUID requestId) {
-		UserEntity currentUser = em.merge(SecurityUtils.getCurrentUser().getPrincipal());
+		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
 		friendshipService.acceptFriendshipRequest(currentUser, requestId);
 	}
 
@@ -90,7 +91,11 @@ public class FriendshipFacadeImpl implements FriendshipFacade {
 
 	@Override
 	public void deleteFriendFromUsersFriendsById(UUID userId, UUID friendId) {
+		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
 		FriendshipEntity friendshipEntity = friendshipService.getUserFriendshipWith(userId, friendId);
+		if (!(friendshipEntity.getSender().equals(currentUser) || friendshipEntity.getReceiver().equals(currentUser))) {
+			throw new AccessDeniedException("Only friends can delete own friendship.");
+		}
 		friendshipService.removeFriendship(friendshipEntity);
 	}
 
