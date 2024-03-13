@@ -9,9 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 public interface FriendshipService {
-
-	// void removeFriendship(UUID friendId);
-
 	void deleteById(UUID id);
 
 	List<FriendshipEntity> getUserFriends(UUID currentUserId);
@@ -27,4 +24,6 @@ public interface FriendshipService {
 	void acceptFriendshipRequest(UserEntity currentUser, UUID requestId);
 
 	Page<FriendshipEntity> findAllFriendsByUserId(UUID userId, PageRequest pageRequest);
+
+	void removeFriendship(FriendshipEntity friendshipEntity);
 }

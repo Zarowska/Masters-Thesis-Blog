@@ -90,17 +90,8 @@ public class FriendshipFacadeImpl implements FriendshipFacade {
 
 	@Override
 	public void deleteFriendFromUsersFriendsById(UUID userId, UUID friendId) {
-		// FriendshipEntity friendshipEntity =
-		// friendshipService.getUserFriendshipWith(userId, friendId);
-
-		FriendshipEntity friendshipEntity = friendshipService.getUserFriendshipWith(userId, friendId)
-		// .orElseThrow(() -> new BadRequestException("Friendship not found with id="))
-		;
-		if (friendshipEntity.equals(null)) {
-			throw new ResourceNotFoundException("FriendshipEntity", "userId= " + userId + " friendId= " + friendId);
-		}
-
-		friendshipService.deleteById(friendshipEntity.getId());
+		FriendshipEntity friendshipEntity = friendshipService.getUserFriendshipWith(userId, friendId);
+		friendshipService.removeFriendship(friendshipEntity);
 	}
 
 }

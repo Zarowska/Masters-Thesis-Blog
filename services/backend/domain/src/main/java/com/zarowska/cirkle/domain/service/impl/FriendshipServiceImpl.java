@@ -22,11 +22,6 @@ public class FriendshipServiceImpl implements FriendshipService {
 	private final UserFriendshipEntityRepository userFriendshipEntityRepository;
 	private final UserFriendshipRequestEntityRepository friendshipRequestEntityRepository;
 
-	// @Override
-	// public void removeFriendship(UUID friendshipId) {
-	// userFriendshipEntityRepository.removeFriendship(friendshipId);
-	// }
-
 	@Override
 	public void deleteById(UUID id) {
 		userFriendshipEntityRepository.deleteById(id);
@@ -39,7 +34,9 @@ public class FriendshipServiceImpl implements FriendshipService {
 
 	@Override
 	public FriendshipEntity getUserFriendshipWith(UUID currentUserId, UUID userId) {
-		return userFriendshipEntityRepository.getUserFriendshipWith(currentUserId, userId);
+		return userFriendshipEntityRepository.getUserFriendshipWith(currentUserId, userId)
+				.orElseThrow(() -> new ResourceNotFoundException("Friendship",
+						"Between %s and %s not set".formatted(currentUserId, userId)));
 	}
 
 	@Override
@@ -74,5 +71,16 @@ public class FriendshipServiceImpl implements FriendshipService {
 	@Override
 	public Page<FriendshipEntity> findAllFriendsByUserId(UUID userId, PageRequest pageRequest) {
 		return userFriendshipEntityRepository.findAllFriends(userId, pageRequest);
+	}
+
+	@Override
+	public void removeFriendship(FriendshipEntity friendshipEntity) {
+		removeIndividualFriendship(friendshipEntity.getSender(), friendshipEntity.getReceiver());
+		removeIndividualFriendship(friendshipEntity.getReceiver(), friendshipEntity.getSender());
+	}
+
+	private void removeIndividualFriendship(UserEntity sender, UserEntity receiver) {
+		userFriendshipEntityRepository.findBySenderAndReceiver(sender, receiver)
+				.ifPresent(userFriendshipEntityRepository::delete);
 	}
 }
