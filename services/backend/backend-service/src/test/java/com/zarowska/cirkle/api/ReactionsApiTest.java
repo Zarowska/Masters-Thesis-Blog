@@ -1,8 +1,6 @@
 package com.zarowska.cirkle.api;
 
 import com.zarowska.cirkle.AbstractTest;
-import com.zarowska.cirkle.utils.TestUserContext;
-import org.junit.jupiter.api.BeforeEach;
 
 public class ReactionsApiTest extends AbstractTest {
 
@@ -14,12 +12,5 @@ public class ReactionsApiTest extends AbstractTest {
 	// Add reaction to comment
 	// Get comment's reaction by id
 	// Delete comment's reaction
-	TestUserContext testUserContext;
-
-	@BeforeEach
-	void setUp() {
-		testUserContext = context("Bob Marley", "bob@marley.com", "http:/some/avatar");
-		testUserContext.getApi().api().apiInfo(); // Simulating API call to setup user
-	}
 
 }

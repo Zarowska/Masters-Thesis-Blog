@@ -21,7 +21,7 @@ public class RelationsApiTest extends AbstractTest {
 	// done // findAllFriendshipRequests
 
 	// done //You cannot send a Friendship Request if you are already Friends
-	// done //only Receiver can seen Requests
+	// done //only Receiver can see Requests
 
 	// done //acceptFriendshipRequestById
 	// done //rejectFriendshipRequestById

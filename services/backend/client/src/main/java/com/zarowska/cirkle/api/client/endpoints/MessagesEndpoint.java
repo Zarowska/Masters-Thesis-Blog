@@ -1,10 +1,7 @@
 package com.zarowska.cirkle.api.client.endpoints;
 
 import com.zarowska.cirkle.api.client.RestTemplateWrapper;
-import com.zarowska.cirkle.api.model.Message;
-import com.zarowska.cirkle.api.model.MessageEventList;
-import com.zarowska.cirkle.api.model.MessagePage;
-import com.zarowska.cirkle.api.model.UpdateUserMessageRequest;
+import com.zarowska.cirkle.api.model.*;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,8 +31,8 @@ public class MessagesEndpoint extends AbstractClientEndpoint {
 		return null;
 	}
 
-	public Optional<Void> sendMessageToUserById(UUID userId) {
-		return null;
+	public void sendMessageToUserById(UUID userId) {
+		doCall(() -> restTemplateWrapper.post(null, Void.class, "/users/{userId}/messages", userId));
 	}
 
 	public Optional<Message> updateMessageById(UUID messageId, UpdateUserMessageRequest updateUserMessageRequest) {
