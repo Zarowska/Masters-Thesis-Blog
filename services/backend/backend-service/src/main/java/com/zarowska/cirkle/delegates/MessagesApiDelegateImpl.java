@@ -1,9 +1,11 @@
 package com.zarowska.cirkle.delegates;
 
+import com.zarowska.cirkle.api.model.CreateMessageRequest;
 import com.zarowska.cirkle.api.model.Message;
 import com.zarowska.cirkle.api.model.MessageEventList;
 import com.zarowska.cirkle.api.model.UpdateUserMessageRequest;
 import com.zarowska.cirkle.api.rest.MessagesApiDelegate;
+import com.zarowska.cirkle.facade.MessageFacade;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class MessagesApiDelegateImpl implements MessagesApiDelegate {
+
+	private final MessageFacade messageFacade;
 
 	@Override
 	public ResponseEntity<Void> deleteMessageById(UUID messageId) {
@@ -32,10 +36,10 @@ public class MessagesApiDelegateImpl implements MessagesApiDelegate {
 		return MessagesApiDelegate.super.markMessageReadById(messageId);
 	}
 
-	// @Override
-	// public ResponseEntity<Void> sendMessageToUserById(,UUID userId) {
-	// return MessagesApiDelegate.super.sendMessageToUserById(userId);
-	// }
+	@Override
+	public ResponseEntity<Message> sendMessageToUserById(UUID userId, CreateMessageRequest createMessageRequest) {
+		return ResponseEntity.ok(messageFacade.sendMessageToUserById(userId, createMessageRequest));
+	}
 
 	@Override
 	public ResponseEntity<Message> updateMessageById(UUID messageId,

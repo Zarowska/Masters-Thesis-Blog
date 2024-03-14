@@ -1,7 +1,14 @@
 package com.zarowska.cirkle.api;
 
+import static org.junit.Assert.assertTrue;
+
 import com.zarowska.cirkle.AbstractTest;
+import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.utils.TestUserContext;
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -26,14 +33,17 @@ public class MessagesApiTest extends AbstractTest {
 		maxContext.getApi().api().apiInfo(); // Simulating API call to setup user
 	}
 
-	@Disabled
 	@Test
 	void testSendingMessageToUserById_Succeeds() {
-		// Message message = new Message();
-		//
-		// bobContest.getApi().messages().sendMessageToUserById(bobContest.getUserId());
-		// bobContest.getApi().messages().deleteMessageById(bobContest.getUserId());
 
+		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
+				.map(it -> getFileFromResource("files/" + it))
+				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
+				.toList();
+		CreateMessageRequest request = CreateMessageRequest.builder().text("New post").images(imagesListURI).build();
+		Optional<Message> newMessage = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(),
+				request);
+		assertTrue(newMessage.isPresent());
 	};
 
 	@Disabled

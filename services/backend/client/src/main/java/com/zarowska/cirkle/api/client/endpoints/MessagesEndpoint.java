@@ -31,7 +31,7 @@ public class MessagesEndpoint extends AbstractClientEndpoint {
 		return null;
 	}
 
-	public Optional<Message> sendMessageToUserById(CreateMessageRequest createMessageRequest, UUID userId) {
+	public Optional<Message> sendMessageToUserById(UUID userId, CreateMessageRequest createMessageRequest) {
 		return doCall(() -> restTemplateWrapper.post(createMessageRequest, Message.class, "/users/{userId}/messages",
 				userId));
 	}
