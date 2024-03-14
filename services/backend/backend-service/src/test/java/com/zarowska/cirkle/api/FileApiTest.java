@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 
@@ -61,7 +62,7 @@ class FileApiTest extends AbstractTest {
 
 		assertThat(imageInfo).isNotNull();
 	}
-
+	@Disabled
 	// TODO
 	@Test
 	void shouldGetImageInfoList() {

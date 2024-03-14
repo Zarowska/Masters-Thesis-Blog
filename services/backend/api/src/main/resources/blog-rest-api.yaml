@@ -648,11 +648,20 @@ paths:
         in: path
         required: true
     post:
-      description: Send user a message
+      description: Send message to user
       operationId: send-message-to-user-by-id
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMessageRequest'
       security:
         - bearer-key: []
       tags:
@@ -1548,6 +1557,14 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MessageEvent'
+    CreateMessageRequest:
+      title: CreateMessageReques
+      type: object
+      properties:
+        text:
+          type: string
+        images:
+          $ref: '#/components/schemas/Images'
     UpdateUserMessageRequest:
       title: UpdateUserMessageRequest
       x-stoplight:

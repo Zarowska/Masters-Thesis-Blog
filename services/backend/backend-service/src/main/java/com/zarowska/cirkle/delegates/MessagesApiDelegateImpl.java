@@ -32,10 +32,10 @@ public class MessagesApiDelegateImpl implements MessagesApiDelegate {
 		return MessagesApiDelegate.super.markMessageReadById(messageId);
 	}
 
-	@Override
-	public ResponseEntity<Void> sendMessageToUserById(UUID userId) {
-		return MessagesApiDelegate.super.sendMessageToUserById(userId);
-	}
+	// @Override
+	// public ResponseEntity<Void> sendMessageToUserById(,UUID userId) {
+	// return MessagesApiDelegate.super.sendMessageToUserById(userId);
+	// }
 
 	@Override
 	public ResponseEntity<Message> updateMessageById(UUID messageId,
