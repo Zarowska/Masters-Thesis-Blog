@@ -1489,12 +1489,20 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/MessageId'
-        from:
+        sender:
+          $ref: '#/components/schemas/User'
+        receiver:
           $ref: '#/components/schemas/User'
         text:
           type: string
         images:
           $ref: '#/components/schemas/Images'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     MessageId:
       title: MessageId
       x-stoplight:

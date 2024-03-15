@@ -42,10 +42,7 @@ public class MessageFacadeImpl implements MessageFacade {
 		MessageEntity messageEntity = messageService.save(
 				new MessageEntity().setSender(sender).setReceiver(receiver).setText(createMessageRequest.getText()));
 		messageEntity.setImages(convertToFileInfoList(messageEntity, createMessageRequest.getImages()));
-		// postMapper.toDto(newPostEntity); MessageEntity
-
-		// return messageMapper.toDto(messageEntity);
-		return null;
+		return messageMapper.toDto(messageEntity);
 	}
 
 	private List<MessageImage> convertToFileInfoList(MessageEntity messageEntity, List<@Valid URI> imageUriList) {
