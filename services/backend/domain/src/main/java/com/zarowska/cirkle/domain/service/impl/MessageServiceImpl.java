@@ -5,6 +5,8 @@ import com.zarowska.cirkle.domain.repository.MessageEntityRepository;
 import com.zarowska.cirkle.domain.service.MessageService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,4 +24,8 @@ public class MessageServiceImpl implements MessageService {
 		return messageEntityRepository.save(messageEntity);
 	}
 
+	@Override
+	public Optional<MessageEntity> findById(UUID messageId) {
+		return messageEntityRepository.findById(messageId);
+	}
 }

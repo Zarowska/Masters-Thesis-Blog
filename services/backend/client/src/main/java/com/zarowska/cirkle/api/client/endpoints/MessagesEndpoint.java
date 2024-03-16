@@ -16,7 +16,7 @@ public class MessagesEndpoint extends AbstractClientEndpoint {
 	}
 
 	public Optional<Message> getMessageById(UUID messageId) {
-		return null;
+		return doCall(() -> restTemplateWrapper.get(Message.class, "/user/messages/{messageId}", messageId));
 	}
 
 	public Optional<MessagePage> getMessagesByUserId(UUID userId, Integer page, Integer size) {

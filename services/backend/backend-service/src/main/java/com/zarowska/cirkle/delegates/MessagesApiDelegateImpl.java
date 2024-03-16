@@ -24,7 +24,7 @@ public class MessagesApiDelegateImpl implements MessagesApiDelegate {
 
 	@Override
 	public ResponseEntity<Message> getMessageById(UUID messageId) {
-		return MessagesApiDelegate.super.getMessageById(messageId);
+		return ResponseEntity.ok(messageFacade.getMessageById(messageId));
 	}
 	@Override
 	public ResponseEntity<MessageEventList> getUnreadMessageEvents() {

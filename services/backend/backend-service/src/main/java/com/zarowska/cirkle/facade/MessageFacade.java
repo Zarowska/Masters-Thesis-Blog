@@ -9,4 +9,7 @@ public interface MessageFacade {
 
 	@Transactional
 	Message sendMessageToUserById(UUID userId, CreateMessageRequest createMessageRequest);
+
+	@Transactional
+	Message getMessageById(UUID messageId);
 }

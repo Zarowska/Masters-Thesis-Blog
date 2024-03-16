@@ -6,6 +6,7 @@ import com.zarowska.cirkle.domain.entity.*;
 import com.zarowska.cirkle.domain.service.FileService;
 import com.zarowska.cirkle.domain.service.MessageService;
 import com.zarowska.cirkle.domain.service.UserService;
+import com.zarowska.cirkle.exception.AccessDeniedException;
 import com.zarowska.cirkle.exception.BadRequestException;
 import com.zarowska.cirkle.exception.ResourceNotFoundException;
 import com.zarowska.cirkle.facade.MessageFacade;
@@ -42,6 +43,22 @@ public class MessageFacadeImpl implements MessageFacade {
 		MessageEntity messageEntity = messageService.save(
 				new MessageEntity().setSender(sender).setReceiver(receiver).setText(createMessageRequest.getText()));
 		messageEntity.setImages(convertToFileInfoList(messageEntity, createMessageRequest.getImages()));
+		return messageMapper.toDto(messageEntity);
+	}
+
+	@Override
+	public Message getMessageById(UUID messageId) {
+		MessageEntity messageEntity = messageService.findById(messageId)
+				.orElseThrow(() -> new ResourceNotFoundException("Message", Map.of()));
+
+		UserEntity receiver = messageEntity.getReceiver();
+		UserEntity sender = messageEntity.getSender();
+		UserEntity user = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+
+		if (!(user.getId().equals(sender.getId()) || user.getId().equals(receiver.getId()))) {
+			throw new AccessDeniedException("Only receiver and sender can message.");
+		}
+
 		return messageMapper.toDto(messageEntity);
 	}
 
