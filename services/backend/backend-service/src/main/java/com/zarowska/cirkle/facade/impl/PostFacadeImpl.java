@@ -21,6 +21,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -104,6 +105,8 @@ public class PostFacadeImpl implements PostFacade {
 				postEntity.getImages().clear();
 				postEntity.getImages().addAll(postImages);
 			}
+
+			postEntity.setUpdatedAt(Instant.now());
 
 			return postEntity;
 		};

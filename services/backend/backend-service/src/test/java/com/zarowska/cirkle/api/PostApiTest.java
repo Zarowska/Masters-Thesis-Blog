@@ -1,6 +1,6 @@
 package com.zarowska.cirkle.api;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 import com.zarowska.cirkle.AbstractTest;
@@ -8,7 +8,10 @@ import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.exception.CirkleException;
 import com.zarowska.cirkle.utils.TestUserContext;
 import java.net.URI;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,7 +67,7 @@ class PostApiTest extends AbstractTest {
 	}
 
 	@Test
-	void updatePost_ShouldSucceed() {
+	void updatePost_ShouldSucceed() throws InterruptedException {
 		CreatePostRequest request = CreatePostRequest.builder().text("Old text").images(Collections.emptyList())
 				.build();
 		Post post = testUserContext.getApi().posts().createPost(testUserContext.getUserId(), request).get();
@@ -80,12 +83,18 @@ class PostApiTest extends AbstractTest {
 
 		assertEquals(Collections.emptyList(), updatedPost.getImages());
 		UpdatePostRequest updateImagesItemRequest = new UpdatePostRequest().addImagesItem(response.getUrl());
+		// Thread.sleep(1000);
 		updatedPost = testUserContext.getApi().posts()
 				.updateUserPostById(testUserContext.getUserId(), post.getId(), updateImagesItemRequest).get(); // addImagesItemRequest
 		List<String> oneImage = updatedPost.getImages().stream().map(URI::getPath).toList();
 		assertEquals(1, oneImage.size());
 
 		assertNotEquals(post.getCreatedAt(), updatedPost.getUpdatedAt());
+
+		Post expected = new Post(post.getId(), updatedPost.getText(), post.getCreatedAt(), post.getUpdatedAt(),
+				post.getAuthor(), updateImagesItemRequest.getImages());
+
+		assertThat(updatedPost).usingRecursiveComparison().ignoringFields("updatedAt").isEqualTo(expected);
 
 		// UpdatePostRequest updateImagesItemRequest2 = new
 		// UpdatePostRequest().addImagesItem(null);
