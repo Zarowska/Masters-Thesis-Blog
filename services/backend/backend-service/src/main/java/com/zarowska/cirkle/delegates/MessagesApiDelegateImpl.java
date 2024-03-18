@@ -44,6 +44,6 @@ public class MessagesApiDelegateImpl implements MessagesApiDelegate {
 	@Override
 	public ResponseEntity<Message> updateMessageById(UUID messageId,
 			UpdateUserMessageRequest updateUserMessageRequest) {
-		return MessagesApiDelegate.super.updateMessageById(messageId, updateUserMessageRequest);
+		return ResponseEntity.ok(messageFacade.updateMessageById(messageId, updateUserMessageRequest));
 	}
 }

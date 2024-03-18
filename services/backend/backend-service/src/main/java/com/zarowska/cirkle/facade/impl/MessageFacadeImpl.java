@@ -2,6 +2,7 @@ package com.zarowska.cirkle.facade.impl;
 
 import com.zarowska.cirkle.api.model.CreateMessageRequest;
 import com.zarowska.cirkle.api.model.Message;
+import com.zarowska.cirkle.api.model.UpdateUserMessageRequest;
 import com.zarowska.cirkle.domain.entity.*;
 import com.zarowska.cirkle.domain.service.FileService;
 import com.zarowska.cirkle.domain.service.MessageService;
@@ -16,6 +17,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -43,6 +45,33 @@ public class MessageFacadeImpl implements MessageFacade {
 		MessageEntity messageEntity = messageService.save(
 				new MessageEntity().setSender(sender).setReceiver(receiver).setText(createMessageRequest.getText()));
 		messageEntity.setImages(convertToFileInfoList(messageEntity, createMessageRequest.getImages()));
+		return messageMapper.toDto(messageEntity);
+	}
+
+	@Override
+	public Message updateMessageById(UUID messageId, UpdateUserMessageRequest updateUserMessageRequest) {
+		MessageEntity messageEntity = messageService.findById(messageId)
+				.orElseThrow(() -> new ResourceNotFoundException("Message", Map.of()));
+
+		UserEntity sender = messageEntity.getSender();
+		UserEntity user = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+
+		if (!user.getId().equals(sender.getId())) {
+			throw new AccessDeniedException("Only sender can update message");
+		}
+
+		if (updateUserMessageRequest.getText() != null) {
+			messageEntity.setText(updateUserMessageRequest.getText()).setUpdatedAt(Instant.now());
+		}
+
+		if (updateUserMessageRequest.getImages() != null) {
+			List<MessageImage> messageImage = convertToFileInfoList(messageEntity,
+					updateUserMessageRequest.getImages());
+			messageEntity.getImages().clear();
+			messageEntity.getImages().addAll(messageImage);
+			messageEntity.setUpdatedAt(Instant.now());
+		}
+
 		return messageMapper.toDto(messageEntity);
 	}
 

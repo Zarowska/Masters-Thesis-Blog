@@ -85,6 +85,8 @@ class PostApiTest extends AbstractTest {
 		List<String> oneImage = updatedPost.getImages().stream().map(URI::getPath).toList();
 		assertEquals(1, oneImage.size());
 
+		assertNotEquals(post.getCreatedAt(), updatedPost.getUpdatedAt());
+
 		// UpdatePostRequest updateImagesItemRequest2 = new
 		// UpdatePostRequest().addImagesItem(null);
 		// updatedPost = testUserContext.getApi().posts()

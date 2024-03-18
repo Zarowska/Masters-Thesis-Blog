@@ -1573,6 +1573,14 @@ components:
           type: string
         images:
           $ref: '#/components/schemas/Images'
+    UpdateMessageRequest:
+      title: UpdateMessageReques
+      type: object
+      properties:
+        text:
+          type: string
+        images:
+          $ref: '#/components/schemas/Images'
     UpdateUserMessageRequest:
       title: UpdateUserMessageRequest
       x-stoplight:

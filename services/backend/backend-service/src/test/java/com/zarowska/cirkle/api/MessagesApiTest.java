@@ -1,25 +1,28 @@
 package com.zarowska.cirkle.api;
 
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
 import com.zarowska.cirkle.AbstractTest;
 import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.exception.CirkleException;
 import com.zarowska.cirkle.utils.TestUserContext;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.Assert.*;
 
 public class MessagesApiTest extends AbstractTest {
 
 	// done // send-message-to-user-by-id
-	// Get message by id
-	// Update message by id
+	// done // Get message by id Succeeds
+	// done// Get message by id ThrowException
+	// Update message by id Succeeds
+	// Update message by id ThrowException
 	// get-messages-by-user-id
 	// Unread messages events
 	// Mark message readed by id
@@ -56,19 +59,79 @@ public class MessagesApiTest extends AbstractTest {
 				.toList();
 
 		CreateMessageRequest request = CreateMessageRequest.builder().text("message").images(imagesListURI).build();
+		Message messageBeforUpdate = bobContest.getApi().messages()
+				.sendMessageToUserById(maxContext.getUserId(), request).get();
+
+		UUID newMessageId = messageBeforUpdate.getId();
+
+		assertEquals(messageBeforUpdate.getText(), "message");
+
+		List<URI> imagesListURI2 = new ArrayList<>();
+
+		UpdateUserMessageRequest updateUserMessageRequest = UpdateUserMessageRequest.builder().text("message2")
+				.images(imagesListURI2).build();
+		Message messageAfterUpdate = bobContest.getApi().messages()
+				.updateMessageById(newMessageId, updateUserMessageRequest).get();
+
+		assertEquals("message2", messageAfterUpdate.getText().toString());
+		assertEquals(messageBeforUpdate.getId(), messageAfterUpdate.getId());
+		assertEquals(imagesListURI2, messageAfterUpdate.getImages());
+		assertEquals(messageBeforUpdate.getCreatedAt(), messageAfterUpdate.getCreatedAt());
+		assertNotEquals(messageBeforUpdate.getCreatedAt(), messageAfterUpdate.getUpdatedAt());
+	};
+
+	@Test
+	void testUpdateMessageById_ThrowException() {
+		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
+				.map(it -> getFileFromResource("files/" + it))
+				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
+				.toList();
+
+		CreateMessageRequest request = CreateMessageRequest.builder().text("message").images(imagesListURI).build();
+		Message messageBeforUpdate = bobContest.getApi().messages()
+				.sendMessageToUserById(maxContext.getUserId(), request).get();
+
+		UUID messageBeforUpdateId = messageBeforUpdate.getId();
+
+		assertEquals(messageBeforUpdate.getText(), "message");
+
+		List<URI> imagesListURI2 = new ArrayList<>();
+
+		TestUserContext johnContest = context("John Lennon", "john@email", "http://avatar3");
+		johnContest.getApi().api().apiInfo();
+		UpdateUserMessageRequest updateUserMessageRequest = UpdateUserMessageRequest.builder().text("message2")
+				.images(imagesListURI2).build();
+		Exception exception = assertThrows(CirkleException.class, () -> {
+			johnContest.getApi().messages().updateMessageById(messageBeforUpdateId, updateUserMessageRequest);
+		});
+		String expectedMessage = "Only sender can update message";
+		assertEquals(expectedMessage, exception.getMessage());
+
+	};
+
+	@Test
+	void testGetingMessagesByUserId_Succeeds() {
+
+		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
+				.map(it -> getFileFromResource("files/" + it))
+				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
+				.toList();
+
+		CreateMessageRequest request = CreateMessageRequest.builder().text("message").images(imagesListURI).build();
 		Message newMessage = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request)
 				.get();
 
 		UUID newMessageId = newMessage.getId();
 
-		Message messageById = maxContext.getApi().messages().getMessageById(newMessageId).get();
+		Message messageBobSee = bobContest.getApi().messages().getMessageById(newMessageId).get();
+		Message messageMaxSee = maxContext.getApi().messages().getMessageById(newMessageId).get();
 
-		assertEquals(newMessage, messageById);
-
+		assertEquals(newMessage, messageBobSee);
+		assertEquals(newMessage, messageMaxSee);
 	};
 
 	@Test
-	void testUpdateMessageById_ThrowException() {
+	void testGetingMessagesByUserId_ThrowException() {
 
 		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
 				.map(it -> getFileFromResource("files/" + it))
@@ -90,9 +153,8 @@ public class MessagesApiTest extends AbstractTest {
 		assertEquals(expectedMessage, exception.getMessage());
 	};
 
-	@Disabled
 	@Test
-	void testGetingMessagesByUserId_Succeeds() {
+	void test() {
 
 		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
 				.map(it -> getFileFromResource("files/" + it))

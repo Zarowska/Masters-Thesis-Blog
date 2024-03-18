@@ -1,7 +1,7 @@
 package com.zarowska.cirkle.domain.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,11 +32,16 @@ public class FriendshipRequestEntity {
 
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, updatable = false)
-	private LocalDateTime createdAt;
+	private Instant createdAt;
 
 	public FriendshipRequestEntity(UserEntity sender, UserEntity receiver) {
 		this.sender = sender;
 		this.receiver = receiver;
+	}
+
+	@PrePersist
+	private void prePersist() {
+		createdAt = Instant.now();
 	}
 
 }

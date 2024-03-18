@@ -37,6 +37,7 @@ public class MessagesEndpoint extends AbstractClientEndpoint {
 	}
 
 	public Optional<Message> updateMessageById(UUID messageId, UpdateUserMessageRequest updateUserMessageRequest) {
-		return null;
+		return doCall(() -> restTemplateWrapper.put(updateUserMessageRequest, Message.class,
+				"/user/messages/{messageId}", messageId));
 	}
 }
