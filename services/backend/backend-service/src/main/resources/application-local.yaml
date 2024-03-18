@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:6432/cirkle
+    username: devuser
+    password: secret
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+application:
+  cache:
+    file:
+      location: cache
+logging:
+  level:
+    root: info
