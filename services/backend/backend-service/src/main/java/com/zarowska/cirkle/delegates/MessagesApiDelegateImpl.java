@@ -1,9 +1,6 @@
 package com.zarowska.cirkle.delegates;
 
-import com.zarowska.cirkle.api.model.CreateMessageRequest;
-import com.zarowska.cirkle.api.model.Message;
-import com.zarowska.cirkle.api.model.MessageEventList;
-import com.zarowska.cirkle.api.model.UpdateUserMessageRequest;
+import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.api.rest.MessagesApiDelegate;
 import com.zarowska.cirkle.facade.MessageFacade;
 import java.util.UUID;
@@ -17,6 +14,10 @@ public class MessagesApiDelegateImpl implements MessagesApiDelegate {
 
 	private final MessageFacade messageFacade;
 
+	@Override
+	public ResponseEntity<MessagePage> getMessagesByUserId(UUID userId, Integer page, Integer size) {
+		return ResponseEntity.ok(messageFacade.getMessagesByUserId(userId, page, size));
+	};
 	@Override
 	public ResponseEntity<Void> deleteMessageById(UUID messageId) {
 		return MessagesApiDelegate.super.deleteMessageById(messageId);

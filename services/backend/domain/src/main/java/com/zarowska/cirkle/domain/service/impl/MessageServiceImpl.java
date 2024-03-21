@@ -8,6 +8,8 @@ import jakarta.persistence.PersistenceContext;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,5 +29,10 @@ public class MessageServiceImpl implements MessageService {
 	@Override
 	public Optional<MessageEntity> findById(UUID messageId) {
 		return messageEntityRepository.findById(messageId);
+	}
+
+	@Override
+	public Page<MessageEntity> findByUsersId(UUID currentUserId, UUID userId, PageRequest pageRequest) {
+		return messageEntityRepository.findByUsersId(currentUserId, userId, pageRequest);
 	}
 }

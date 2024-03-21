@@ -1,8 +1,6 @@
 package com.zarowska.cirkle.facade.impl;
 
-import com.zarowska.cirkle.api.model.CreateMessageRequest;
-import com.zarowska.cirkle.api.model.Message;
-import com.zarowska.cirkle.api.model.UpdateUserMessageRequest;
+import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.domain.entity.*;
 import com.zarowska.cirkle.domain.service.FileService;
 import com.zarowska.cirkle.domain.service.MessageService;
@@ -22,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -73,6 +73,33 @@ public class MessageFacadeImpl implements MessageFacade {
 		}
 
 		return messageMapper.toDto(messageEntity);
+	}
+
+	@Override
+	public MessagePage getMessagesByUserId(UUID userId, Integer page, Integer size) {
+
+		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+		UserEntity user = userService.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("User", Map.of("id", userId)));
+
+		if (!user.getId().equals(userId)) {
+			throw new ResourceNotFoundException("User", Map.of("id", userId));
+		}
+
+		Integer realPage = page == null ? 0 : page;
+		Integer realSize = size == null ? 10 : size;
+
+		Page<MessageEntity> messagePage = messageService.findByUsersId(currentUser.getId(), userId,
+				PageRequest.of(realPage, realSize));
+
+		new MessagePage().totalElements(messagePage.getTotalElements()).last(messagePage.isLast())
+				.first(messagePage.isFirst()).size(messagePage.getSize()).empty(messagePage.isEmpty())
+				.number(messagePage.getNumber()).numberOfElements(messagePage.getNumberOfElements())
+				.totalPages(messagePage.getTotalPages())
+		// .content(messagePage.getContent().stream().map(messagePage::toDto).toList())
+		;
+
+		return null;
 	}
 
 	@Override

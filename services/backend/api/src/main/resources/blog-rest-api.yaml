@@ -678,11 +678,11 @@ paths:
                 $ref: '#/components/schemas/MessagePage'
       parameters:
         - schema:
-            type: number
+            type: integer
           in: query
           name: page
         - schema:
-            type: number
+            type: integer
           in: query
           name: size
       security:
