@@ -12,5 +12,5 @@ public interface MessageService {
 
 	Optional<MessageEntity> findById(UUID messageId);
 
-	Page<MessageEntity> findByUsersId(UUID id, UUID userId, PageRequest of);
+	Page<MessageEntity> findByUsersId(UUID currentUserId, UUID userId, PageRequest of);
 }

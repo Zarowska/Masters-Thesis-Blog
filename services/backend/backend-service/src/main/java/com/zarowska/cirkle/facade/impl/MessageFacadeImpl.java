@@ -9,7 +9,7 @@ import com.zarowska.cirkle.exception.AccessDeniedException;
 import com.zarowska.cirkle.exception.BadRequestException;
 import com.zarowska.cirkle.exception.ResourceNotFoundException;
 import com.zarowska.cirkle.facade.MessageFacade;
-import com.zarowska.cirkle.facade.mapper.MessagetEntityMapper;
+import com.zarowska.cirkle.facade.mapper.MessageEntityMapper;
 import com.zarowska.cirkle.security.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MessageFacadeImpl implements MessageFacade {
 
-	private final MessagetEntityMapper messageMapper;
+	private final MessageEntityMapper messageMapper;
 	private final MessageService messageService;
 	private final UserService userService;
 	private final FileService fileService;
@@ -78,7 +78,6 @@ public class MessageFacadeImpl implements MessageFacade {
 	@Override
 	public MessagePage getMessagesByUserId(UUID userId, Integer page, Integer size) {
 
-		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
 		UserEntity user = userService.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User", Map.of("id", userId)));
 
@@ -86,20 +85,20 @@ public class MessageFacadeImpl implements MessageFacade {
 			throw new ResourceNotFoundException("User", Map.of("id", userId));
 		}
 
+		UUID currentUserId = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal()).getId();
+
 		Integer realPage = page == null ? 0 : page;
 		Integer realSize = size == null ? 10 : size;
 
-		Page<MessageEntity> messagePage = messageService.findByUsersId(currentUser.getId(), userId,
+		Page<MessageEntity> messagePage = messageService.findByUsersId(currentUserId, userId,
 				PageRequest.of(realPage, realSize));
 
-		new MessagePage().totalElements(messagePage.getTotalElements()).last(messagePage.isLast())
+		return new MessagePage().totalElements(messagePage.getTotalElements()).last(messagePage.isLast())
 				.first(messagePage.isFirst()).size(messagePage.getSize()).empty(messagePage.isEmpty())
 				.number(messagePage.getNumber()).numberOfElements(messagePage.getNumberOfElements())
 				.totalPages(messagePage.getTotalPages())
-		// .content(messagePage.getContent().stream().map(messagePage::toDto).toList())
-		;
+				.content(messagePage.getContent().stream().map(messageMapper::toDto).toList());
 
-		return null;
 	}
 
 	@Override

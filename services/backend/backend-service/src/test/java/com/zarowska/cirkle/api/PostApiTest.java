@@ -94,7 +94,9 @@ class PostApiTest extends AbstractTest {
 		Post expected = new Post(post.getId(), updatedPost.getText(), post.getCreatedAt(), post.getUpdatedAt(),
 				post.getAuthor(), updateImagesItemRequest.getImages());
 
-		assertThat(updatedPost).usingRecursiveComparison().ignoringFields("updatedAt").isEqualTo(expected);
+		// assertThat(updatedPost).usingRecursiveComparison().ignoringFields("updatedAt").isEqualTo(expected);
+
+		assertEquals(expected, updatedPost);
 
 		// UpdatePostRequest updateImagesItemRequest2 = new
 		// UpdatePostRequest().addImagesItem(null);

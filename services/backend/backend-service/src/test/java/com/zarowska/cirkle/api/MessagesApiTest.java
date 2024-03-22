@@ -12,18 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MessagesApiTest extends AbstractTest {
+class MessagesApiTest extends AbstractTest {
 
 	// done // send-message-to-user-by-id
 	// done // Get message by id Succeeds
-	// done// Get message by id ThrowException
-	// Update message by id Succeeds
-	// Update message by id ThrowException
-	// get-messages-by-user-id
+	// done // Get message by id ThrowException
+	// done // Update message by id Succeeds
+	// done // Update message by id ThrowException
+	// done // get-messages-by-user-id Succeeds
+	// done // get-messages-by-user-id EmptyPage
 	// Unread messages events
 	// Mark message readed by id
 	// Delete message by id
@@ -112,6 +114,38 @@ public class MessagesApiTest extends AbstractTest {
 	@Test
 	void testGetingMessagesByUserId_Succeeds() {
 
+		TestUserContext johnContest = context("John Lennon", "john@email", "http://avatar3");
+		johnContest.getApi().api().apiInfo();
+
+		CreateMessageRequest request0 = CreateMessageRequest.builder().text("message0").build();
+		johnContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request0);
+
+		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
+				.map(it -> getFileFromResource("files/" + it))
+				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
+				.toList();
+
+		CreateMessageRequest request = CreateMessageRequest.builder().text("message1").images(imagesListURI).build();
+		Message newMessage = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request)
+				.get();
+
+		CreateMessageRequest request2 = CreateMessageRequest.builder().text("message2").images(imagesListURI).build();
+		Message newMessage2 = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request2)
+				.get();
+
+		Optional<MessagePage> messagePage = bobContest.getApi().messages().getMessagesByUserId(maxContext.getUserId());
+
+		List<String> allMessageText = messagePage.get().getContent().stream().map(Message::getText).toList();
+
+		List<String> expectedMessageText = List.of("message1", "message2");
+
+		assertEquals(expectedMessageText, allMessageText);
+
+	};
+
+	@Test
+	void testGetingMessagesByUserId_ReturnEmptyPage() {
+
 		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
 				.map(it -> getFileFromResource("files/" + it))
 				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
@@ -121,18 +155,22 @@ public class MessagesApiTest extends AbstractTest {
 		Message newMessage = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request)
 				.get();
 
-		UUID newMessageId = newMessage.getId();
+		TestUserContext johnContest = context("John Lennon", "john@email", "http://avatar3");
+		johnContest.getApi().api().apiInfo();
 
-		Message messageBobSee = bobContest.getApi().messages().getMessageById(newMessageId).get();
-		Message messageMaxSee = maxContext.getApi().messages().getMessageById(newMessageId).get();
+		Optional<MessagePage> messagePage = johnContest.getApi().messages().getMessagesByUserId(bobContest.getUserId());
 
-		assertEquals(newMessage, messageBobSee);
-		assertEquals(newMessage, messageMaxSee);
+		List<String> allMessageText = messagePage.get().getContent().stream()
+				.map(m -> m.getSender().toString() + " - " + m.getReceiver().toString() + " : " + m.getText())
+				.collect(Collectors.toList());
+
+		List<String> expectedMessageText = List.of();
+
+		assertEquals(expectedMessageText, allMessageText);
 	};
 
 	@Test
-	void testGetingMessagesByUserId_ThrowException() {
-
+	void testGetingMessageById_ThrowException() {
 		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
 				.map(it -> getFileFromResource("files/" + it))
 				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
@@ -154,8 +192,7 @@ public class MessagesApiTest extends AbstractTest {
 	};
 
 	@Test
-	void test() {
-
+	void testGetingMessageById_Succeeds() {
 		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
 				.map(it -> getFileFromResource("files/" + it))
 				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
@@ -165,30 +202,15 @@ public class MessagesApiTest extends AbstractTest {
 		Message newMessage = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request)
 				.get();
 
-		newMessage.getText();
-		newMessage.getImages();
-		newMessage.getUpdatedAt();
-		newMessage.getCreatedAt();
-		newMessage.getReceiver();
-		newMessage.getSender();
+		UUID newMessageId = newMessage.getId();
 
-		CreateMessageRequest request2 = CreateMessageRequest.builder().text("message2").build();
-		Message newMessage2 = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request2)
-				.get();
+		Message messageBobGot = bobContest.getApi().messages().getMessageById(newMessageId).get();
 
-		newMessage2.getText();
-		newMessage2.getImages();
-		newMessage2.getUpdatedAt();
-		newMessage2.getCreatedAt();
-		newMessage2.getReceiver();
-		newMessage2.getSender();
+		assertEquals(newMessage, messageBobGot);
 
-		assertEquals("message", newMessage.getText().toString());
-		assertEquals("message2", newMessage2.getText().toString());
+		Message messageMaxGot = maxContext.getApi().messages().getMessageById(newMessageId).get();
 
-		/// users/{userId}/messages
-		// description: Get dialog with user
-		// operationId: get-messages-by-user-id
+		assertEquals(newMessage, messageMaxGot);
 	};
 
 }

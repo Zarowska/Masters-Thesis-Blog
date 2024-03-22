@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MessagetEntityMapper {
+public class MessageEntityMapper {
 
 	private final ZoneOffset currentZoneOffset = OffsetDateTime.now().getOffset();
 

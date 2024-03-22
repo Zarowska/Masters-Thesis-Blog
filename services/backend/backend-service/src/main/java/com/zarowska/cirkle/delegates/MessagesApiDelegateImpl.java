@@ -17,7 +17,7 @@ public class MessagesApiDelegateImpl implements MessagesApiDelegate {
 	@Override
 	public ResponseEntity<MessagePage> getMessagesByUserId(UUID userId, Integer page, Integer size) {
 		return ResponseEntity.ok(messageFacade.getMessagesByUserId(userId, page, size));
-	};
+	}
 	@Override
 	public ResponseEntity<Void> deleteMessageById(UUID messageId) {
 		return MessagesApiDelegate.super.deleteMessageById(messageId);
