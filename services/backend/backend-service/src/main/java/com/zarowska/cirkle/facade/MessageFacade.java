@@ -1,9 +1,8 @@
 package com.zarowska.cirkle.facade;
 
-import com.zarowska.cirkle.api.model.CreateMessageRequest;
-import com.zarowska.cirkle.api.model.Message;
-import com.zarowska.cirkle.api.model.MessagePage;
-import com.zarowska.cirkle.api.model.UpdateUserMessageRequest;
+import com.zarowska.cirkle.api.model.*;
+
+import java.util.List;
 import java.util.UUID;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,4 +19,7 @@ public interface MessageFacade {
 
 	@Transactional
 	MessagePage getMessagesByUserId(UUID userId, Integer page, Integer size);
+
+	@Transactional
+	List<Message> getUnreadMessageEvents();
 }

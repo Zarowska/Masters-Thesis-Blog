@@ -23,8 +23,8 @@ public class MessagesEndpoint extends AbstractClientEndpoint {
 		return doCall(() -> restTemplateWrapper.get(MessagePage.class, "/users/{userId}/messages", userId));
 	}
 
-	public MessageEventList getUnreadMessageEvents() {
-		return null;
+	public Optional<MessageEventList> getUnreadMessageEvents() {
+		return doCall(() -> restTemplateWrapper.get(MessageEventList.class, "/user/messages/events"));
 	}
 
 	public Optional<Void> markMessageReadById(UUID messageId) {

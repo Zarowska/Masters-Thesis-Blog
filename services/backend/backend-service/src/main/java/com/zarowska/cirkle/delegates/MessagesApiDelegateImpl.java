@@ -3,6 +3,8 @@ package com.zarowska.cirkle.delegates;
 import com.zarowska.cirkle.api.model.*;
 import com.zarowska.cirkle.api.rest.MessagesApiDelegate;
 import com.zarowska.cirkle.facade.MessageFacade;
+
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +30,8 @@ public class MessagesApiDelegateImpl implements MessagesApiDelegate {
 		return ResponseEntity.ok(messageFacade.getMessageById(messageId));
 	}
 	@Override
-	public ResponseEntity<MessageEventList> getUnreadMessageEvents() {
-		return MessagesApiDelegate.super.getUnreadMessageEvents();
+	public ResponseEntity<List<Message>> getUnreadMessageEvents() {
+		return ResponseEntity.ok(messageFacade.getUnreadMessageEvents());
 	}
 
 	@Override

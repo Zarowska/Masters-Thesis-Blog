@@ -30,4 +30,12 @@ public class test {
 	// private final EntityManager entityManager;
 	// UserEntity currentUser =
 	// entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+
+	// 6.
+	// MessagePage().totalElements(messagePage.getTotalElements()).last(messagePage.isLast())
+	// .first(messagePage.isFirst()).size(messagePage.getSize()).empty(messagePage.isEmpty())
+	// .number(messagePage.getNumber()).numberOfElements(messagePage.getNumberOfElements())
+	// .totalPages(messagePage.getTotalPages())
+	// .content(messagePage.getContent().stream().map(messageMapper::toDto).toList());
+
 }
