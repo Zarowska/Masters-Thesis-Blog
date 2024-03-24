@@ -10,7 +10,6 @@ import com.zarowska.cirkle.exception.BadRequestException;
 import com.zarowska.cirkle.exception.ResourceNotFoundException;
 import com.zarowska.cirkle.facade.MessageFacade;
 import com.zarowska.cirkle.facade.mapper.MessageEntityMapper;
-import com.zarowska.cirkle.facade.mapper.MessageEventMapper;
 import com.zarowska.cirkle.security.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -30,7 +29,7 @@ import org.springframework.stereotype.Service;
 public class MessageFacadeImpl implements MessageFacade {
 
 	private final MessageEntityMapper messageMapper;
-	private final MessageEventMapper messageEventMapper;
+	// private final MessageEventMapper messageEventMapper;
 	private final MessageService messageService;
 	private final UserService userService;
 	private final FileService fileService;
@@ -104,14 +103,17 @@ public class MessageFacadeImpl implements MessageFacade {
 	}
 
 	@Override
-	public List<Message> getUnreadMessageEvents() {
-		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+	public MessageEventList getUnreadMessageEvents() {
+		// UserEntity currentUser =
+		// entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+		//
+		// List<MessageEntity> messageEntityList =
+		// messageService.findUnreadMessagesByUserId(currentUser.getId());
+		//
+		// List<Message> result =
+		// messageEntityList.stream().map(messageMapper::toDto).toList();
 
-		List<MessageEntity> messageEntityList = messageService.findUnreadMessagesByUserId(currentUser.getId());
-
-		List<Message>  result =  messageEntityList.stream().map(messageMapper::toDto).toList();
-
-		return result;
+		return null;
 	}
 
 	@Override

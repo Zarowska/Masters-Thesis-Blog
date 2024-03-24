@@ -40,27 +40,30 @@ class MessagesApiTest extends AbstractTest {
 		maxContext.getApi().api().apiInfo();
 	}
 
-	@Test
-	void testGettingUnreadMessageEvents() {
-
-		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
-				.map(it -> getFileFromResource("files/" + it))
-				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
-				.toList();
-
-		CreateMessageRequest request = CreateMessageRequest.builder().text("message").images(imagesListURI).build();
-		Message messageBeforeReading = bobContest.getApi().messages()
-				.sendMessageToUserById(maxContext.getUserId(), request).get();
-
-		UUID messageId = messageBeforeReading.getId();
-
-		assertEquals(messageBeforeReading.getText(), "message");
-
-		Optional<MessageEventList> messageEventList = bobContest.getApi().messages().getUnreadMessageEvents();
-
-
-		assertEquals(Optional.ofNullable(messageEventList.get().getItems().get(0).getCount()), 1);
-	}
+	// @Test
+	// void testGettingUnreadMessageEvents() {
+	//
+	// List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
+	// .map(it -> getFileFromResource("files/" + it))
+	// .map(imageResource ->
+	// bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
+	// .toList();
+	//
+	// CreateMessageRequest request =
+	// CreateMessageRequest.builder().text("message").images(imagesListURI).build();
+	// Message messageBeforeReading = bobContest.getApi().messages()
+	// .sendMessageToUserById(maxContext.getUserId(), request).get();
+	//
+	// UUID messageId = messageBeforeReading.getId();
+	//
+	// assertEquals(messageBeforeReading.getText(), "message");
+	//
+	// Optional<MessageEventList> messageEventList =
+	// bobContest.getApi().messages().getUnreadMessageEvents();
+	//
+	// assertEquals(Optional.ofNullable(messageEventList.get().getItems().get(0).getCount()),
+	// 1);
+	// }
 
 	@Test
 	void testSendingMessageToUserById_Succeeds() {

@@ -1,12 +1,10 @@
 package com.zarowska.cirkle.domain.service.impl;
 
 import com.zarowska.cirkle.domain.entity.MessageEntity;
-import com.zarowska.cirkle.domain.entity.MessageEventEntity;
 import com.zarowska.cirkle.domain.repository.MessageEntityRepository;
 import com.zarowska.cirkle.domain.service.MessageService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +36,8 @@ public class MessageServiceImpl implements MessageService {
 		return messageEntityRepository.findByUsersId(currentUserId, userId, pageRequest);
 	}
 
-	@Override
-	public List<MessageEntity> findUnreadMessagesByUserId(UUID currentUserId) {
-		return messageEntityRepository.findUnreadMessagesByUserId(currentUserId);
-	}
+	// @Override
+	// public List<MessageEntity> findUnreadMessagesByUserId(UUID currentUserId) {
+	// return messageEntityRepository.findUnreadMessagesByUserId(currentUserId);
+	// }
 }
