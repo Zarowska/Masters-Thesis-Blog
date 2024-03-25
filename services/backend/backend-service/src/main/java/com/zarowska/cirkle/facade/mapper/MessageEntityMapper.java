@@ -25,6 +25,7 @@ public class MessageEntityMapper {
 		OffsetDateTime updatedAt = message.getUpdatedAt().atOffset(currentZoneOffset);
 		List<URI> images = message.getImages().stream().map(MessageImage::getImage).map(FileInfoEntity::getId)
 				.map(it -> "/images/%s".formatted(it)).map(URI::create).toList();
-		return new Message(message.getId(), sender, receiver, message.getText(), images, createdAt, updatedAt);
+		return new Message(message.getId(), sender, receiver, message.getText(), images, createdAt, updatedAt,
+				message.isViewedByReceiver());
 	}
 }

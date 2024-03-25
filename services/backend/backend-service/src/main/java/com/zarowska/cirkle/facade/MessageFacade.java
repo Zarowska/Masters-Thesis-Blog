@@ -20,4 +20,7 @@ public interface MessageFacade {
 
 	@Transactional
 	MessageEventList getUnreadMessageEvents();
+
+	@Transactional
+	Void markMessageReadById(UUID messageId);
 }

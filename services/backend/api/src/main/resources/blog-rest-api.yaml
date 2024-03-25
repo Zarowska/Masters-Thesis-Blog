@@ -1503,6 +1503,8 @@ components:
         updatedAt:
           type: string
           format: date-time
+        viewedByReceiver:
+          type: boolean
     MessageId:
       title: MessageId
       x-stoplight:

@@ -104,14 +104,37 @@ public class MessageFacadeImpl implements MessageFacade {
 
 	@Override
 	public MessageEventList getUnreadMessageEvents() {
-		// UserEntity currentUser =
-		// entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
 		//
-		// List<MessageEntity> messageEntityList =
-		// messageService.findUnreadMessagesByUserId(currentUser.getId());
+		List<MessageEntity> messageEntityList = messageService.findUnreadMessagesByUserId(currentUser.getId());
 		//
 		// List<Message> result =
 		// messageEntityList.stream().map(messageMapper::toDto).toList();
+
+		return null;
+	}
+
+	@Override
+	public Void markMessageReadById(UUID messageId) {
+		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+
+		// // messageService.findUnreadMessagesByUserId(currentUser.getId());
+		// MessageEntity messageEntity =
+		// messageService.findUnreadMessagesById(messageId)
+		// .orElseThrow(() -> new ResourceNotFoundException("Message", Map.of()));
+		MessageEntity messageEntity = messageService.findById(messageId)
+				.orElseThrow(() -> new ResourceNotFoundException("Message", Map.of()));
+
+		UserEntity receiver = messageEntity.getReceiver();
+		// UserEntity sender = messageEntity.getSender();
+		// UserEntity user =
+		// entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+		//
+		if (!currentUser.getId().equals(receiver.getId())) {
+			throw new AccessDeniedException("Only the message receiver is allowed to mark it as read.");
+		}
+
+		messageEntity.setViewedByReceiver(true);
 
 		return null;
 	}

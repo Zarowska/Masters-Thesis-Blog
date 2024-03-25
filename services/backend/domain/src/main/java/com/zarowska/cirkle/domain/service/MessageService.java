@@ -1,6 +1,7 @@
 package com.zarowska.cirkle.domain.service;
 
 import com.zarowska.cirkle.domain.entity.MessageEntity;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -14,5 +15,7 @@ public interface MessageService {
 
 	Page<MessageEntity> findByUsersId(UUID currentUserId, UUID userId, PageRequest of);
 
-	// List<MessageEntity> findUnreadMessagesByUserId(UUID id);
+	List<MessageEntity> findUnreadMessagesByUserId(UUID id);
+
+	Optional<MessageEntity> findUnreadMessagesById(UUID messageId);
 }

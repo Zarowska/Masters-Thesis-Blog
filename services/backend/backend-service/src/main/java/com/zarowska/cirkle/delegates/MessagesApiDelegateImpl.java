@@ -34,7 +34,7 @@ public class MessagesApiDelegateImpl implements MessagesApiDelegate {
 
 	@Override
 	public ResponseEntity<Void> markMessageReadById(UUID messageId) {
-		return MessagesApiDelegate.super.markMessageReadById(messageId);
+		return ResponseEntity.ok(messageFacade.markMessageReadById(messageId));
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.zarowska.cirkle.domain.repository;
 
 import com.zarowska.cirkle.domain.entity.MessageEntity;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,9 @@ public interface MessageEntityRepository extends JpaRepository<MessageEntity, UU
 	// @Query("SELECT distinct m FROM MessageEntity m WHERE m.viewedByReceiver IS
 	// FALSE " +
 	// "AND m.receiver.id = :userId");
-	// @Query("SELECT distinct m FROM MessageEntity m WHERE m.receiver.id =
-	// :currentUserId and m.viewedByReceiver IS FALSE order by m.createdAt")
-	// List<MessageEntity> findUnreadMessagesByUserId(UUID currentUserId);
+	@Query("SELECT distinct m FROM MessageEntity m WHERE m.receiver.id = :currentUserId and m.viewedByReceiver IS FALSE order by m.createdAt")
+	List<MessageEntity> findUnreadMessagesByUserId(UUID currentUserId);
+
+	@Query("SELECT distinct m FROM MessageEntity m WHERE m.id = :messageId and m.viewedByReceiver IS FALSE order by m.createdAt")
+	MessageEntity findUnreadMessagesById(UUID messageId);
 }
