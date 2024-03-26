@@ -28,7 +28,7 @@ public class MessagesEndpoint extends AbstractClientEndpoint {
 	}
 
 	public void markMessageReadById(UUID messageId) {
-		doCall(() -> restTemplateWrapper.get(Void.class, "/user/messages/{messageId}", messageId));
+		doCall(() -> restTemplateWrapper.post(null, Message.class, "/user/messages/{messageId}/read", messageId));
 	}
 
 	public Optional<Message> sendMessageToUserById(UUID userId, CreateMessageRequest createMessageRequest) {

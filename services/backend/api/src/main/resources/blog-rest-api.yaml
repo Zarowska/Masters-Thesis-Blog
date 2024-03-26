@@ -1575,6 +1575,8 @@ components:
           type: string
         images:
           $ref: '#/components/schemas/Images'
+        viewedByReceiver:
+          type: boolean
     UpdateMessageRequest:
       title: UpdateMessageReques
       type: object
@@ -1593,6 +1595,8 @@ components:
           type: string
         images:
           $ref: '#/components/schemas/Images'
+        viewedByReceiver:
+          type: boolean
     CreatePostRequest:
       title: CreatePostRequest
       x-stoplight:

@@ -50,18 +50,33 @@ class MessagesApiTest extends AbstractTest {
 		Message newMessage = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request)
 				.get();
 		UUID newMessageId = newMessage.getId();
-		// Message messageBobGot =
-		// bobContest.getApi().messages().getMessageById(newMessageId).get();
-		// assertEquals(newMessage, messageBobGot);
-		// Message messageMaxGot =
-		// maxContext.getApi().messages().getMessageById(newMessageId).get();
-		// assertEquals(newMessage, messageMaxGot);
 
 		assertFalse(newMessage.getViewedByReceiver());
 
-		bobContest.getApi().messages().markMessageReadById(newMessageId);
+		maxContext.getApi().messages().markMessageReadById(newMessageId);
 
 		assertTrue(bobContest.getApi().messages().getMessageById(newMessageId).get().getViewedByReceiver());
+
+	}
+
+	@Test
+	void testMarkMessageReadById__ThrowException() {
+		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
+				.map(it -> getFileFromResource("files/" + it))
+				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
+				.toList();
+		CreateMessageRequest request = CreateMessageRequest.builder().text("message").images(imagesListURI).build();
+		Message newMessage = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request)
+				.get();
+		UUID newMessageId = newMessage.getId();
+
+		assertFalse(newMessage.getViewedByReceiver());
+
+		Exception exception = assertThrows(CirkleException.class, () -> {
+			bobContest.getApi().messages().markMessageReadById(newMessageId);
+		});
+
+		assertEquals("Only the message receiver is allowed to mark it as read.", exception.getMessage());
 
 	}
 

@@ -43,8 +43,8 @@ public class MessageFacadeImpl implements MessageFacade {
 		UserEntity receiver = userService.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("User", Map.of("id", userId)));
 
-		MessageEntity messageEntity = messageService.save(
-				new MessageEntity().setSender(sender).setReceiver(receiver).setText(createMessageRequest.getText()));
+		MessageEntity messageEntity = messageService.save(new MessageEntity().setSender(sender).setReceiver(receiver)
+				.setViewedByReceiver(false).setText(createMessageRequest.getText()));
 		messageEntity.setImages(convertToFileInfoList(messageEntity, createMessageRequest.getImages()));
 		return messageMapper.toDto(messageEntity);
 	}
@@ -71,6 +71,10 @@ public class MessageFacadeImpl implements MessageFacade {
 			messageEntity.getImages().clear();
 			messageEntity.getImages().addAll(messageImage);
 			messageEntity.setUpdatedAt(Instant.now());
+		}
+
+		if (updateUserMessageRequest.getViewedByReceiver() != null) {
+			messageEntity.setViewedByReceiver(updateUserMessageRequest.getViewedByReceiver());
 		}
 
 		return messageMapper.toDto(messageEntity);
@@ -117,25 +121,21 @@ public class MessageFacadeImpl implements MessageFacade {
 	@Override
 	public Void markMessageReadById(UUID messageId) {
 		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
-
-		// // messageService.findUnreadMessagesByUserId(currentUser.getId());
-		// MessageEntity messageEntity =
-		// messageService.findUnreadMessagesById(messageId)
-		// .orElseThrow(() -> new ResourceNotFoundException("Message", Map.of()));
 		MessageEntity messageEntity = messageService.findById(messageId)
 				.orElseThrow(() -> new ResourceNotFoundException("Message", Map.of()));
 
 		UserEntity receiver = messageEntity.getReceiver();
-		// UserEntity sender = messageEntity.getSender();
-		// UserEntity user =
-		// entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
-		//
+
+		if (messageEntity.isViewedByReceiver()) {
+			throw new BadRequestException("Message is already viewed.");
+		}
+
 		if (!currentUser.getId().equals(receiver.getId())) {
 			throw new AccessDeniedException("Only the message receiver is allowed to mark it as read.");
 		}
-
 		messageEntity.setViewedByReceiver(true);
 
+		messageMapper.toDto(messageEntity);
 		return null;
 	}
 
