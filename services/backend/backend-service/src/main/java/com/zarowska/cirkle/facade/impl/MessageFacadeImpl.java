@@ -10,6 +10,7 @@ import com.zarowska.cirkle.exception.BadRequestException;
 import com.zarowska.cirkle.exception.ResourceNotFoundException;
 import com.zarowska.cirkle.facade.MessageFacade;
 import com.zarowska.cirkle.facade.mapper.MessageEntityMapper;
+import com.zarowska.cirkle.facade.mapper.MessageEventMapper;
 import com.zarowska.cirkle.security.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,6 +19,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +31,7 @@ import org.springframework.stereotype.Service;
 public class MessageFacadeImpl implements MessageFacade {
 
 	private final MessageEntityMapper messageMapper;
-	// private final MessageEventMapper messageEventMapper;
+	private final MessageEventMapper messageEventMapper;
 	private final MessageService messageService;
 	private final UserService userService;
 	private final FileService fileService;
@@ -109,12 +111,30 @@ public class MessageFacadeImpl implements MessageFacade {
 	@Override
 	public MessageEventList getUnreadMessageEvents() {
 		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
-		//
-		List<MessageEntity> messageEntityList = messageService.findUnreadMessagesByUserId(currentUser.getId());
-		//
-		// List<Message> result =
-		// messageEntityList.stream().map(messageMapper::toDto).toList();
+		List<MessageEntity> unreadMessageList = messageService.findUnreadMessagesByUserId(currentUser.getId());
+		// unreadMessageList.stream().map(message -> message.getSender());
 
+		List<MessageEvent> messageEventList = null;
+
+		for (MessageEntity messageEntity : unreadMessageList) {
+
+			Optional<MessageEvent> messageEventWithSender = messageEventList.stream()
+					.filter(messageEvent -> messageEvent.getAuthor().equals(messageEntity.getSender())).findFirst();
+
+			if (messageEventWithSender.isPresent()) {
+				MessageEvent existingMessageEvent = messageEventWithSender.get();
+				existingMessageEvent.setCount(existingMessageEvent.getCount() + 1);
+			} else {
+				// messageEventList.add(new MessageEvent(messageEntity.getSender(), 1,
+				// messageEntity.getCreatedAt()));
+			}
+
+		}
+
+		List<MessageEvent> messageEntityList = messageService.findUnreadMessagesByUserId(currentUser.getId()).stream()
+				.map(messageEventMapper::toDto).toList();
+		MessageEventList result = new MessageEventList();
+		messageEntityList.stream().map(it -> result.addItemsItem(it));
 		return null;
 	}
 
@@ -150,6 +170,10 @@ public class MessageFacadeImpl implements MessageFacade {
 
 		if (!(user.getId().equals(sender.getId()) || user.getId().equals(receiver.getId()))) {
 			throw new AccessDeniedException("Only receiver and sender can message.");
+		}
+
+		if (user == receiver) {
+			markMessageReadById(messageId);
 		}
 
 		return messageMapper.toDto(messageEntity);
