@@ -11,17 +11,19 @@ import com.zarowska.cirkle.exception.ResourceNotFoundException;
 import com.zarowska.cirkle.facade.MessageFacade;
 import com.zarowska.cirkle.facade.mapper.MessageEntityMapper;
 import com.zarowska.cirkle.facade.mapper.MessageEventMapper;
+import com.zarowska.cirkle.facade.mapper.UserEntityMapper;
 import com.zarowska.cirkle.security.SecurityUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ public class MessageFacadeImpl implements MessageFacade {
 
 	private final MessageEntityMapper messageMapper;
 	private final MessageEventMapper messageEventMapper;
+	private final UserEntityMapper userEntityMapper;
 	private final MessageService messageService;
 	private final UserService userService;
 	private final FileService fileService;
@@ -112,30 +115,58 @@ public class MessageFacadeImpl implements MessageFacade {
 	public MessageEventList getUnreadMessageEvents() {
 		UserEntity currentUser = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
 		List<MessageEntity> unreadMessageList = messageService.findUnreadMessagesByUserId(currentUser.getId());
-		// unreadMessageList.stream().map(message -> message.getSender());
 
-		List<MessageEvent> messageEventList = null;
+		Map<UserEntity, MessageCounter> mapMessages = new HashMap<>();
 
-		for (MessageEntity messageEntity : unreadMessageList) {
+		unreadMessageList.forEach(messageEntity -> {
+			mapMessages.compute(messageEntity.getSender(), (sender, counter) -> {
+				if (counter == null) {
+					return new MessageCounter(1, messageEntity.getCreatedAt());
+				} else {
+					int messageCount = counter.getMessageCount() + 1;
+					Instant lastUpdateTime = messageEntity.getCreatedAt().isAfter(counter.getLastUpdateTime())
+							? messageEntity.getCreatedAt()
+							: counter.getLastUpdateTime();
+					return new MessageCounter(messageCount, lastUpdateTime);
+				}
+			});
+		});
 
-			Optional<MessageEvent> messageEventWithSender = messageEventList.stream()
-					.filter(messageEvent -> messageEvent.getAuthor().equals(messageEntity.getSender())).findFirst();
+		ZoneOffset currentZoneOffset = OffsetDateTime.now().getOffset();
+		List<MessageEvent> items = mapMessages.entrySet().stream()
+				.map(entry -> new MessageEvent(userEntityMapper.toDto(entry.getKey()),
+						entry.getValue().getMessageCount(),
+						entry.getValue().getLastUpdateTime().atOffset(currentZoneOffset)))
+				.collect(Collectors.toList());
 
-			if (messageEventWithSender.isPresent()) {
-				MessageEvent existingMessageEvent = messageEventWithSender.get();
-				existingMessageEvent.setCount(existingMessageEvent.getCount() + 1);
-			} else {
-				// messageEventList.add(new MessageEvent(messageEntity.getSender(), 1,
-				// messageEntity.getCreatedAt()));
-			}
+		return new MessageEventList(items);
+	}
 
+	static class MessageCounter {
+		@Setter
+		private int messageCount;
+		private Instant lastUpdateTime;
+
+		public MessageCounter(int messageCount, Instant lastUpdateTime) {
+			this.messageCount = messageCount;
+			this.lastUpdateTime = lastUpdateTime;
 		}
 
-		List<MessageEvent> messageEntityList = messageService.findUnreadMessagesByUserId(currentUser.getId()).stream()
-				.map(messageEventMapper::toDto).toList();
-		MessageEventList result = new MessageEventList();
-		messageEntityList.stream().map(it -> result.addItemsItem(it));
-		return null;
+		public int getMessageCount() {
+			return messageCount;
+		}
+
+		public Instant getlastUpdateTime() {
+			return lastUpdateTime;
+		}
+
+		public void setLastUpdateTime(Instant lastUpdateTime) {
+			this.lastUpdateTime = lastUpdateTime;
+		}
+
+		public Instant getLastUpdateTime() {
+			return lastUpdateTime;
+		}
 	}
 
 	@Override

@@ -17,8 +17,8 @@ public interface MessageEntityRepository extends JpaRepository<MessageEntity, UU
 	Page<MessageEntity> findByUsersId(@Param("currentUserId") UUID currentUserId, @Param("userId") UUID userId,
 			Pageable pageRequest);
 
-	@Query("SELECT distinct m FROM MessageEntity m WHERE m.receiver.id = :currentUserId and m.viewedByReceiver IS FALSE order by m.createdAt")
-	List<MessageEntity> findUnreadMessagesByUserId(UUID currentUserId);
+	@Query("SELECT distinct m FROM MessageEntity m WHERE m.receiver.id = :currentUserId and m.viewedByReceiver = FALSE order by m.createdAt")
+	List<MessageEntity> findUnreadMessagesByUserId(@Param("currentUserId") UUID currentUserId);
 
 	@Query("SELECT distinct m FROM MessageEntity m WHERE m.id = :messageId and m.viewedByReceiver IS FALSE order by m.createdAt")
 	MessageEntity findUnreadMessagesById(UUID messageId);

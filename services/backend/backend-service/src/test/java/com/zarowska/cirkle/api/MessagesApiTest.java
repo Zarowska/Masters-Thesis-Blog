@@ -26,8 +26,8 @@ class MessagesApiTest extends AbstractTest {
 	// done // Update message by id ThrowException
 	// done // get-messages-by-user-id Succeeds
 	// done // get-messages-by-user-id EmptyPage
-	// Unread messages events
-	// Mark message readed by id
+	// done // Unread messages events
+	// done // Mark message readed by id
 	// Delete message by id
 
 	TestUserContext bobContest, maxContext;
@@ -38,6 +38,38 @@ class MessagesApiTest extends AbstractTest {
 		bobContest.getApi().api().apiInfo();
 		maxContext = context("Max Payne", "max@email", "http://avatar2");
 		maxContext.getApi().api().apiInfo();
+	}
+
+	@Test
+	void testGetUnreadMessageEvents_Succeeds() {
+		CreateMessageRequest request = CreateMessageRequest.builder().text("message1").build();
+		Message newMessage = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request)
+				.get();
+		assertFalse(newMessage.getViewedByReceiver());
+
+		CreateMessageRequest request2 = CreateMessageRequest.builder().text("message2").build();
+		Message newMessage2 = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request2)
+				.get();
+		assertFalse(newMessage2.getViewedByReceiver());
+
+		CreateMessageRequest request3 = CreateMessageRequest.builder().text("message2").build();
+		Message newMessage3 = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(), request3)
+				.get();
+		assertFalse(newMessage3.getViewedByReceiver());
+
+		Optional<MessageEventList> maxMessageEventList = maxContext.getApi().messages().getUnreadMessageEvents();
+		assertNotNull(maxMessageEventList.get());
+
+		assertEquals("3", maxMessageEventList.get().getItems().get(0).getCount().toString());
+		assertEquals("Bob Marley", maxMessageEventList.get().getItems().get(0).getAuthor().getName());
+
+		maxContext.getApi().messages().getMessageById(newMessage3.getId());
+
+		Optional<MessageEventList> maxMessageEventList2 = maxContext.getApi().messages().getUnreadMessageEvents();
+		assertNotNull(maxMessageEventList2.get());
+
+		assertEquals("2", maxMessageEventList2.get().getItems().get(0).getCount().toString());
+
 	}
 
 	@Test
@@ -79,31 +111,6 @@ class MessagesApiTest extends AbstractTest {
 		assertEquals("Only the message receiver is allowed to mark it as read.", exception.getMessage());
 
 	}
-
-	// @Test
-	// void testGettingUnreadMessageEvents() {
-	//
-	// List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
-	// .map(it -> getFileFromResource("files/" + it))
-	// .map(imageResource ->
-	// bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
-	// .toList();
-	//
-	// CreateMessageRequest request =
-	// CreateMessageRequest.builder().text("message").images(imagesListURI).build();
-	// Message messageBeforeReading = bobContest.getApi().messages()
-	// .sendMessageToUserById(maxContext.getUserId(), request).get();
-	//
-	// UUID messageId = messageBeforeReading.getId();
-	//
-	// assertEquals(messageBeforeReading.getText(), "message");
-	//
-	// Optional<MessageEventList> messageEventList =
-	// bobContest.getApi().messages().getUnreadMessageEvents();
-	//
-	// assertEquals(Optional.ofNullable(messageEventList.get().getItems().get(0).getCount()),
-	// 1);
-	// }
 
 	@Test
 	void testSendingMessageToUserById_Succeeds() {
