@@ -23,4 +23,7 @@ public interface MessageFacade {
 
 	@Transactional
 	Void markMessageReadById(UUID messageId);
+
+	@Transactional
+	Void deleteMessageById(UUID messageId);
 }

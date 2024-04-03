@@ -18,4 +18,6 @@ public interface MessageService {
 	List<MessageEntity> findUnreadMessagesByUserId(UUID id);
 
 	Optional<MessageEntity> findUnreadMessagesById(UUID messageId);
+
+	void delete(MessageEntity messageEntity);
 }

@@ -191,6 +191,22 @@ public class MessageFacadeImpl implements MessageFacade {
 	}
 
 	@Override
+	public Void deleteMessageById(UUID messageId) {
+		UserEntity user = entityManager.merge(SecurityUtils.getCurrentUser().getPrincipal());
+
+		MessageEntity messageEntity = messageService.findById(messageId)
+				.orElseThrow(() -> new ResourceNotFoundException("Message", Map.of("id", messageId)));
+
+		if (!messageEntity.getSender().getId().equals(user.getId())) {
+			throw new AccessDeniedException("Only the sender has permission to delete message");
+		}
+
+		messageService.delete(messageEntity);
+
+		return null;
+	}
+
+	@Override
 	public Message getMessageById(UUID messageId) {
 		MessageEntity messageEntity = messageService.findById(messageId)
 				.orElseThrow(() -> new ResourceNotFoundException("Message", Map.of()));

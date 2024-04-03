@@ -12,7 +12,7 @@ public class MessagesEndpoint extends AbstractClientEndpoint {
 	}
 
 	public Optional<Void> deleteMessageById(UUID messageId) {
-		return null;
+		return doCall(() -> restTemplateWrapper.delete(Void.class, "/user/messages/{messageId}", messageId));
 	}
 
 	public Optional<Message> getMessageById(UUID messageId) {

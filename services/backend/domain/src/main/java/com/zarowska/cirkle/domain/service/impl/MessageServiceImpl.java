@@ -46,4 +46,9 @@ public class MessageServiceImpl implements MessageService {
 	public Optional<MessageEntity> findUnreadMessagesById(UUID messageId) {
 		return Optional.ofNullable(messageEntityRepository.findUnreadMessagesById(messageId));
 	}
+
+	@Override
+	public void delete(MessageEntity messageEntity) {
+		messageEntityRepository.delete(messageEntity);
+	}
 }

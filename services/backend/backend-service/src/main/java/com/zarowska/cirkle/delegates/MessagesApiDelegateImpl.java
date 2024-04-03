@@ -20,7 +20,7 @@ public class MessagesApiDelegateImpl implements MessagesApiDelegate {
 	}
 	@Override
 	public ResponseEntity<Void> deleteMessageById(UUID messageId) {
-		return MessagesApiDelegate.super.deleteMessageById(messageId);
+		return ResponseEntity.ok(messageFacade.deleteMessageById(messageId));
 	}
 
 	@Override

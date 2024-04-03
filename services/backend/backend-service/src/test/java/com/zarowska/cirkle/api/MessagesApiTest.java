@@ -28,7 +28,7 @@ class MessagesApiTest extends AbstractTest {
 	// done // get-messages-by-user-id EmptyPage
 	// done // Unread messages events
 	// done // Mark message readed by id
-	// Delete message by id
+	// done // Delete message by id
 
 	TestUserContext bobContest, maxContext;
 
@@ -39,6 +39,46 @@ class MessagesApiTest extends AbstractTest {
 		maxContext = context("Max Payne", "max@email", "http://avatar2");
 		maxContext.getApi().api().apiInfo();
 	}
+
+	@Test
+	void testDeleteMessageToUserById_Succeeds() {
+		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
+				.map(it -> getFileFromResource("files/" + it))
+				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
+				.toList();
+		CreateMessageRequest request = CreateMessageRequest.builder().text("New message").images(imagesListURI).build();
+		Optional<Message> newMessage = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(),
+				request);
+
+		UUID messageId = newMessage.get().getId();
+
+		assertTrue(newMessage.isPresent());
+
+		bobContest.getApi().messages().deleteMessageById(messageId);
+
+		assertFalse(bobContest.getApi().messages().getMessageById(messageId).isPresent());
+
+	};
+
+	@Test
+	void testDeleteMessageToUserById_ThrowException() {
+		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
+				.map(it -> getFileFromResource("files/" + it))
+				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
+				.toList();
+		CreateMessageRequest request = CreateMessageRequest.builder().text("New message").images(imagesListURI).build();
+		Optional<Message> newMessage = bobContest.getApi().messages().sendMessageToUserById(maxContext.getUserId(),
+				request);
+		assertTrue(newMessage.isPresent());
+		UUID messageId = newMessage.get().getId();
+
+		Exception exception = assertThrows(CirkleException.class, () -> {
+			maxContext.getApi().messages().deleteMessageById(messageId);
+		});
+		String expectedMessage = "Only the sender has permission to delete message";
+		assertEquals(expectedMessage, exception.getMessage());
+
+	};
 
 	@Test
 	void testGetUnreadMessageEvents_Succeeds() {
@@ -92,7 +132,7 @@ class MessagesApiTest extends AbstractTest {
 	}
 
 	@Test
-	void testMarkMessageReadById__ThrowException() {
+	void testMarkMessageReadById_ThrowException() {
 		List<URI> imagesListURI = Stream.of("max_payne.png", "blazkovic.png")
 				.map(it -> getFileFromResource("files/" + it))
 				.map(imageResource -> bobContest.getApi().images().uploadImage(imageResource)).map(FileDto::getUrl)
