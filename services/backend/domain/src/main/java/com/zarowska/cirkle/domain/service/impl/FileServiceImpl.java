@@ -65,16 +65,6 @@ public class FileServiceImpl implements FileService {
 		}
 	}
 
-	// @Override
-	// public Page<FileInfoEntity> getImageInfoList(Integer page, Integer size) {
-	// return fileInfoEntityRepository.getImageInfoList(page, size);
-	// }
-	//
-	// @Override
-	// public FileInfoEntity getImageInfoById(UUID imageId) {
-	// return fileInfoEntityRepository.getImageInfoById(imageId);
-	// }
-
 	@Override
 	public Page<FileInfoEntity> findAllByOwner(UserEntity owner, Pageable pageable) {
 		return fileInfoEntityRepository.findAllByOwner(owner, pageable);

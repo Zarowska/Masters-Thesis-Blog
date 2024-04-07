@@ -9,4 +9,7 @@ public interface PostCommentFacade {
 
 	@Transactional
 	Comment createPostComment(UUID userId, UUID postId, CreateCommentRequest createCommentRequest);
+
+	@Transactional
+	Comment getPostCommentById(UUID userId, UUID postId, UUID commentId);
 }

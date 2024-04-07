@@ -21,7 +21,7 @@ public class PostCommentFacadeImpl implements PostCommentFacade {
 
 	private final CommentService commentService;
 	private final CommentEntityMapper commentEntityMapper;
-
+	private final PostFacadeImpl postFacadeImpl;
 	@PersistenceContext
 	private final EntityManager entityManager;
 
@@ -37,5 +37,15 @@ public class PostCommentFacadeImpl implements PostCommentFacade {
 				.save(new CommentEntity().setAuthor(user).setText(createCommentRequest.getText()));
 
 		return commentEntityMapper.toDto(newCommentEntity);
+	}
+
+	@Override
+	public Comment getPostCommentById(UUID userId, UUID postId, UUID commentId) {
+
+		CommentEntity commentEntity = commentService.findById(commentId)
+				.orElseThrow(() -> new BadRequestException("Comment not found with commentId=" + commentId));
+
+		return commentEntityMapper.toDto(commentEntity);
+
 	}
 }

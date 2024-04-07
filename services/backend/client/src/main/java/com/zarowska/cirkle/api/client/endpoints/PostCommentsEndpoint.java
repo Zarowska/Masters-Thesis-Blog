@@ -22,19 +22,26 @@ public class PostCommentsEndpoint extends AbstractClientEndpoint {
 	}
 
 	public Optional<Void> deletePostCommentById(UUID userId, UUID postId, UUID commentId) {
-		return null;
+		return doCall(() -> restTemplateWrapper.delete(Void.class,
+				"/users/{userId}/posts/{postId}/comments/{commentId}", userId, postId, commentId));
 	}
 
 	public Optional<Comment> getPostCommentById(UUID userId, UUID postId, UUID commentId) {
-		return null;
+		return doCall(() -> restTemplateWrapper.get(Comment.class,
+				"/users/{userId}/posts/{postId}/comments/{commentId}", userId, postId, commentId));
+
 	}
 
-	public Optional<CommentPage> listPostCommentsById(UUID userId, UUID postId, Integer page, Integer size) {
-		return null;
+	public Optional<CommentPage> listPostCommentsById(UUID userId, UUID postId) {
+		return doCall(() -> restTemplateWrapper.get(CommentPage.class,
+				"/users/{userId}/posts/{postId}/comments/{commentId}", userId, postId));
+
 	}
 
 	public Optional<Comment> updatePostCommentById(UUID userId, UUID postId, UUID commentId,
 			UpdateCommentRequest updateCommentRequest) {
-		return null;
+		return doCall(() -> restTemplateWrapper.put(updateCommentRequest, Comment.class,
+				"/users/{userId}/posts/{postId}/comments", userId, postId, commentId));
+
 	}
 }

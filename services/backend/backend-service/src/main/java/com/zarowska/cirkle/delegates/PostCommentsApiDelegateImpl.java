@@ -29,7 +29,7 @@ public class PostCommentsApiDelegateImpl implements PostCommentsApiDelegate {
 
 	@Override
 	public ResponseEntity<Comment> getPostCommentById(UUID userId, UUID postId, UUID commentId) {
-		return PostCommentsApiDelegate.super.getPostCommentById(userId, postId, commentId);
+		return ResponseEntity.ok(postCommentFacade.getPostCommentById(userId, postId, commentId));
 	}
 
 	@Override
