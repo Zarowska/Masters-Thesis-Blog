@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:6432/cirkle
+    username: devuser
+    password: secret

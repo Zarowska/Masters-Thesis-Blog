@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
     api(project(":cirkle:core"))
+    api("org.springframework.security:spring-security-core")
 }
