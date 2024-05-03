@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    api(project(":cirkle:core"))
-    api(project(":cirkle:domain:decl"))
+    implementation(project(":cirkle:core"))
+    implementation(project(":cirkle:domain:decl"))
 }

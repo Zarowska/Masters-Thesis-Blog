@@ -2,5 +2,12 @@ plugins {
     id("application.spring.conventions")
 }
 
-api(project(":cirkle:api:rest"))
-api(project(":cirkle:api:graphql"))
+dependencies {
+    implementation(project(":cirkle:api:rest"))
+    implementation(project(":cirkle:api:graphql"))
+
+    implementation("org.springframework.boot:spring-boot-starter")
+    runtimeOnly("org.postgresql:postgresql")
+
+    testImplementation(project(":cirkle:test"))
+}

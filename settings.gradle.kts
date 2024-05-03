@@ -15,11 +15,12 @@ plugins {
 
 rootProject.name = "cirkle-blog"
 include(
-    "circle:core",
-    "circle:api:rest",
-    "circle:api:graphql",
-    "circle:api:domain:decl",
-    "circle:api:domain:impl",
-    "circle:api:domain:persistence",
-    "circle:app",
+    "cirkle:core",
+    "cirkle:api:rest",
+    "cirkle:api:graphql",
+    "cirkle:domain:decl",
+    "cirkle:domain:impl",
+    "cirkle:domain:persistence",
+    "cirkle:test",
+    "cirkle:app",
 )
