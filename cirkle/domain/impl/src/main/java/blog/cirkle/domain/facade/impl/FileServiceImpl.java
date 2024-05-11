@@ -1,4 +1,4 @@
-package blog.cirkle.domain.impl;
+package blog.cirkle.domain.facade.impl;
 
 import blog.cirkle.domain.entity.resource.ImageFile;
 import blog.cirkle.domain.exception.BadRequestException;

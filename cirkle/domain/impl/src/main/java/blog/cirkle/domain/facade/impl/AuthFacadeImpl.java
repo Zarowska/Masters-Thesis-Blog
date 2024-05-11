@@ -1,4 +1,4 @@
-package blog.cirkle.domain.impl;
+package blog.cirkle.domain.facade.impl;
 
 import blog.cirkle.domain.entity.participant.User;
 import blog.cirkle.domain.facade.AuthFacade;

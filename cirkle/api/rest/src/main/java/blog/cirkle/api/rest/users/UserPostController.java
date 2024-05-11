@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/users/{userId}/posts")
 @RequiredArgsConstructor
@@ -17,12 +19,12 @@ public class UserPostController {
 	private final PostFacade postFacade;
 
 	@PostMapping
-	PostDto create(@PathVariable int userId, @RequestBody CreatePostDto request) {
+	PostDto create(@PathVariable UUID userId, @RequestBody CreatePostDto request) {
 		return postFacade.createOne(userId, request);
 	}
 
 	@GetMapping
-	Page<PostDto> findAllPosts(@PathVariable int userId, @PageableDefault Pageable pageable) {
+	Page<PostDto> findAllPosts(@PathVariable UUID userId, @PageableDefault Pageable pageable) {
 		return postFacade.findByUserId(userId, pageable);
 	}
 }

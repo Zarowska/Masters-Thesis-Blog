@@ -16,11 +16,13 @@ public class WebSecurityConfiguration {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtAuthenticationFilter jwtAuthenticationFilter)
 			throws Exception {
+
 		return httpSecurity.cors(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable)
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.formLogin(AbstractHttpConfigurer::disable).httpBasic(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(http -> http.requestMatchers("/api/v1/info").permitAll()
 						.requestMatchers("/api/v1/auth").permitAll().requestMatchers("/api/v1/registration").permitAll()
-						.requestMatchers("/api/v1/registration/validation").permitAll()
+						.requestMatchers("/api/v1/registration/email-validation").permitAll()
 						.requestMatchers("/api/v1/images/**").permitAll().requestMatchers("/api/v1/**").authenticated()
 						.anyRequest().permitAll())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();

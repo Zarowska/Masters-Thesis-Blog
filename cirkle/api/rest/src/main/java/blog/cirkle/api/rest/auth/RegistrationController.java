@@ -23,14 +23,14 @@ public class RegistrationController {
 	private final UserFacade userFacade;
 	private final AuthFacade authFacade;
 
-	@PostMapping
+	@PostMapping()
 	ResponseEntity<UserDto> registration(@Valid @RequestBody RegistrationRequest request) {
 		RegistrationResponseDto response = userFacade.register(request);
 		return ResponseEntity.status(200).header("email-validation", response.getEmailValidationToken())
 				.body(response.getUser());
 	}
 
-	@PostMapping("/validation")
+	@PostMapping("/email-validation")
 	ResponseEntity<AuthenticateResponse> validateEmail(@RequestBody EmailValidationRequest request) {
 		return ResponseEntity.ok(authFacade.validateAndLogin(request));
 	}

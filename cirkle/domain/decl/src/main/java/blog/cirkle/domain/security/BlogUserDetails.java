@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.User;
 public class BlogUserDetails extends User {
 
 	public static final UUID SYSTEM_USER_ID = UUID.fromString("00000000-0000-0000-0000-000000000000");
-	public static final BlogUserDetails SYSTEM_USER = new BlogUserDetails(SYSTEM_USER_ID, "system@circle.blog", true,
+	public static final BlogUserDetails SYSTEM_USER = new BlogUserDetails(SYSTEM_USER_ID, "system@cirkle.blog", true,
 			"-1");
 	@Getter
 	private final UUID id;

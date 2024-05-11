@@ -179,6 +179,6 @@ values ('00000000-0000-0000-0000-000000000000',
 
 INSERT INTO users (id, email_validated, auth_id, email, first_name, last_name, password_hash, role)
 values ('00000000-0000-0000-0000-000000000000', true, null,
-        'system@circle.blog', 'System', '', '$2a$12$mfxXeMl0ufV2CDmWur19D.vNe/qUGESm.DUPaGL4breVVwUVhhTd2', 'SYSTEM');
+        'system@cirkle.blog', 'System', '', '$2a$12$mfxXeMl0ufV2CDmWur19D.vNe/qUGESm.DUPaGL4breVVwUVhhTd2', 'SYSTEM');
 
 

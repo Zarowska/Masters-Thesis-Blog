@@ -1,4 +1,4 @@
-package blog.cirkle.api.rest;
+package blog.cirkle.api.rest.users;
 
 import blog.cirkle.domain.facade.UserFacade;
 import blog.cirkle.domain.model.response.UserDto;
