@@ -5,6 +5,4 @@ EXPOSE 8080
 COPY build/libs/cirkle-app.jar /app/cirkle-app.jar
 
 
-
-
 CMD ["java", "-jar", "/app/cirkle-app.jar"]
