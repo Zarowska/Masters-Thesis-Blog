@@ -1,4 +1,8 @@
 spring:
+  datasource:
+    url: ${C_DB_URL}
+    username: ${C_DB_USER}
+    password: ${C_DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -9,6 +13,8 @@ springdoc:
 app:
   security:
     jwt:
-      algorithm: RSA256
-      # 60 min * 60 sec
-      ttl: 3600
+      issuer: ${C_JWT_ISSUER}
+      algorithm: ${C_JWT_ALGORITHM}
+      ttl: ${C_JWT_TTL}
+      publicKey: ${C_JWT_PUBLIC_KEY}
+      privateKey: ${C_JWT_PRIVATE_KEY}
