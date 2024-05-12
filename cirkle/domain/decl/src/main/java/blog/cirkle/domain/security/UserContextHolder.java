@@ -29,7 +29,7 @@ public class UserContextHolder {
 				if (mockContexts.isEmpty()) {
 					return Optional.empty();
 				} else {
-					return Optional.of(mockContexts.getFirst());
+					return mockContexts.stream().findFirst();
 				}
 			},
 			// defaultUser

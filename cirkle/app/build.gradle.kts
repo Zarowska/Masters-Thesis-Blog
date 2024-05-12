@@ -21,3 +21,9 @@ dependencies {
 tasks.bootJar {
     archiveFileName.set("cirkle-app.jar")
 }
+
+tasks.register("printVersion") {
+    doLast {
+        println("##teamcity[setParameter name='env.PROJECT_VERSION' value='${project.version}']")
+    }
+}
