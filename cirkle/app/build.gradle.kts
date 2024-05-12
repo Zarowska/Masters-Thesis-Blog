@@ -17,3 +17,7 @@ dependencies {
 
     testImplementation(project(":cirkle:test"))
 }
+
+tasks.bootJar {
+    archiveFileName.set("cirkle-app.jar")
+}
