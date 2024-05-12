@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+springdoc:
+  swagger-ui:
+    path: /openapi
+
+app:
+  security:
+    jwt:
+      algorithm: RSA256
+      # 60 min * 60 sec
+      ttl: 3600
