@@ -18,7 +18,7 @@ public class PostFacadeImpl implements PostFacade {
 	private final PostService postService;
 
 	@Override
-	public Page findByUserId(UUID userId, Pageable pageable) {
+	public Page<PostDto> findByUserId(UUID userId, Pageable pageable) {
 		Page<Post> posts = postService.findByUserId(userId, pageable);
 
 		return posts.map(post -> {

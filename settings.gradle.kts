@@ -17,6 +17,7 @@ rootProject.name = "cirkle-blog"
 include(
     "cirkle:core",
     "cirkle:api:rest",
+    "cirkle:api:rest-client",
     "cirkle:api:graphql",
     "cirkle:domain:decl",
     "cirkle:domain:impl",

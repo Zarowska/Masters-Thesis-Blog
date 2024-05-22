@@ -16,6 +16,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
 
     testImplementation(project(":cirkle:test"))
+    testImplementation(project(":cirkle:api:rest-client"))
 }
 
 tasks.bootJar {
