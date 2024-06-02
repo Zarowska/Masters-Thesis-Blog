@@ -7,4 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface PostService {
 	Page<Post> findByUserId(UUID userId, Pageable pageable);
+
+	Post save(Post post);
 }

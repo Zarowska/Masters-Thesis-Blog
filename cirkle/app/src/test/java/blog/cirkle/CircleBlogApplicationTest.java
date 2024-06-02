@@ -3,6 +3,9 @@ package blog.cirkle;
 import static org.junit.Assert.assertTrue;
 
 import blog.cirkle.api.rest.client.ApiClient;
+import blog.cirkle.api.rest.client.model.PaginatedResponse;
+import blog.cirkle.domain.model.request.CreatePostDto;
+import blog.cirkle.domain.model.response.PostDto;
 import blog.cirkle.domain.model.response.UserDto;
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +38,19 @@ class CircleBlogApplicationTest {
 		assertTrue(uploadAndDownloadFile(apiClient, "test-data/cirkle.gif").isPresent());
 		assertTrue(uploadAndDownloadFile(apiClient, "test-data/cirkle-png8.png").isPresent());
 		assertTrue(uploadAndDownloadFile(apiClient, "test-data/cirkle-png24.png").isPresent());
+	}
+
+	@Test
+	void createPostTest() throws IOException {
+		ApiClient apiClient = new ApiClient("http://localhost:" + port);
+		apiClient.registration().register("abc1@cde.com", "John", "Doe", "12345");
+		UserDto current = apiClient.user().current();
+		PostDto helloWorld = apiClient.posts().create(current.getId(), new CreatePostDto().setText("Hello World"));
+		System.out.println(helloWorld);
+
+		PaginatedResponse<PostDto> posts = apiClient.posts().findByUserId(current.getId());
+		System.out.println(posts);
+
 	}
 
 	private Optional<byte[]> uploadAndDownloadFile(ApiClient apiClient, String imageName) throws IOException {

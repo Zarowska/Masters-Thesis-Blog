@@ -1,8 +1,8 @@
 package blog.cirkle.api.rest.users;
 
 import blog.cirkle.domain.facade.PostFacade;
-import blog.cirkle.domain.model.CreatePostDto;
-import blog.cirkle.domain.model.PostDto;
+import blog.cirkle.domain.model.request.CreatePostDto;
+import blog.cirkle.domain.model.response.PostDto;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,13 +17,14 @@ public class PostsController {
 
 	private final PostFacade postFacade;
 
+	@GetMapping
+	Page<PostDto> findAllPostsByUserId(@PathVariable UUID userId, @PageableDefault Pageable pageable) {
+		return postFacade.findByUserId(userId, pageable);
+	}
+
 	@PostMapping
-	PostDto create(@PathVariable UUID userId, @RequestBody CreatePostDto request) {
+	PostDto createPost(@PathVariable UUID userId, @RequestBody CreatePostDto request) {
 		return postFacade.createOne(userId, request);
 	}
 
-	@GetMapping
-	Page<PostDto> findAllPosts(@PathVariable UUID userId, @PageableDefault Pageable pageable) {
-		return postFacade.findByUserId(userId, pageable);
-	}
 }

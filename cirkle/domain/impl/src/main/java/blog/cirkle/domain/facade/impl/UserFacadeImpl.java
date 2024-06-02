@@ -24,18 +24,18 @@ public class UserFacadeImpl implements UserFacade {
 
 	@Override
 	public Page<UserDto> findAll(Pageable pageable) {
-		return userService.findAll(pageable).map(this::toUserDto);
+		return userService.findAll(pageable).map(UserFacadeImpl::toUserDto);
 	}
 
 	@Override
 	public UserDto findBySlug(String slug) {
-		return userService.findBySlug(slug).map(this::toUserDto)
+		return userService.findBySlug(slug).map(UserFacadeImpl::toUserDto)
 				.orElseThrow(() -> new ResourceNotFoundException("User", Map.of("slug", slug)));
 	}
 
 	@Override
 	public UserDto findById(UUID id) {
-		return userService.findById(id).map(this::toUserDto)
+		return userService.findById(id).map(UserFacadeImpl::toUserDto)
 				.orElseThrow(() -> new ResourceNotFoundException("User", Map.of("id", id)));
 	}
 
@@ -46,7 +46,7 @@ public class UserFacadeImpl implements UserFacade {
 
 	@Override
 	public UserDto updateById(UUID id, UpdateUserRequest request) {
-		return userService.updateUser(id, request).map(this::toUserDto)
+		return userService.updateUser(id, request).map(UserFacadeImpl::toUserDto)
 				.orElseThrow(() -> new ResourceNotFoundException("User", Map.of("id", id)));
 	}
 
@@ -56,7 +56,7 @@ public class UserFacadeImpl implements UserFacade {
 		return new RegistrationResponseDto(toUserDto(response.getUser()), response.getEmailUrl());
 	}
 
-	private UserDto toUserDto(User user) {
+	public static UserDto toUserDto(User user) {
 		UserDto userDto = new UserDto();
 		userDto.setId(user.getId());
 		userDto.setSlug(user.getSlug().getSlug());

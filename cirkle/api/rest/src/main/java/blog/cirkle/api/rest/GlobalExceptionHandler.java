@@ -49,6 +49,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	ResponseEntity<ProblemDetail> internalServerErrorHandler(Exception ex) {
+		ex.printStackTrace();
 		log.warn(ex.getClass().getCanonicalName());
 		int status = exceptionCodes.getOrDefault(ex.getClass(), 500);
 		HttpStatusCode code = HttpStatusCode.valueOf(status);

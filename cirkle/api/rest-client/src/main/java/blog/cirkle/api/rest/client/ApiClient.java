@@ -22,6 +22,7 @@ public class ApiClient {
 	private final Lazy<UserEndpoint> user = lazy(() -> new UserEndpoint(getContext()));
 	private final Lazy<UsersEndpoint> users = lazy(() -> new UsersEndpoint(getContext()));
 	private final Lazy<FilesEndpoint> files = lazy(() -> new FilesEndpoint(getContext()));
+	private final Lazy<PostEndpoint> posts = lazy(() -> new PostEndpoint(getContext()));
 
 	public ApiClient(String baseUrl) {
 		OkHttpClient client = new OkHttpClient.Builder()
@@ -49,6 +50,10 @@ public class ApiClient {
 
 	public FilesEndpoint files() {
 		return files.get();
+	}
+
+	public PostEndpoint posts() {
+		return posts.get();
 	}
 
 	static final <T> Lazy<T> lazy(Supplier<T> builder) {

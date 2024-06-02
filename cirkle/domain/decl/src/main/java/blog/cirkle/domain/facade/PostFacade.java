@@ -1,7 +1,7 @@
 package blog.cirkle.domain.facade;
 
-import blog.cirkle.domain.model.CreatePostDto;
-import blog.cirkle.domain.model.PostDto;
+import blog.cirkle.domain.model.request.CreatePostDto;
+import blog.cirkle.domain.model.response.PostDto;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
