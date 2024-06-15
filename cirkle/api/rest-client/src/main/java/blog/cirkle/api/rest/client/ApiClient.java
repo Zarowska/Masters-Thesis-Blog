@@ -4,6 +4,8 @@ import blog.cirkle.api.rest.client.endpoint.*;
 import blog.cirkle.api.rest.client.utils.AuthInterceptor;
 import blog.cirkle.api.rest.client.utils.ClientContext;
 import blog.cirkle.api.rest.client.utils.Lazy;
+import blog.cirkle.domain.model.newModel.UserDto;
+import java.util.UUID;
 import java.util.function.Supplier;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,6 +25,7 @@ public class ApiClient {
 	private final Lazy<UsersEndpoint> users = lazy(() -> new UsersEndpoint(getContext()));
 	private final Lazy<FilesEndpoint> files = lazy(() -> new FilesEndpoint(getContext()));
 	private final Lazy<PostEndpoint> posts = lazy(() -> new PostEndpoint(getContext()));
+	private final Lazy<UUID> id = lazy(() -> getCurrentUser().getId());
 
 	public ApiClient(String baseUrl) {
 		OkHttpClient client = new OkHttpClient.Builder()
@@ -30,6 +33,14 @@ public class ApiClient {
 		Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl).client(client)
 				.addConverterFactory(GsonConverterFactory.create()).build();
 		context = new ClientContext(retrofit);
+	}
+
+	public UserDto getCurrentUser() {
+		return user().current();
+	}
+
+	public UUID getId() {
+		return id.get();
 	}
 
 	public AuthEndpoint auth() {
@@ -42,6 +53,10 @@ public class ApiClient {
 
 	public UserEndpoint user() {
 		return user.get();
+	}
+
+	public UserById user(UUID userId) {
+		return new UserById(getContext(), userId);
 	}
 
 	public UsersEndpoint users() {

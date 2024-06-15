@@ -3,10 +3,10 @@ package blog.cirkle.api.rest.client.endpoint;
 
 import blog.cirkle.api.rest.client.api.RegistrationApi;
 import blog.cirkle.api.rest.client.utils.ClientContext;
+import blog.cirkle.domain.model.newModel.UserDto;
 import blog.cirkle.domain.model.request.EmailValidationRequest;
 import blog.cirkle.domain.model.request.RegistrationRequest;
 import blog.cirkle.domain.model.response.AuthenticateResponse;
-import blog.cirkle.domain.model.response.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import retrofit2.Response;
 

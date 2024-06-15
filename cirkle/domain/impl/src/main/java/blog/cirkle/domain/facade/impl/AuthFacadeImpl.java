@@ -8,6 +8,7 @@ import blog.cirkle.domain.security.BlogUserDetails;
 import blog.cirkle.domain.security.UserContextHolder;
 import blog.cirkle.domain.service.JwtService;
 import blog.cirkle.domain.service.UserService;
+import com.auth0.jwt.interfaces.Payload;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +35,18 @@ public class AuthFacadeImpl implements AuthFacade, ApplicationRunner {
 
 	@Override
 	public BlogUserDetails authenticateByUsernameAndPassword(String username, String password) {
-		BlogUserDetails blogUserDetails = (BlogUserDetails) userDetailsService.loadUserByUsername(username);
-		if (!passwordEncoder.matches(password, blogUserDetails.getPassword())) {
-			throw new BadCredentialsException("Invalid password");
+		try {
+			BlogUserDetails blogUserDetails = (BlogUserDetails) userDetailsService
+					.loadUserByUsername(username.toLowerCase());
+			if (!passwordEncoder.matches(password, blogUserDetails.getPassword())) {
+				throw new BadCredentialsException("Invalid password");
+			}
+			authenticate(password, blogUserDetails);
+			return blogUserDetails;
+		} catch (UsernameNotFoundException e) {
+			throw new BadCredentialsException("Invalid user and/or password");
 		}
-		authenticate(password, blogUserDetails);
-		return blogUserDetails;
+
 	}
 
 	private static void authenticate(String password, BlogUserDetails blogUserDetails) {
@@ -52,9 +60,9 @@ public class AuthFacadeImpl implements AuthFacade, ApplicationRunner {
 	public BlogUserDetails authenticateByToken(String token) {
 		AtomicReference<BlogUserDetails> userDetails = new AtomicReference<>();
 		try {
-			UUID userId = UUID.fromString(jwtService.validateToken(token, decoded -> decoded.getSubject()));
+			UUID userId = UUID.fromString(jwtService.validateToken(token, Payload::getSubject));
 			userService.getFindById(userId).map(User::getEmail).map(userDetailsService::loadUserByUsername)
-					.map(user -> (BlogUserDetails) user).ifPresent(blogUserDetails -> {
+					.map(BlogUserDetails.class::cast).ifPresent(blogUserDetails -> {
 						authenticate(token, blogUserDetails);
 						userDetails.set(blogUserDetails);
 					});

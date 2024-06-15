@@ -47,6 +47,11 @@ public class User extends Participant {
 		return firstName + " " + lastName;
 	}
 
+	@Override
+	public ParticipantType getType() {
+		return ParticipantType.USER;
+	}
+
 	public enum UserRole {
 		SYSTEM, ADMIN, USER
 	}

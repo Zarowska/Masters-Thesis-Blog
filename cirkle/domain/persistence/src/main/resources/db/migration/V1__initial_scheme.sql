@@ -49,7 +49,7 @@ CREATE TABLE relations
     owner_id   UUID NOT NULL REFERENCES participants on DELETE cascade,
     related_id UUID NOT NULL REFERENCES participants on delete cascade,
     type       TEXT NOT NULL
-        CHECK (type = ANY (ARRAY ['BLOCKED', 'OWNER', 'ADMIN', 'MEMBER', 'FRIEND', 'FOLLOWER']))
+        CHECK (type = ANY (ARRAY ['BLOCKED', 'OWNER', 'ADMIN', 'MEMBER', 'FRIEND', 'FOLLOWER','FOLLOWED']))
 );
 
 CREATE TABLE relation_requests
@@ -58,7 +58,7 @@ CREATE TABLE relation_requests
     initiator_id UUID NOT NULL REFERENCES participants on delete cascade,
     target_id    UUID NOT NULL REFERENCES participants on delete cascade,
     type         TEXT NOT NULL
-        CHECK (type = ANY (ARRAY ['BLOCKED', 'OWNER', 'ADMIN', 'MEMBER', 'FRIEND', 'FOLLOWER']))
+        CHECK (type = ANY (ARRAY ['BLOCKED', 'OWNER', 'ADMIN', 'MEMBER', 'FRIEND', 'FOLLOWER','FOLLOWED']))
 );
 
 CREATE TABLE resources
@@ -85,11 +85,8 @@ CREATE TABLE images
 CREATE TABLE posts
 (
     id     UUID    NOT NULL PRIMARY KEY REFERENCES resources (id) ON DELETE CASCADE,
-    is_new BOOLEAN NOT NULL default false,
-    slug   TEXT    NOT NULL UNIQUE
+    is_new BOOLEAN NOT NULL default false
 );
-
-CREATE INDEX resources_slug_index ON posts (slug);
 
 CREATE TABLE comments
 (

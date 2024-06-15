@@ -1,7 +1,6 @@
 package blog.cirkle.domain.service.impl;
 
-import blog.cirkle.domain.entity.participant.EmailValidation;
-import blog.cirkle.domain.entity.participant.User;
+import blog.cirkle.domain.entity.participant.*;
 import blog.cirkle.domain.exception.BadRequestException;
 import blog.cirkle.domain.exception.NotAllowedException;
 import blog.cirkle.domain.model.RegistrationResponse;
@@ -51,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Optional<User> findBySlug(String slug) {
-		return userRepository.findByRoleNotAndSlug_slug(User.UserRole.SYSTEM, slug);
+		return userRepository.findByRoleNotAndSlug_value(User.UserRole.SYSTEM, slug);
 	}
 
 	@Override
@@ -68,7 +67,7 @@ public class UserServiceImpl implements UserService {
 				ifNotNull(request.getFirstName(), user::setFirstName);
 				ifNotNull(request.getLastName(), user::setLastName);
 				ifNotNull(user.getAvatarUrl(), user::setAvatarUrl);
-				ifNotNull(request.getSlug(), user.getSlug()::setSlug);
+				ifNotNull(request.getSlug(), user.getSlug()::setValue);
 				return user;
 			});
 		} else {
@@ -80,7 +79,8 @@ public class UserServiceImpl implements UserService {
 	public RegistrationResponse register(RegistrationRequest request) {
 		String avatar = "https://i.pravatar.cc/150?u=" + request.getEmail().hashCode();
 		User user = User.builder().role(User.UserRole.USER).firstName(request.getFirstName())
-				.lastName(request.getLastName()).avatarUrl(avatar).email(request.getEmail()).passwordHash("-1").build();
+				.lastName(request.getLastName()).avatarUrl(avatar).email(request.getEmail().toLowerCase())
+				.passwordHash("-1").build();
 		try {
 			User saved = userRepository.save(user);
 			userRepository.flush();
@@ -99,6 +99,7 @@ public class UserServiceImpl implements UserService {
 			emailValidationRepository.deleteById(reg.getId());
 			User user = reg.getUserRef();
 			user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+			user.setEmailValidated(true);
 			userRepository.flush();
 			return user;
 		}).orElseThrow(() -> new BadCredentialsException("Invalid validation token"));
@@ -115,4 +116,5 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findById(id);
 
 	}
+
 }

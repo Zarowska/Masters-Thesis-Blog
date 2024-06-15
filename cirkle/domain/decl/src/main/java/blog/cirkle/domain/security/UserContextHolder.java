@@ -34,7 +34,7 @@ public class UserContextHolder {
 			},
 			// defaultUser
 			() -> Optional.ofNullable(SecurityContextHolder.getContext()).map(SecurityContext::getAuthentication)
-					.map(Authentication::getPrincipal).filter(it -> it instanceof BlogUserDetails)
+					.map(Authentication::getPrincipal).filter(BlogUserDetails.class::isInstance)
 					.map(it -> (BlogUserDetails) it).map(UserContextImpl::new),
 			// systemUser
 			() -> Optional.of(new UserContextImpl(BlogUserDetails.SYSTEM_USER)));
@@ -45,6 +45,10 @@ public class UserContextHolder {
 
 	public static Optional<BlogUserDetails> getCurrentUser() {
 		return getUserContext().map(UserContext::currentUser);
+	}
+
+	public static BlogUserDetails getCurrentUserOrThrow() {
+		return getUserContext().map(UserContext::currentUser).orElseThrow();
 	}
 
 	public static Optional<Instant> getNow() {

@@ -1,5 +1,10 @@
 package blog.cirkle.domain.entity;
 
-public interface NamedEntity {
+import java.util.UUID;
+
+public interface NamedEntity<T> {
+
+	UUID getId();
+
 	String getName();
 }

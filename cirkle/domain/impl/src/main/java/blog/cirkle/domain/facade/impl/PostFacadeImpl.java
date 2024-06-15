@@ -5,10 +5,12 @@ import blog.cirkle.domain.entity.resource.Image;
 import blog.cirkle.domain.entity.resource.Post;
 import blog.cirkle.domain.entity.resource.Text;
 import blog.cirkle.domain.facade.PostFacade;
+import blog.cirkle.domain.facade.mappers.UserMapper;
 import blog.cirkle.domain.model.request.CreatePostDto;
 import blog.cirkle.domain.model.response.PostDto;
 import blog.cirkle.domain.service.FileService;
 import blog.cirkle.domain.service.PostService;
+import blog.cirkle.domain.service.impl.UserServiceHolder;
 import java.util.*;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +24,13 @@ public class PostFacadeImpl implements PostFacade {
 
 	private final PostService postService;
 	private final FileService fileService;
+	private final UserMapper userMapper;
 
 	@Override
 	public Page<PostDto> findByUserId(UUID userId, Pageable pageable) {
 		Page<Post> posts = postService.findByUserId(userId, pageable);
 
-		return posts.map(post -> toDto(post));
+		return posts.map(this::toDto);
 
 	}
 
@@ -38,15 +41,16 @@ public class PostFacadeImpl implements PostFacade {
 		List<Image> imageList = request.getImages().stream().map(fileService::findById).filter(Optional::isPresent)
 				.map(Optional::get).map(Image::new).toList();
 		post.getContent().addAll(imageList);
+		post.setAuthor(UserServiceHolder.currentUserOrNull());
 		post = postService.save(post);
 		return toDto(post);
 	}
 
 	PostDto toDto(Post post) {
-		return new PostDto().setId(post.getId()).setSlug(post.getSlug().getSlug())
-				.setCreatedAt(post.getCreatedAt().getEpochSecond()).setUpdatedAt(post.getUpdatedAt().getEpochSecond())
-				.setAuthor(UserFacadeImpl.toUserDto(post.getAuthor())).setText(getTextPart(post))
-				.setComments(Collections.emptyList()).setReactions(Collections.emptyList()).setImages(getImages(post));
+		return new PostDto().setId(post.getId()).setSlug("").setCreatedAt(post.getCreatedAt().getEpochSecond())
+				.setUpdatedAt(post.getUpdatedAt().getEpochSecond()).setAuthor(userMapper.toUserDto(post.getAuthor()))
+				.setText(getTextPart(post)).setComments(Collections.emptyList()).setReactions(Collections.emptyList())
+				.setImages(getImages(post));
 
 	}
 

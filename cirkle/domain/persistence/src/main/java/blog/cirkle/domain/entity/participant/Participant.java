@@ -8,6 +8,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "participants")
 @NoArgsConstructor
 @SuperBuilder
-public abstract class Participant extends BaseEntity implements NamedEntity {
+public abstract class Participant extends BaseEntity implements NamedEntity<UUID> {
 
 	@NotNull @Column(name = "avatar_url", nullable = false, length = Integer.MAX_VALUE)
 	private String avatarUrl;
@@ -39,6 +40,21 @@ public abstract class Participant extends BaseEntity implements NamedEntity {
 	@Override
 	protected void onUpdate() {
 		super.onUpdate();
-		slug.update(this);
+		if (slug.getValue() == null) {
+			slug.update(this);
+		}
+	}
+
+	public User asUser() {
+		if (this instanceof User user) {
+			return user;
+		}
+		throw new ClassCastException("Can't cast " + this.getClass().getSimpleName() + " to User");
+	}
+
+	public abstract ParticipantType getType();
+
+	public enum ParticipantType {
+		USER, GROUP
 	}
 }

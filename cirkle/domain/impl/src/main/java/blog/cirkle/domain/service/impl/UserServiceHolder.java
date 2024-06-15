@@ -1,5 +1,8 @@
 package blog.cirkle.domain.service.impl;
 
+import blog.cirkle.domain.entity.participant.User;
+import blog.cirkle.domain.security.BlogUserDetails;
+import blog.cirkle.domain.security.UserContextHolder;
 import blog.cirkle.domain.service.UserService;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -15,5 +18,14 @@ public class UserServiceHolder {
 
 	public static Optional<UserService> getInstance() {
 		return Optional.ofNullable(instance.get());
+	}
+
+	public static Optional<User> currentUser() {
+		return getInstance().flatMap(
+				service -> UserContextHolder.getCurrentUser().map(BlogUserDetails::getId).flatMap(service::findById));
+	}
+
+	public static User currentUserOrNull() {
+		return currentUser().orElse(null);
 	}
 }

@@ -25,4 +25,9 @@ public class Group extends Participant {
 	public String getName() {
 		return title;
 	}
+
+	@Override
+	public ParticipantType getType() {
+		return ParticipantType.GROUP;
+	}
 }

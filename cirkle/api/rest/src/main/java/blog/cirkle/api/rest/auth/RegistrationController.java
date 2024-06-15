@@ -2,11 +2,11 @@ package blog.cirkle.api.rest.auth;
 
 import blog.cirkle.domain.facade.AuthFacade;
 import blog.cirkle.domain.facade.UserFacade;
+import blog.cirkle.domain.model.newModel.UserDto;
 import blog.cirkle.domain.model.request.EmailValidationRequest;
 import blog.cirkle.domain.model.request.RegistrationRequest;
 import blog.cirkle.domain.model.response.AuthenticateResponse;
 import blog.cirkle.domain.model.response.RegistrationResponseDto;
-import blog.cirkle.domain.model.response.UserDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

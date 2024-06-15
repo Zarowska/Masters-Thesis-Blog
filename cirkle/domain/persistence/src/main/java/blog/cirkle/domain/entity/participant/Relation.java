@@ -1,10 +1,11 @@
 package blog.cirkle.domain.entity.participant;
 
 import blog.cirkle.domain.entity.BaseEntity;
+import blog.cirkle.domain.model.newModel.RelationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,6 +13,9 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Entity
 @Table(name = "relations")
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Relation extends BaseEntity {
 
 	@NotNull @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -25,13 +29,8 @@ public class Relation extends BaseEntity {
 	private Participant related;
 
 	@NotNull @Column(name = "type", nullable = false, length = Integer.MAX_VALUE)
-	private String type;
-
-	// FRIEND
-	// FOLLOWER
-	// GROUP_MEMBER
-	// GROUP_ADMIN
-	// GROUP_OWNER
+	@Enumerated(EnumType.STRING)
+	private RelationType type;
 
 	// todo add messages
 }

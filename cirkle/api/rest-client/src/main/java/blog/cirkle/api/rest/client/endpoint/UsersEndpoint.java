@@ -4,7 +4,7 @@ package blog.cirkle.api.rest.client.endpoint;
 import blog.cirkle.api.rest.client.api.UsersApi;
 import blog.cirkle.api.rest.client.model.PaginatedResponse;
 import blog.cirkle.api.rest.client.utils.ClientContext;
-import blog.cirkle.domain.model.response.UserDto;
+import blog.cirkle.domain.model.newModel.UserDto;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;

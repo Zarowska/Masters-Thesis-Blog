@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -20,6 +21,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @SuperBuilder
+@Accessors(chain = true)
 public abstract class BaseEntity {
 	@Id
 	@ColumnDefault("uuid_generate_v4()")

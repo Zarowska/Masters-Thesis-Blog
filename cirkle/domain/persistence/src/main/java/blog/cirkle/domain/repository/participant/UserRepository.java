@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
 	Page<User> findByRoleNot(User.UserRole role, Pageable pageable);
 
-	Optional<User> findByRoleNotAndSlug_slug(User.UserRole userRole, String slug);
+	Optional<User> findByRoleNotAndSlug_value(User.UserRole userRole, String slug);
 
 	Optional<User> findByRoleNotAndId(User.UserRole userRole, UUID id);
 }

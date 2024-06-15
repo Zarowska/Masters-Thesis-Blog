@@ -12,11 +12,11 @@ import lombok.Setter;
 @Embeddable
 public class Slug {
 	@NotNull @Column(name = "slug", nullable = false, length = Integer.MAX_VALUE)
-	private String slug;
+	private String value;
 
-	public void update(NamedEntity host) {
-		if (slug == null) {
-			slug = SlugUtils.slugifyWithSalt(host.getName());
+	public <K> void update(NamedEntity<K> host) {
+		if (value == null) {
+			value = SlugUtils.slugifyWithSalt(host.getName());
 		}
 	}
 }

@@ -1,9 +1,9 @@
 package blog.cirkle.api.rest.client.api;
 
+import blog.cirkle.domain.model.newModel.UserDto;
 import blog.cirkle.domain.model.request.EmailValidationRequest;
 import blog.cirkle.domain.model.request.RegistrationRequest;
 import blog.cirkle.domain.model.response.AuthenticateResponse;
-import blog.cirkle.domain.model.response.UserDto;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
