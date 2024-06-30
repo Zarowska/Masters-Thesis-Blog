@@ -1,7 +1,7 @@
 package blog.cirkle.api.rest.client.api;
 
 import blog.cirkle.api.rest.client.model.PaginatedResponse;
-import blog.cirkle.domain.model.newModel.RelationDto;
+import blog.cirkle.domain.model.response.RelationDto;
 import java.util.UUID;
 import retrofit2.Call;
 import retrofit2.http.GET;

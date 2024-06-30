@@ -12,6 +12,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "images")
 @NoArgsConstructor
+@DiscriminatorValue("IMAGE")
 public class Image extends Resource {
 	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@OnDelete(action = OnDeleteAction.CASCADE)

@@ -1,6 +1,7 @@
 package blog.cirkle.domain.facade.impl;
 
 import blog.cirkle.domain.entity.BaseEntity;
+import blog.cirkle.domain.entity.participant.Relation;
 import blog.cirkle.domain.entity.resource.Image;
 import blog.cirkle.domain.entity.resource.Post;
 import blog.cirkle.domain.entity.resource.Text;
@@ -8,8 +9,10 @@ import blog.cirkle.domain.facade.PostFacade;
 import blog.cirkle.domain.facade.mappers.UserMapper;
 import blog.cirkle.domain.model.request.CreatePostDto;
 import blog.cirkle.domain.model.response.PostDto;
+import blog.cirkle.domain.model.response.RelationType;
 import blog.cirkle.domain.service.FileService;
 import blog.cirkle.domain.service.PostService;
+import blog.cirkle.domain.service.RelationService;
 import blog.cirkle.domain.service.impl.UserServiceHolder;
 import java.util.*;
 import java.util.stream.Stream;
@@ -24,6 +27,7 @@ public class PostFacadeImpl implements PostFacade {
 
 	private final PostService postService;
 	private final FileService fileService;
+	private final RelationService relationService;
 	private final UserMapper userMapper;
 
 	@Override
@@ -41,9 +45,26 @@ public class PostFacadeImpl implements PostFacade {
 		List<Image> imageList = request.getImages().stream().map(fileService::findById).filter(Optional::isPresent)
 				.map(Optional::get).map(Image::new).toList();
 		post.getContent().addAll(imageList);
-		post.setAuthor(UserServiceHolder.currentUserOrNull());
-		post = postService.save(post);
-		return toDto(post);
+		final Post savedPost = postService.save(post);
+
+		List<Relation> relations;
+		int page = 0;
+		do {
+			relations = relationService
+					.findRelationsByType(userId, Set.of(RelationType.FOLLOWER), Pageable.ofSize(100).withPage(page))
+					.getContent();
+			relations.forEach(rel -> postService.addToFeed(rel.getRelated(), savedPost.getId()));
+			page++;
+		} while (!relations.isEmpty());
+
+		return toDto(savedPost);
+	}
+
+	@Override
+	public Page<PostDto> feed(Pageable pageable) {
+		Page<Post> feed = postService.getFeedByUserId(UserServiceHolder.currentUserOrNull().getId(), pageable);
+
+		return feed.map(it -> toDto(it));
 	}
 
 	PostDto toDto(Post post) {

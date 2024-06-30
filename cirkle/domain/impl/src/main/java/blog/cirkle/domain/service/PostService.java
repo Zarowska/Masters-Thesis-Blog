@@ -1,5 +1,6 @@
 package blog.cirkle.domain.service;
 
+import blog.cirkle.domain.entity.participant.Participant;
 import blog.cirkle.domain.entity.resource.Post;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
@@ -9,4 +10,8 @@ public interface PostService {
 	Page<Post> findByUserId(UUID userId, Pageable pageable);
 
 	Post save(Post post);
+
+	Page<Post> getFeedByUserId(UUID id, Pageable pageable);
+
+	void addToFeed(Participant target, UUID postId);
 }

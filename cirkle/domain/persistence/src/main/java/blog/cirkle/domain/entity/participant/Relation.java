@@ -1,7 +1,7 @@
 package blog.cirkle.domain.entity.participant;
 
 import blog.cirkle.domain.entity.BaseEntity;
-import blog.cirkle.domain.model.newModel.RelationType;
+import blog.cirkle.domain.model.response.RelationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

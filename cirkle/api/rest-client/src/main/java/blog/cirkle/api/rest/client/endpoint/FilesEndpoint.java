@@ -3,6 +3,7 @@ package blog.cirkle.api.rest.client.endpoint;
 import blog.cirkle.api.rest.client.api.FilesApi;
 import blog.cirkle.api.rest.client.utils.ClientContext;
 import blog.cirkle.api.rest.client.utils.Lazy;
+import blog.cirkle.domain.model.response.FileDto;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,14 +26,14 @@ public class FilesEndpoint extends AbstractEndpoint {
 		this.api = context.createApi(FilesApi.class);
 	}
 
-	public String upload(String name, MediaType mediaType, byte[] content) {
-		RequestBody requestBody = RequestBody.create(mediaType, content);
+	public FileDto upload(String name, MediaType mediaType, byte[] content) {
+		RequestBody requestBody = RequestBody.create(content, mediaType);
 		MultipartBody.Part filePart = MultipartBody.Part.createFormData("image", name, requestBody);
-		Response<ResponseBody> response = call(api.upload(filePart));
-		return response.headers().get("Location");
+		Response<FileDto> response = call(api.upload(filePart));
+		return response.body();
 	}
 
-	public String upload(File file) throws IOException {
+	public FileDto upload(File file) throws IOException {
 		MediaType mediaType = MediaType.parse(tika.get().detect(file));
 		return upload(file.getName(), mediaType, Files.readAllBytes(file.toPath()));
 	}

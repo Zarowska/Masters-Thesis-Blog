@@ -1,5 +1,6 @@
 package blog.cirkle.api.rest.client.api;
 
+import blog.cirkle.domain.model.response.FileDto;
 import java.util.UUID;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
@@ -13,5 +14,5 @@ public interface FilesApi extends Api {
 
 	@Multipart
 	@POST("/api/v1/images")
-	Call<ResponseBody> upload(@Part MultipartBody.Part image);
+	Call<FileDto> upload(@Part MultipartBody.Part image);
 }

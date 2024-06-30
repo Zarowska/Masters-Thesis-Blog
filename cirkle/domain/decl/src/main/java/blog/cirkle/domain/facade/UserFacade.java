@@ -1,12 +1,12 @@
 package blog.cirkle.domain.facade;
 
-import blog.cirkle.domain.model.newModel.RelationDto;
-import blog.cirkle.domain.model.newModel.RelationRequestDto;
-import blog.cirkle.domain.model.newModel.RelationType;
-import blog.cirkle.domain.model.newModel.UserDto;
+import blog.cirkle.domain.model.UserDto;
 import blog.cirkle.domain.model.request.RegistrationRequest;
 import blog.cirkle.domain.model.request.UpdateUserRequest;
 import blog.cirkle.domain.model.response.RegistrationResponseDto;
+import blog.cirkle.domain.model.response.RelationDto;
+import blog.cirkle.domain.model.response.RelationRequestDto;
+import blog.cirkle.domain.model.response.RelationType;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.domain.Page;

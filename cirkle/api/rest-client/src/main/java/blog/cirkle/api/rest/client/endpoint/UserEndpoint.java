@@ -4,8 +4,9 @@ package blog.cirkle.api.rest.client.endpoint;
 import blog.cirkle.api.rest.client.api.UserApi;
 import blog.cirkle.api.rest.client.model.PaginatedResponse;
 import blog.cirkle.api.rest.client.utils.ClientContext;
-import blog.cirkle.domain.model.newModel.RelationRequestDto;
-import blog.cirkle.domain.model.newModel.UserDto;
+import blog.cirkle.domain.model.UserDto;
+import blog.cirkle.domain.model.response.PostDto;
+import blog.cirkle.domain.model.response.RelationRequestDto;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,4 +36,7 @@ public class UserEndpoint extends AbstractEndpoint {
 		call(api.rejectRequest(requestId));
 	}
 
+	public PaginatedResponse<PostDto> feed(int page, int pageSize) {
+		return call(api.feed(page, pageSize)).body();
+	}
 }

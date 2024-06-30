@@ -2,7 +2,7 @@ package blog.cirkle.domain.repository.participant;
 
 import blog.cirkle.domain.entity.participant.Participant;
 import blog.cirkle.domain.entity.participant.Relation;
-import blog.cirkle.domain.model.newModel.RelationType;
+import blog.cirkle.domain.model.response.RelationType;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;

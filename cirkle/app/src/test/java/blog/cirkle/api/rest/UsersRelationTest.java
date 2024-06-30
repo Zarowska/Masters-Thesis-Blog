@@ -5,8 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import blog.cirkle.AbstractApiTest;
 import blog.cirkle.api.rest.client.exception.ClientResponseException;
-import blog.cirkle.domain.model.newModel.RelationDto;
-import blog.cirkle.domain.model.newModel.RelationRequestDto;
+import blog.cirkle.domain.model.response.RelationDto;
+import blog.cirkle.domain.model.response.RelationRequestDto;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;

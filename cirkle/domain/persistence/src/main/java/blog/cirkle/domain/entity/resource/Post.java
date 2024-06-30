@@ -10,6 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Setter
 @Entity
 @Table(name = "posts")
+@DiscriminatorValue("POST")
 public class Post extends Resource {
 
 	@NotNull @ColumnDefault("false")

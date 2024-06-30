@@ -3,8 +3,10 @@ package blog.cirkle.api.rest.controller;
 import static blog.cirkle.api.rest.constants.RestApiConstants.API_ROOT;
 
 import blog.cirkle.domain.facade.UserFacade;
-import blog.cirkle.domain.model.newModel.RelationDto;
-import blog.cirkle.domain.model.newModel.RelationType;
+import blog.cirkle.domain.model.response.RelationDto;
+import blog.cirkle.domain.model.response.RelationType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(API_ROOT + "/users/{userId}")
 @RequiredArgsConstructor
+@SecurityRequirements({@SecurityRequirement(name = "Bearer Authentication")})
 public class UsersRelationController {
 
 	private final UserFacade userFacade;

@@ -1,6 +1,7 @@
 package blog.cirkle.domain.entity.participant;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "groups")
 @NoArgsConstructor
 @SuperBuilder
+@DiscriminatorValue("GROUP")
 public class Group extends Participant {
 	@NotNull @Column(name = "title", nullable = false, length = Integer.MAX_VALUE)
 	@Builder.Default

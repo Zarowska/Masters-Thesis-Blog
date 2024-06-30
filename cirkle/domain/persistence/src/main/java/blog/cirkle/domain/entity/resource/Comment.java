@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Entity
 @Table(name = "comments")
+@DiscriminatorValue("COMMENT")
 public class Comment extends Resource {
 
 	@NotNull @ManyToOne(fetch = FetchType.LAZY, optional = false)

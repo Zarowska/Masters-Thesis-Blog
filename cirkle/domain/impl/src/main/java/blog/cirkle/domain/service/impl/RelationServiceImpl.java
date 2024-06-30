@@ -5,7 +5,7 @@ import blog.cirkle.domain.entity.participant.Relation;
 import blog.cirkle.domain.entity.participant.RelationRequest;
 import blog.cirkle.domain.exception.BadRequestException;
 import blog.cirkle.domain.exception.ResourceNotFoundException;
-import blog.cirkle.domain.model.newModel.RelationType;
+import blog.cirkle.domain.model.response.RelationType;
 import blog.cirkle.domain.repository.participant.RelationRepository;
 import blog.cirkle.domain.repository.participant.RelationRequestRepository;
 import blog.cirkle.domain.service.RelationService;

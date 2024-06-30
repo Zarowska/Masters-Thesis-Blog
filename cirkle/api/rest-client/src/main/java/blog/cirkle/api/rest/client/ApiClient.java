@@ -4,7 +4,7 @@ import blog.cirkle.api.rest.client.endpoint.*;
 import blog.cirkle.api.rest.client.utils.AuthInterceptor;
 import blog.cirkle.api.rest.client.utils.ClientContext;
 import blog.cirkle.api.rest.client.utils.Lazy;
-import blog.cirkle.domain.model.newModel.UserDto;
+import blog.cirkle.domain.model.UserDto;
 import java.util.UUID;
 import java.util.function.Supplier;
 import lombok.AccessLevel;

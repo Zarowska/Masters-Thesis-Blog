@@ -20,4 +20,10 @@ public class AuthEndpoint extends AbstractEndpoint {
 		AuthenticateResponse response = call(api.authenticate("Basic " + basicAuthToken)).body();
 		context.setToken(response.getToken());
 	}
+
+	public void loginForm(String email, String password, String token) {
+		context.clearToken();
+		AuthenticateResponse response = call(api.authenticateForm(email, password, token)).body();
+		context.setToken(response.getToken());
+	}
 }

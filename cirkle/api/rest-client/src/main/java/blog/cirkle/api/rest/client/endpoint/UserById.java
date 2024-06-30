@@ -3,7 +3,7 @@ package blog.cirkle.api.rest.client.endpoint;
 import blog.cirkle.api.rest.client.api.UsersRelationsApi;
 import blog.cirkle.api.rest.client.model.PaginatedResponse;
 import blog.cirkle.api.rest.client.utils.ClientContext;
-import blog.cirkle.domain.model.newModel.RelationDto;
+import blog.cirkle.domain.model.response.RelationDto;
 import java.util.UUID;
 
 public class UserById extends AbstractEndpoint {

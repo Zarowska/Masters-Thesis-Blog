@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @Accessors(chain = true)
 @NoArgsConstructor
 @SuperBuilder
+@DiscriminatorValue("USER")
 public class User extends Participant {
 
 	@NotNull @Column(name = "email_validated", nullable = false)

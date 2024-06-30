@@ -1,5 +1,7 @@
-package blog.cirkle.domain.model.newModel;
+package blog.cirkle.domain.model.response;
 
+import blog.cirkle.domain.model.UserDto;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +13,8 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class RelationDto {
+public class RelationRequestDto {
+	private UUID id;
 	private UserDto user;
 	private RelationType type;
 	private Long since;

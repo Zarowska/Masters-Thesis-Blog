@@ -1,6 +1,6 @@
 package blog.cirkle.domain.model.response;
 
-import blog.cirkle.domain.model.newModel.UserDto;
+import blog.cirkle.domain.model.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

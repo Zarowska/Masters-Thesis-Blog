@@ -1,8 +1,10 @@
-package blog.cirkle.api.rest.auth;
+package blog.cirkle.api.rest.controller;
 
+import blog.cirkle.domain.exception.BadRequestException;
 import blog.cirkle.domain.facade.AuthFacade;
 import blog.cirkle.domain.model.response.AuthenticateResponse;
 import blog.cirkle.domain.security.BlogUserDetails;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -10,10 +12,7 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/auth")
@@ -25,6 +24,28 @@ public class AuthController {
 
 	private final AuthFacade authFacade;
 
+	@Operation(summary = "Authenticate with form", description = "Returns authentication response", operationId = "authByForm", tags = {
+			"auth"})
+	@PostMapping("/form")
+	ResponseEntity<AuthenticateResponse> authenticate(@RequestParam(required = false) String email,
+			@RequestParam(required = false) String password, @RequestParam(required = false) String token) {
+		String authorization = null;
+		if (email != null && password != null) {
+			authorization = BASIC_PREFIX
+					+ Base64.getEncoder().encodeToString("%s:%s".formatted(email, password).getBytes());
+		} else if (token != null) {
+			authorization = BEARER_PREFIX + token;
+		}
+
+		if (authorization == null) {
+			throw new BadRequestException("Expected email with password or token");
+		}
+
+		return authenticate(authorization);
+	}
+
+	@Operation(summary = "Authenticate", description = "Returns authentication response", operationId = "auth", tags = {
+			"auth"})
 	@PostMapping
 	ResponseEntity<AuthenticateResponse> authenticate(
 			@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String token) {

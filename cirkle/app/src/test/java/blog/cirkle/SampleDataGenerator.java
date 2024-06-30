@@ -3,7 +3,7 @@ package blog.cirkle;
 import static java.util.stream.Collectors.toMap;
 
 import blog.cirkle.api.rest.client.ApiClient;
-import blog.cirkle.domain.model.newModel.UserDto;
+import blog.cirkle.domain.model.UserDto;
 import blog.cirkle.utils.SqlUtils;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;

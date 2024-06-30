@@ -3,7 +3,7 @@ package blog.cirkle.api.rest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import blog.cirkle.AbstractApiTest;
-import blog.cirkle.domain.model.newModel.UserDto;
+import blog.cirkle.domain.model.UserDto;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 

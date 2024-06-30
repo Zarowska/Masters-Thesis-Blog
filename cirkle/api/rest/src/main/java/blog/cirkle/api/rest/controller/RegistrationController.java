@@ -1,12 +1,13 @@
-package blog.cirkle.api.rest.auth;
+package blog.cirkle.api.rest.controller;
 
 import blog.cirkle.domain.facade.AuthFacade;
 import blog.cirkle.domain.facade.UserFacade;
-import blog.cirkle.domain.model.newModel.UserDto;
+import blog.cirkle.domain.model.UserDto;
 import blog.cirkle.domain.model.request.EmailValidationRequest;
 import blog.cirkle.domain.model.request.RegistrationRequest;
 import blog.cirkle.domain.model.response.AuthenticateResponse;
 import blog.cirkle.domain.model.response.RegistrationResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,8 @@ public class RegistrationController {
 	private final UserFacade userFacade;
 	private final AuthFacade authFacade;
 
+	@Operation(summary = "Registers new user", description = "Returns registered user info", operationId = "register", tags = {
+			"auth"})
 	@PostMapping()
 	ResponseEntity<UserDto> registration(@Valid @RequestBody RegistrationRequest request) {
 		RegistrationResponseDto response = userFacade.register(request);
@@ -30,6 +33,8 @@ public class RegistrationController {
 				.body(response.getUser());
 	}
 
+	@Operation(summary = "Email validation and password setup", description = "Returns authentication response", operationId = "validateEmail", tags = {
+			"auth"})
 	@PostMapping("/email-validation")
 	ResponseEntity<AuthenticateResponse> validateEmail(@RequestBody EmailValidationRequest request) {
 		return ResponseEntity.ok(authFacade.validateAndLogin(request));

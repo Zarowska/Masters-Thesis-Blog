@@ -3,7 +3,7 @@ package blog.cirkle.domain.service;
 import blog.cirkle.domain.entity.participant.Participant;
 import blog.cirkle.domain.entity.participant.Relation;
 import blog.cirkle.domain.entity.participant.RelationRequest;
-import blog.cirkle.domain.model.newModel.RelationType;
+import blog.cirkle.domain.model.response.RelationType;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.data.domain.Page;

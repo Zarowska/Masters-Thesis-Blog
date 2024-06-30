@@ -1,6 +1,6 @@
 package blog.cirkle.domain.model.response;
 
-import blog.cirkle.domain.model.newModel.UserDto;
+import blog.cirkle.domain.model.UserDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

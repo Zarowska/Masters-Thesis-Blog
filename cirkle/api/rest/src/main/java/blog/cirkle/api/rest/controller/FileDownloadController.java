@@ -1,4 +1,4 @@
-package blog.cirkle.api.rest.files;
+package blog.cirkle.api.rest.controller;
 
 import blog.cirkle.domain.facade.ImageFacade;
 import blog.cirkle.domain.model.FileWrapper;

@@ -1,6 +1,6 @@
 package blog.cirkle.api.rest.config;
 
-import blog.cirkle.api.rest.auth.AuthController;
+import blog.cirkle.api.rest.controller.AuthController;
 import blog.cirkle.domain.facade.AuthFacade;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
