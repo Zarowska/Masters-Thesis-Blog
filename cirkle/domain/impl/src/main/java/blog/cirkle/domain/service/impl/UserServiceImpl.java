@@ -1,7 +1,6 @@
 package blog.cirkle.domain.service.impl;
 
-import blog.cirkle.domain.entity.participant.EmailValidation;
-import blog.cirkle.domain.entity.participant.User;
+import blog.cirkle.domain.entity.participant.*;
 import blog.cirkle.domain.exception.BadRequestException;
 import blog.cirkle.domain.exception.NotAllowedException;
 import blog.cirkle.domain.model.RegistrationResponse;
@@ -14,6 +13,7 @@ import blog.cirkle.domain.security.BlogUserDetails;
 import blog.cirkle.domain.security.UserContextHolder;
 import blog.cirkle.domain.service.UserService;
 import blog.cirkle.domain.util.UUIDUtils;
+import blog.cirkle.domain.utils.SlugUtils;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -36,11 +36,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void createDefaultUsers() {
 		if (userRepository.count() == 1) {
-			userRepository.save(User.builder().firstName("Oksana").lastName("Zarowska")
+			User defaultUser = User.builder().firstName("Oksana").lastName("Zarowska")
 					.email("oksana.zarowska@cirkle.blog").passwordHash(passwordEncoder.encode("admin"))
 					.avatarUrl(
 							"https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/58/5839e66bf8adfec277abe6658039bc4d3947d08f.jpg")
-					.role(User.UserRole.ADMIN).build());
+					.role(User.UserRole.ADMIN).build();
+			save(defaultUser);
 		}
 	}
 
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Optional<User> findBySlug(String slug) {
-		return userRepository.findByRoleNotAndSlug_slug(User.UserRole.SYSTEM, slug);
+		return userRepository.findByRoleNotAndSlug(User.UserRole.SYSTEM, slug);
 	}
 
 	@Override
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
 				ifNotNull(request.getFirstName(), user::setFirstName);
 				ifNotNull(request.getLastName(), user::setLastName);
 				ifNotNull(user.getAvatarUrl(), user::setAvatarUrl);
-				ifNotNull(request.getSlug(), user.getSlug()::setSlug);
+				ifNotNull(request.getSlug(), user::setSlug);
 				return user;
 			});
 		} else {
@@ -80,9 +81,10 @@ public class UserServiceImpl implements UserService {
 	public RegistrationResponse register(RegistrationRequest request) {
 		String avatar = "https://i.pravatar.cc/150?u=" + request.getEmail().hashCode();
 		User user = User.builder().role(User.UserRole.USER).firstName(request.getFirstName())
-				.lastName(request.getLastName()).avatarUrl(avatar).email(request.getEmail()).passwordHash("-1").build();
+				.lastName(request.getLastName()).avatarUrl(avatar).email(request.getEmail().toLowerCase())
+				.passwordHash("-1").build();
 		try {
-			User saved = userRepository.save(user);
+			User saved = save(user);
 			userRepository.flush();
 			EmailValidation validation = emailValidationRepository.save(new EmailValidation(saved));
 			return new RegistrationResponse(saved, UUIDUtils.uuidsToBase64(validation.getId(), validation.getCode()));
@@ -99,6 +101,7 @@ public class UserServiceImpl implements UserService {
 			emailValidationRepository.deleteById(reg.getId());
 			User user = reg.getUserRef();
 			user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+			user.setEmailValidated(true);
 			userRepository.flush();
 			return user;
 		}).orElseThrow(() -> new BadCredentialsException("Invalid validation token"));
@@ -114,5 +117,10 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> getFindById(UUID id) {
 		return userRepository.findById(id);
 
+	}
+
+	private User save(User user) {
+		user.setSlug(SlugUtils.slugify(user.getName(), slug -> !userRepository.existsBySlug(slug)));
+		return userRepository.save(user);
 	}
 }

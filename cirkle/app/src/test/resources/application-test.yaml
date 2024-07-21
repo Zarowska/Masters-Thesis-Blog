@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql:16-alpine:///cirkle-test
+    username: sa
+    password:
+
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+app:
+  security:
+    jwt:
+      issuer: http://localhost:8080
+      algorithm: RSA256
+      publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAro3PM0Z/Gm4nW33NIjwIF+HcDsWuaXLNsfsGODiHOOTlxcVVP6jp9L6OPwqfIkmsBgqsL99zBJc0o3GHidrH+oGcUPWnNN9q6ibnFNkOCXb0YAYkNKOG1yYb6yz1mDNB/DTbvWnLzDL39qYX+m4Tee+LEnhhJwzk4/4D5ZBptvFtG0zpGMDpumrMoCRM17sQe5UGAgO087lETdvjqP32eGZZOGA0PXxaqf3Xj2RBsDh1CRtL/77hzuTrpDyEWslIhDdHDOkeawLJ0eRcjHnCj6OXi+VW90SdFh8N5yXFkT5j6LuoqydGSKfo+wL7jXkdhzc7dJ6Xe18qraNgN3fEuwIDAQAB
+      privateKey: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCujc8zRn8abidbfc0iPAgX4dwOxa5pcs2x+wY4OIc45OXFxVU/qOn0vo4/Cp8iSawGCqwv33MElzSjcYeJ2sf6gZxQ9ac032rqJucU2Q4JdvRgBiQ0o4bXJhvrLPWYM0H8NNu9acvMMvf2phf6bhN574sSeGEnDOTj/gPlkGm28W0bTOkYwOm6asygJEzXuxB7lQYCA7TzuURN2+Oo/fZ4Zlk4YDQ9fFqp/dePZEGwOHUJG0v/vuHO5OukPIRayUiEN0cM6R5rAsnR5FyMecKPo5eL5Vb3RJ0WHw3nJcWRPmPou6irJ0ZIp+j7AvuNeR2HNzt0npd7Xyqto2A3d8S7AgMBAAECggEALpW9JyeY02JzkYjU/t57oHgQRUb/wbe4atgeNFHt0MLSCcKc+kTnz4AtsWhxyPJVfTVK9+nQJfj+vOIXNLTVayc9IyQ0cDlyLLSeNmOpSeBb3ua0sfG0kmXizJRupSSE5zzqKjZ6g/BUWhjAzH6lJwVFnfPPpd7clXZc7t7oP8DlMqrhtS8ywIXxq1T/9WtQ+vjAuiGKS/slhDmQ1mIHW1SSr7nsYgHllYP/napWfBsQ85CzllHfkes3AFMbJ46olsCbCLGAiMKWlFaWNnSmmvIuPlTKRmBeCliAZdN+LLJobkQnyDTSmosvDeoAZ3samV8VFMKk9tjfHaPDYPU+7QKBgQDTDHe5SuVNcAgExfQITOAcilok1drfC/hseMMZ2k+lSTrTkrILxdynSEbw4vHncD7J++UIh8gcGBAkqkmX8pAVd4PSQhxnb0C9r987RKoLn3RVLlwzcf0LwM/Zr8lxL3VdMjByhUvAA84w3bMwze5ezSUI3nTqh5lQg8Zq1c7IBQKBgQDTu3KGF76O1hxJ0+3QTsSzFWw1hGJwSnwYbNyWYBjAGDLzKRmYiGSn2XKAsPhVQJqYiNRqjDxxmeXd1ojHnagifzx4xrkN+qLyeAWTXx1eJPWvCLWS27EEiL3SvVSOv+d34ytVlPJ4UoJrEuHhuHFx07Jsm6fPT8QJrkntV8G1vwKBgDk1ZvrGT5QHK1VH55ecZx+1bSwRAEx37TZSIejPIcnXKOgTGspQLzj1Qa2ohxRKe+q6qmH+lILxDucxddOHgAEhrY0AOLzdDnqcwvFI8qNF7P3uHDYhzwsxj+YdXYid6b2CjllswpThMzJR1nIDUHtINqLJ0n2Elk2Z+t4Y6P2VAoGAMMLplBIh05lhuGrzSNbrG+ciHY0Yco3k2Gcxwfvtl0e7bB6aA3Pd4n4Ejbiz6EZRlDFm4gbb4Lm1o4pFw9r+Hru4vIPfmGWRY0/a0N7Fz6mpXx8dWe34bXfkZ4Us1RdDAmwxzarY0HcIDAq0NJyam8FKRRLv6aGQHz6hTeS4+tcCgYEA0cPFhsQ6QeTc6DqrMZMtity4DDYU7uminMD1J96rD+9NMNV45kB1cmMNkjS9kHrMzw7CKTk0vizx95P69eskhILi4JpjfmKEPmEWtL1eS2RlOFtMROQhA1YwLRrZyze1PRDYwv7n2WhY5VPXMCb1FySEdnbIQgsRSsknSg5OUWQ=
+      ttl: 3600
+
+logging:
+  level:
+    blog.cirkle: debug
+    org.springframework.security: debug
+#    org.hibernate: debug

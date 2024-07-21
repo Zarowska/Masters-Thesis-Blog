@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @Accessors(chain = true)
 @NoArgsConstructor
 @SuperBuilder
+@DiscriminatorValue("USER")
 public class User extends Participant {
 
 	@NotNull @Column(name = "email_validated", nullable = false)
@@ -45,6 +46,11 @@ public class User extends Participant {
 	@Override
 	public String getName() {
 		return firstName + " " + lastName;
+	}
+
+	@Override
+	public ParticipantType getType() {
+		return ParticipantType.USER;
 	}
 
 	public enum UserRole {

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -20,10 +21,11 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	private static Map<Class<? extends Throwable>, Integer> exceptionCodes;
+	private static final Map<Class<? extends Throwable>, Integer> exceptionCodes;
 
 	static {
 		LinkedHashMap<Class<? extends Throwable>, Integer> map = new LinkedHashMap<>();
+		map.put(BadCredentialsException.class, 401);
 		map.put(HttpRequestMethodNotSupportedException.class, 400);
 		map.put(MissingRequestHeaderException.class, 400);
 		map.put(NoResourceFoundException.class, 404);
@@ -47,6 +49,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	ResponseEntity<ProblemDetail> internalServerErrorHandler(Exception ex) {
+		ex.printStackTrace();
 		log.warn(ex.getClass().getCanonicalName());
 		int status = exceptionCodes.getOrDefault(ex.getClass(), 500);
 		HttpStatusCode code = HttpStatusCode.valueOf(status);

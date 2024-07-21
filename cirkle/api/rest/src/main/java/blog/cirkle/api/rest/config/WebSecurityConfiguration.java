@@ -2,6 +2,7 @@ package blog.cirkle.api.rest.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,10 +22,10 @@ public class WebSecurityConfiguration {
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.formLogin(AbstractHttpConfigurer::disable).httpBasic(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(http -> http.requestMatchers("/api/v1/info").permitAll()
-						.requestMatchers("/api/v1/auth").permitAll().requestMatchers("/api/v1/registration").permitAll()
-						.requestMatchers("/api/v1/registration/email-validation").permitAll()
-						.requestMatchers("/api/v1/images/**").permitAll().requestMatchers("/api/v1/**").authenticated()
-						.anyRequest().permitAll())
+						.requestMatchers("/api/v1/auth/**").permitAll().requestMatchers("/api/v1/registration")
+						.permitAll().requestMatchers("/api/v1/registration/email-validation").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/v1/images/**").permitAll().requestMatchers("/api/v1/**")
+						.authenticated().anyRequest().permitAll())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
 }

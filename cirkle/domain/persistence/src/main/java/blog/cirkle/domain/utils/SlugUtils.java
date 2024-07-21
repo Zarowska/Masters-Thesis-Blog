@@ -2,6 +2,8 @@ package blog.cirkle.domain.utils;
 
 import com.github.slugify.Slugify;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +25,14 @@ public class SlugUtils {
 		return slugify(safeInput + " " + random.nextInt(1, 999999));
 	}
 
+	public static String slugify(String input, Predicate<String> isUnique) {
+		if (input == null) {
+			input = "undefined";
+		}
+		String result = slugify(input);
+		while (!isUnique.test(result)) {
+			result = slugify(input) + "-" + ThreadLocalRandom.current().nextInt(1000000);
+		}
+		return result;
+	}
 }

@@ -5,6 +5,7 @@ import blog.cirkle.domain.exception.ResourceNotFoundException;
 import blog.cirkle.domain.facade.ImageFacade;
 import blog.cirkle.domain.model.CacheEntry;
 import blog.cirkle.domain.model.FileWrapper;
+import blog.cirkle.domain.model.response.FileDto;
 import blog.cirkle.domain.service.FileService;
 import blog.cirkle.domain.service.impl.CacheHelper;
 import java.awt.*;
@@ -31,8 +32,10 @@ public class ImageFacadeImpl implements ImageFacade {
 	private final CacheHelper cacheHelper;
 
 	@Override
-	public UUID uploadFile(MultipartFile file) {
-		return fileService.create(file).getId();
+	public FileDto uploadFile(MultipartFile file) {
+		ImageFile imageFile = fileService.create(file);
+		return FileDto.builder().id(imageFile.getId()).originalFilename(imageFile.getOriginalName())
+				.mediaType(imageFile.getMediaType().toString()).size(imageFile.getContent().length).build();
 	}
 
 	@Override

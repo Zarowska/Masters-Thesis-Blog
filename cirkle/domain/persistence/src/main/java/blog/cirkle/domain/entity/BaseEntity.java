@@ -6,12 +6,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.UUID;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
@@ -20,12 +19,13 @@ import org.hibernate.annotations.ColumnDefault;
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @SuperBuilder
+@Accessors(chain = true)
+@DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class BaseEntity {
 	@Id
-	@ColumnDefault("uuid_generate_v4()")
+	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "id", nullable = false)
-	@Builder.Default
-	private UUID id = UUID.randomUUID();
+	private UUID id = null;
 
 	@NotNull @Column(name = "created_at", nullable = false)
 	private Instant createdAt;

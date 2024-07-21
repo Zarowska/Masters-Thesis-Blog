@@ -1,12 +1,14 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE
+EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE objects
 (
-    id         UUID                        NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-    created_at TIMESTAMP(6) WITH TIME ZONE NOT NULL,
-    updated_at TIMESTAMP(6) WITH TIME ZONE NOT NULL,
-    created_by UUID,
-    updated_by UUID
+    id          UUID                        NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
+    created_at  TIMESTAMP(6) WITH TIME ZONE NOT NULL,
+    updated_at  TIMESTAMP(6) WITH TIME ZONE NOT NULL,
+    created_by  UUID,
+    updated_by  UUID,
+    entity_type TEXT                        not null
 );
 
 CREATE TABLE participants
@@ -33,7 +35,7 @@ CREATE TABLE users
     first_name      TEXT    NOT NULL,
     last_name       TEXT    NOT NULL,
     password_hash   TEXT    NOT NULL,
-    role            TEXT    NOT NULL CHECK (role = ANY (ARRAY ['SYSTEM', 'ADMIN', 'USER']))
+    role            TEXT    NOT NULL CHECK (role = ANY (ARRAY['SYSTEM', 'ADMIN', 'USER']))
 );
 
 CREATE TABLE email_validations
@@ -49,7 +51,7 @@ CREATE TABLE relations
     owner_id   UUID NOT NULL REFERENCES participants on DELETE cascade,
     related_id UUID NOT NULL REFERENCES participants on delete cascade,
     type       TEXT NOT NULL
-        CHECK (type = ANY (ARRAY ['BLOCKED', 'OWNER', 'ADMIN', 'MEMBER', 'FRIEND', 'FOLLOWER']))
+        CHECK (type = ANY (ARRAY['BLOCKED', 'OWNER', 'ADMIN', 'MEMBER', 'FRIEND', 'FOLLOWER', 'FOLLOWED']))
 );
 
 CREATE TABLE relation_requests
@@ -58,7 +60,7 @@ CREATE TABLE relation_requests
     initiator_id UUID NOT NULL REFERENCES participants on delete cascade,
     target_id    UUID NOT NULL REFERENCES participants on delete cascade,
     type         TEXT NOT NULL
-        CHECK (type = ANY (ARRAY ['BLOCKED', 'OWNER', 'ADMIN', 'MEMBER', 'FRIEND', 'FOLLOWER']))
+        CHECK (type = ANY (ARRAY['BLOCKED', 'OWNER', 'ADMIN', 'MEMBER', 'FRIEND', 'FOLLOWER', 'FOLLOWED']))
 );
 
 CREATE TABLE resources
@@ -85,11 +87,8 @@ CREATE TABLE images
 CREATE TABLE posts
 (
     id     UUID    NOT NULL PRIMARY KEY REFERENCES resources (id) ON DELETE CASCADE,
-    is_new BOOLEAN NOT NULL default false,
-    slug   TEXT    NOT NULL UNIQUE
+    is_new BOOLEAN NOT NULL default false
 );
-
-CREATE INDEX resources_slug_index ON posts (slug);
 
 CREATE TABLE comments
 (
@@ -159,8 +158,8 @@ CREATE TABLE actor_topics
     topic    TEXT
 );
 
-INSERT INTO objects(id, created_at, created_by, updated_at, updated_by)
-values ('00000000-0000-0000-0000-000000000000', now(), null, now(), null);
+INSERT INTO objects(id, created_at, created_by, updated_at, updated_by, entity_type)
+values ('00000000-0000-0000-0000-000000000000', now(), null, now(), null, 'USER');
 
 update objects
 set created_by = '00000000-0000-0000-0000-000000000000',

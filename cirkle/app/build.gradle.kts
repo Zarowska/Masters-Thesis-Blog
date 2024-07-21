@@ -15,7 +15,9 @@ dependencies {
 
     runtimeOnly("org.postgresql:postgresql")
 
+    testImplementation("com.github.vertical-blank:sql-formatter:2.0.5")
     testImplementation(project(":cirkle:test"))
+    testImplementation(project(":cirkle:api:rest-client"))
 }
 
 tasks.bootJar {
