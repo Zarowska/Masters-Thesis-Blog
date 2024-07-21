@@ -19,6 +19,4 @@ public class PostDto {
 	private UserDto author;
 	private List<UUID> images = new ArrayList<>();
 	private String text;
-	private List<CommentDto> comments = new ArrayList<>();
-	private List<ReactionDto> reactions = new ArrayList<>();
 }

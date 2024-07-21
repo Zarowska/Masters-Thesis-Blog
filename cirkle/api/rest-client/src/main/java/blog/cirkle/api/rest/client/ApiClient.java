@@ -25,6 +25,7 @@ public class ApiClient {
 	private final Lazy<UsersEndpoint> users = lazy(() -> new UsersEndpoint(getContext()));
 	private final Lazy<FilesEndpoint> files = lazy(() -> new FilesEndpoint(getContext()));
 	private final Lazy<PostEndpoint> posts = lazy(() -> new PostEndpoint(getContext()));
+	private final Lazy<CommentEndpoint> comments = lazy(() -> new CommentEndpoint(getContext()));
 	private final Lazy<UUID> id = lazy(() -> getCurrentUser().getId());
 
 	public ApiClient(String baseUrl) {
@@ -69,6 +70,10 @@ public class ApiClient {
 
 	public PostEndpoint posts() {
 		return posts.get();
+	}
+
+	public CommentEndpoint comments() {
+		return comments.get();
 	}
 
 	static final <T> Lazy<T> lazy(Supplier<T> builder) {

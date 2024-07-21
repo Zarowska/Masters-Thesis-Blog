@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
@@ -15,6 +16,7 @@ import lombok.Setter;
 @Table(name = "texts")
 @NoArgsConstructor
 @DiscriminatorValue("TEXT")
+@Accessors(chain = true)
 public class Text extends Resource {
 	@NotNull @Column(name = "text", nullable = false, length = Integer.MAX_VALUE)
 	private String text;

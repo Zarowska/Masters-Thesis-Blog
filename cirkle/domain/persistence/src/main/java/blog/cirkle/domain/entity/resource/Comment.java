@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,6 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "comments")
 @DiscriminatorValue("COMMENT")
+@Accessors(chain = true)
 public class Comment extends Resource {
 
 	@NotNull @ManyToOne(fetch = FetchType.LAZY, optional = false)

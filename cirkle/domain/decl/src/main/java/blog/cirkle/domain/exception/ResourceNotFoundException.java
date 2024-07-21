@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 public class ResourceNotFoundException extends BlogException {
 
 	public ResourceNotFoundException(String resourceName, Map<String, Object> details) {
-		this("Resource of type "
-				+ resourceName + " with " + details.entrySet().stream()
+		this("Resource of type " + resourceName + " with "
+				+ details.entrySet().stream().sorted(Map.Entry.comparingByKey())
 						.map(it -> "%s=%s".formatted(it.getKey(), it.getValue())).collect(Collectors.joining(","))
 				+ " not found");
 	}
