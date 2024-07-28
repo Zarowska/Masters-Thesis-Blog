@@ -4,6 +4,8 @@
 ### Gradle Build cache ###
 build-cache/
 
+downloads/
+
 ### Bower ###
 bower_components
 .bower-cache
