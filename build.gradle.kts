@@ -3,7 +3,6 @@ plugins {
     id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.hibernate.orm") version "6.5.2.Final"
-    id("org.graalvm.buildtools.native") version "0.10.2"
     id("com.diffplug.spotless") version "7.0.0.BETA1"
 }
 
@@ -30,9 +29,15 @@ repositories {
 extra["springAiVersion"] = "1.0.0-M1"
 
 dependencies {
+    val graphqlKickstartVersion = "15.1.0"
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.graphql-java-kickstart:graphql-spring-boot-starter:$graphqlKickstartVersion") {
+        exclude(group = "com.graphql-java", module = "graphql-java")
+    }
+    implementation("com.graphql-java:graphql-java:21.3")
+    implementation("com.graphql-java-kickstart:playground-spring-boot-starter:11.1.0")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.auth0:java-jwt:4.4.0")
@@ -49,7 +54,8 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.springframework.graphql:spring-graphql-test")
+
+    testImplementation("com.graphql-java-kickstart:graphql-spring-boot-starter-test:$graphqlKickstartVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
