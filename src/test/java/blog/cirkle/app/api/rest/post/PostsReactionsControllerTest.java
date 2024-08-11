@@ -1,6 +1,6 @@
 package blog.cirkle.app.api.rest.post;
 
-import static blog.cirkle.app.api.rest.TestUtils.twoBunniesPost;
+import static blog.cirkle.app.api.rest.RestTestUtils.twoBunniesPost;
 import static org.junit.jupiter.api.Assertions.*;
 
 import blog.cirkle.app.api.rest.AbstractApiTest;

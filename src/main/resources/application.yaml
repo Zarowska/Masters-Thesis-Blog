@@ -1,7 +1,5 @@
+
 spring:
-  ai:
-    mistralai:
-      api-key: AAA
   datasource:
     url: jdbc:postgresql://localhost:6432/cirkle
     username: devuser
@@ -11,24 +9,52 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+    open-in-view: false
   servlet:
     multipart:
       max-file-size: 5MB
       max-request-size: 6MB
 
-  graphql:
-    graphiql:
+  threads:
+    virtual:
       enabled: true
-    websocket:
-      path: /graphql
-
-
-
-
 
 springdoc:
   swagger-ui:
     path: /openapi
+
+graphql:
+  servlet:
+    enabled: true
+    mapping: /graphql
+    cors-enabled: false
+    exception-handlers-enabled: true
+    context-setting: PER_REQUEST_WITH_INSTRUMENTATION
+
+  graphiql:
+    mapping: /graphiql
+    endpoint:
+      graphql: /graphql
+      subscriptions: /subscriptions
+    subscriptions:
+      timeout: 30
+      reconnect: false
+    basePath: /
+    enabled: true
+    pageTitle: GraphiQL
+    cdn:
+      enabled: false
+      version: latest
+    props:
+      resources:
+        query: graphql/queries.graphqls
+#        defaultQuery: defaultQuery.graphql
+#        variables: variables.json
+      variables:
+        editorTheme: "solarized light"
+#    headers:
+#      Authorization: "Bearer <your-token>"
+
 
 #app:
 #  security:
