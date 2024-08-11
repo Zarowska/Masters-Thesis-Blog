@@ -45,7 +45,6 @@ dependencies {
     implementation("org.apache.tika:tika-core:2.9.2")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
-    implementation("org.springframework.ai:spring-ai-mistral-ai-spring-boot-starter")
     compileOnly("org.projectlombok:lombok")
     testCompileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")

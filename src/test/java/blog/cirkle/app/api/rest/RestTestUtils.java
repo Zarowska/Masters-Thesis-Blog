@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.ClassPathResource;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TestUtils {
+public class RestTestUtils {
 	public static PostDto twoBunniesPost(ApiClient client) {
 		List<ImageDto> images = bunnyImages(client);
 		PostDto post = client.posts.createPost(CreatePostDto.builder().text("Post about two bunnies")

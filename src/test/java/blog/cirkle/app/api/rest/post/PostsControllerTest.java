@@ -1,6 +1,6 @@
 package blog.cirkle.app.api.rest.post;
 
-import static blog.cirkle.app.api.rest.TestUtils.*;
+import static blog.cirkle.app.api.rest.RestTestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import blog.cirkle.app.api.rest.AbstractApiTest;
