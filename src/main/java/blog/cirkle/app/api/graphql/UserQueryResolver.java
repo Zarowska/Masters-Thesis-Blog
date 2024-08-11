@@ -1,7 +1,8 @@
 package blog.cirkle.app.api.graphql;
 
 import blog.cirkle.app.api.graphql.model.User;
-import blog.cirkle.app.service.UserService;
+import blog.cirkle.app.api.rest.model.ParticipantDto;
+import blog.cirkle.app.facade.UserFacade;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import java.util.List;
 import java.util.UUID;
@@ -16,15 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserQueryResolver implements GraphQLQueryResolver {
 
-	private final UserService userService;
+	private final UserFacade userFacade;
 
 	User user(UUID id) {
-		blog.cirkle.app.model.entity.User user = userService.findById(id);
+		ParticipantDto user = userFacade.findByUserId(id);
 		return User.builder().id(user.getId()).build();
 	}
 
 	List<User> users(Integer limit, Integer offset) {
-		Page<User> page = userService.findAll(null, Pageable.ofSize(limit).withPage(offset))
+		Page<User> page = userFacade.findAll(null, Pageable.ofSize(limit).withPage(offset))
 				.map(u -> User.builder().id(u.getId()).build());
 		return page.getContent();
 	}

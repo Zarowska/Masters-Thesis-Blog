@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class User {
 	private UUID id;
+	private String name;
+	private String avatarUrl;
+	Boolean isGroup;
 }
