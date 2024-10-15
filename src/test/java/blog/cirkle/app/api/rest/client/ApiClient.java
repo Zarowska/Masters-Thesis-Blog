@@ -1,16 +1,20 @@
 package blog.cirkle.app.api.rest.client;
 
 import blog.cirkle.app.api.rest.client.endpoints.*;
+import blog.cirkle.app.api.rest.client.endpoints.utils.LogUtils;
 import blog.cirkle.app.api.rest.model.AuthenticateResponse;
 import blog.cirkle.app.api.rest.model.NewUserDto;
 import blog.cirkle.app.api.rest.model.ResetPasswordDto;
 import blog.cirkle.app.api.rest.model.request.CreateUserDto;
+import java.io.File;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.springframework.http.HttpHeaders;
+import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -63,11 +67,25 @@ public class ApiClient {
 		return context.userId.get();
 	}
 
+	public void setLogFile(String logFileName) {
+		File file = new File(logFileName);
+		if (file.exists()) {
+			file.delete();
+		}
+		context.setLogFileName(logFileName);
+
+	}
+
+	public void logComment(String comment) {
+		context.logComment(comment);
+	}
+
 	public static class ClientContext {
 		private final AtomicReference<String> tokenRef = new AtomicReference();
 		private final AtomicReference<UUID> userId = new AtomicReference();
 
 		private final Retrofit retrofit;
+		private String logFileName = null;
 
 		public Optional<String> getToken() {
 			return Optional.ofNullable(tokenRef.get());
@@ -94,6 +112,22 @@ public class ApiClient {
 		public void clear() {
 			tokenRef.set(null);
 			userId.set(null);
+		}
+
+		public void setLogFileName(String logFileName) {
+			this.logFileName = logFileName;
+		}
+
+		public <T> void logRequest(Call<T> call, Response<T> response) {
+			if (logFileName != null) {
+				LogUtils.logRequest(logFileName, call, response);
+			}
+		}
+
+		public void logComment(String comment) {
+			if (logFileName != null) {
+				LogUtils.appendLog(logFileName, "// " + comment + "\n\n");
+			}
 		}
 	}
 }

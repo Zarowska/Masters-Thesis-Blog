@@ -2,6 +2,7 @@ package blog.cirkle.app.api.rest.client.endpoints;
 
 import blog.cirkle.app.api.rest.client.ApiClient;
 import blog.cirkle.app.api.rest.client.api.MessagesApi;
+import blog.cirkle.app.api.rest.client.endpoints.utils.PageableQueryMapConverter;
 import blog.cirkle.app.api.rest.client.model.Pageable;
 import blog.cirkle.app.api.rest.client.model.PaginatedResponse;
 import blog.cirkle.app.api.rest.model.DialogInfoDto;
@@ -10,6 +11,7 @@ import blog.cirkle.app.api.rest.model.ReactionsDto;
 import blog.cirkle.app.api.rest.model.request.CreateMessageDto;
 import blog.cirkle.app.api.rest.model.request.CreateReactionDto;
 import blog.cirkle.app.api.rest.model.request.UpdateMessageDto;
+import java.util.Map;
 import java.util.UUID;
 
 public class MessagesEndpoint extends AbstractEndpoint<MessagesApi> {
@@ -40,10 +42,12 @@ public class MessagesEndpoint extends AbstractEndpoint<MessagesApi> {
 	}
 
 	PaginatedResponse<DialogInfoDto> getDialogs(Pageable pageable) {
-		return call(api.getDialogs(pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.getDialogs(pageableMap)).body();
 	}
 
 	PaginatedResponse<MessageDto> getMessagesByUserId(UUID userId, Pageable pageable) {
-		return call(api.getMessagesByUserId(userId, pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.getMessagesByUserId(userId, pageableMap)).body();
 	}
 }

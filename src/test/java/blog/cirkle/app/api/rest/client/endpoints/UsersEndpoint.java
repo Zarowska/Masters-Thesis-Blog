@@ -2,11 +2,13 @@ package blog.cirkle.app.api.rest.client.endpoints;
 
 import blog.cirkle.app.api.rest.client.ApiClient;
 import blog.cirkle.app.api.rest.client.api.UsersApi;
+import blog.cirkle.app.api.rest.client.endpoints.utils.PageableQueryMapConverter;
 import blog.cirkle.app.api.rest.client.model.Pageable;
 import blog.cirkle.app.api.rest.client.model.PaginatedResponse;
 import blog.cirkle.app.api.rest.model.ParticipantDto;
 import blog.cirkle.app.api.rest.model.PostDto;
 import blog.cirkle.app.api.rest.model.UserProfileDto;
+import java.util.Map;
 import java.util.UUID;
 
 public class UsersEndpoint extends AbstractEndpoint<UsersApi> {
@@ -32,7 +34,8 @@ public class UsersEndpoint extends AbstractEndpoint<UsersApi> {
 	}
 
 	public PaginatedResponse<ParticipantDto> findAllUsers(Pageable pageable) {
-		return call(api.findAllUsers(pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.findAllUsers(pageableMap)).body();
 	}
 
 	public ParticipantDto findUserById(UUID userId) {
@@ -44,7 +47,8 @@ public class UsersEndpoint extends AbstractEndpoint<UsersApi> {
 	}
 
 	public PaginatedResponse<PostDto> listPostsByUserId(UUID userId, Pageable pageable) {
-		return call(api.findPostsByUserId(userId, pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.findPostsByUserId(userId, pageableMap)).body();
 	}
 
 	public UserProfileDto getUserProfileById(UUID userId) {

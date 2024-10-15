@@ -45,6 +45,14 @@ public abstract class AbstractApiTest {
 		as("Alice", action);
 	}
 
+	protected void asMichael(UnsafeConsumer<ApiClient> action) {
+		as("Michael", action);
+	}
+
+	protected void asJessica(UnsafeConsumer<ApiClient> action) {
+		as("Jessica", action);
+	}
+
 	protected void asBob(UnsafeConsumer<ApiClient> action) {
 		as("Bob", action);
 	}
