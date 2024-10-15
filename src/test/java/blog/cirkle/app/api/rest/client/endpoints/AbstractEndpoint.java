@@ -20,10 +20,12 @@ public abstract class AbstractEndpoint<A> {
 		this.api = context.createApi(api);
 	}
 
-	protected static final <T> Response<T> call(Call<T> call) {
+	protected final <T> Response<T> call(Call<T> call) {
 		try {
 			Response<T> response = call.execute();
 			if (response.isSuccessful()) {
+				context.logRequest(call, response);
+
 				return response;
 			} else {
 				try {
@@ -42,4 +44,5 @@ public abstract class AbstractEndpoint<A> {
 		}
 
 	}
+
 }

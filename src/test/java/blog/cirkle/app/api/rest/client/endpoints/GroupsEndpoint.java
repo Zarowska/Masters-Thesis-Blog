@@ -2,12 +2,14 @@ package blog.cirkle.app.api.rest.client.endpoints;
 
 import blog.cirkle.app.api.rest.client.ApiClient;
 import blog.cirkle.app.api.rest.client.api.GroupsApi;
+import blog.cirkle.app.api.rest.client.endpoints.utils.PageableQueryMapConverter;
 import blog.cirkle.app.api.rest.client.model.Pageable;
 import blog.cirkle.app.api.rest.client.model.PaginatedResponse;
 import blog.cirkle.app.api.rest.model.GroupProfileDto;
 import blog.cirkle.app.api.rest.model.ParticipantDto;
 import blog.cirkle.app.api.rest.model.RequestDto;
 import blog.cirkle.app.api.rest.model.request.CreateGroupDto;
+import java.util.Map;
 
 public class GroupsEndpoint extends AbstractEndpoint<GroupsApi> {
 	public GroupsEndpoint(ApiClient.ClientContext context) {
@@ -15,7 +17,8 @@ public class GroupsEndpoint extends AbstractEndpoint<GroupsApi> {
 	}
 
 	public PaginatedResponse<ParticipantDto> listGroups(Pageable pageable) {
-		return call(api.listGroups(pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.listGroups(pageableMap)).body();
 	}
 
 	public ParticipantDto createGroup(CreateGroupDto createGroupDto) {
@@ -23,7 +26,8 @@ public class GroupsEndpoint extends AbstractEndpoint<GroupsApi> {
 	}
 
 	public PaginatedResponse<RequestDto> listGroupJoinRequest(String groupId, Pageable pageable) {
-		return call(api.listGroupJoinRequest(groupId, pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.listGroupJoinRequest(groupId, pageableMap)).body();
 	}
 
 	public Void acceptParticipantRequest(String groupId, String requestId) {

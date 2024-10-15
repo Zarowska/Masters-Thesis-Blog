@@ -2,12 +2,14 @@ package blog.cirkle.app.api.rest.client.endpoints;
 
 import blog.cirkle.app.api.rest.client.ApiClient;
 import blog.cirkle.app.api.rest.client.api.UserApi;
+import blog.cirkle.app.api.rest.client.endpoints.utils.PageableQueryMapConverter;
 import blog.cirkle.app.api.rest.client.model.Pageable;
 import blog.cirkle.app.api.rest.client.model.PaginatedResponse;
 import blog.cirkle.app.api.rest.model.ImageDto;
 import blog.cirkle.app.api.rest.model.ParticipantDto;
 import blog.cirkle.app.api.rest.model.PostDto;
 import blog.cirkle.app.api.rest.model.RequestDto;
+import java.util.Map;
 import java.util.UUID;
 import lombok.SneakyThrows;
 import okhttp3.MediaType;
@@ -32,7 +34,8 @@ public class UserEndpoint extends AbstractEndpoint<UserApi> {
 	}
 
 	public PaginatedResponse<ImageDto> listUserImages(Pageable pageable) {
-		return call(api.listUserImages(pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.listUserImages(pageableMap)).body();
 	}
 
 	public ImageDto uploadImage(MultipartBody.Part image) {
@@ -57,22 +60,28 @@ public class UserEndpoint extends AbstractEndpoint<UserApi> {
 	}
 
 	public PaginatedResponse<RequestDto> listUserRequests(Pageable pageable) {
-		return call(api.listUserRequests(pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.listUserRequests(pageableMap)).body();
 	}
 
 	public PaginatedResponse<PostDto> listUserPosts(Pageable pageable) {
-		return call(api.listUserPosts(pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.listUserPosts(pageableMap)).body();
 	}
 
 	public PaginatedResponse<PostDto> getUserFeed(Pageable pageable) {
-		return call(api.getUserFeed(pageable)).body();
+
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.getUserFeed(pageableMap)).body();
 	}
 
 	public PaginatedResponse<ParticipantDto> listFollowers(Pageable pageable) {
-		return call(api.listFollowers(pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.listFollowers(pageableMap)).body();
 	}
 
 	public PaginatedResponse<ParticipantDto> listFriends(Pageable pageable) {
-		return call(api.listFriends(pageable)).body();
+		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
+		return call(api.listFriends(pageableMap)).body();
 	}
 }
