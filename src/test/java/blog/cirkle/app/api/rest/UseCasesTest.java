@@ -13,16 +13,15 @@ import org.junit.jupiter.api.Test;
 
 class UseCasesTest extends AbstractApiTest {
 
-	// Creating a nested comment in an existing comment of a given post
 	@Test
-	void case1() {
+	void CreateNestedCommentCreation() {
 		asAlice(alice -> {
 			asMichael(michael -> {
 				asJessica(jessica -> {
 
-					alice.setLogFile("case1.log");
-					michael.setLogFile("case1.log");
-					jessica.setLogFile("case1.log");
+					alice.setLogFile("Nested_Comment_Creation.log");
+					michael.setLogFile("Nested_Comment_Creation.log");
+					jessica.setLogFile("Nested_Comment_Creation.log");
 
 					alice.logComment("Alice creates initial post");
 
@@ -59,7 +58,7 @@ class UseCasesTest extends AbstractApiTest {
 					alice.logComment("Get root comments");
 					List<CommentDto> rootComments = alice.posts.getComments(targetPost.getId()).getContent();
 
-					alice.logComment("Look for jessica's comment");
+					alice.logComment("Look for Jessica's comment");
 
 					CommentDto foundJessicaComment = rootComments.stream()
 							.flatMap(comment -> alice.posts.getComments(targetPost.getId(), comment.getId())
@@ -82,5 +81,34 @@ class UseCasesTest extends AbstractApiTest {
 			});
 		});
 	}
+
+
+	@Test
+	void RetrieveListOfUsersAndUserProfile () {
+		asAlice(alice -> {
+			asMichael(michael -> {
+				asJessica(jessica -> {
+
+					alice.setLogFile("Retrieve_List_Of_Users_And_User_Profile.log");
+					michael.setLogFile("Retrieve_List_Of_Users_And_User_Profile.log");
+					jessica.setLogFile("Retrieve_List_Of_Users_And_User_Profile.log");
+
+					alice.logComment("Find all users");
+					PaginatedResponse<ParticipantDto> allUsers = alice.users.findAllUsers(Pageable.DEFAULT);
+
+					ParticipantDto userParticipan = allUsers.getContent().stream()
+							.filter(it -> it.getName().startsWith("Michael") )
+												.findFirst().orElseThrow();
+
+					alice.logComment("Get a Michael Smith's profile");
+					UserProfileDto foundMichaelProfile = alice.users.getUserProfileById(userParticipan.getId());
+					UserProfileDto michaelProfile = michael.users.getUserProfileById(michael.getUserId());
+
+					assertEquals(michaelProfile, foundMichaelProfile);
+				});
+			});
+		});
+	}
+
 
 }
