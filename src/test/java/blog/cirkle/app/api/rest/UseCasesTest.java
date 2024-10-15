@@ -15,6 +15,7 @@ class UseCasesTest extends AbstractApiTest {
 
 	@Test
 	void CreateNestedCommentCreation() {
+
 		asAlice(alice -> {
 			asMichael(michael -> {
 				asJessica(jessica -> {
@@ -88,7 +89,6 @@ class UseCasesTest extends AbstractApiTest {
 		asAlice(alice -> {
 			asMichael(michael -> {
 				asJessica(jessica -> {
-
 					alice.setLogFile("Retrieve_List_Of_Users_And_User_Profile.log");
 					michael.setLogFile("Retrieve_List_Of_Users_And_User_Profile.log");
 					jessica.setLogFile("Retrieve_List_Of_Users_And_User_Profile.log");
@@ -109,6 +109,5 @@ class UseCasesTest extends AbstractApiTest {
 			});
 		});
 	}
-
 
 }
