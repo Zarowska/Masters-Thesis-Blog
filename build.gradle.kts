@@ -1,9 +1,9 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.3.2"
+    id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
-    id("org.hibernate.orm") version "6.5.2.Final"
-    id("com.diffplug.spotless") version "7.0.0.BETA1"
+    id("org.hibernate.orm") version "6.6.1.Final"
+    id("com.diffplug.spotless") version "7.0.0.BETA3"
 }
 
 group = "blog.cirkle"
@@ -26,18 +26,18 @@ repositories {
     maven { url = uri("https://repo.spring.io/milestone") }
 }
 
-extra["springAiVersion"] = "1.0.0-M1"
+extra["springAiVersion"] = "1.0.0-M3"
 
 dependencies {
-    val graphqlKickstartVersion = "15.1.0"
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.graphql-java-kickstart:graphql-spring-boot-starter:$graphqlKickstartVersion") {
-        exclude(group = "com.graphql-java", module = "graphql-java")
-    }
-    implementation("com.graphql-java:graphql-java:21.3")
-    implementation("com.graphql-java-kickstart:playground-spring-boot-starter:11.1.0")
+    implementation("org.springframework.boot:spring-boot-starter-graphql")
+
+    testImplementation("dev.langchain4j:langchain4j:0.35.0")
+    testImplementation("dev.langchain4j:langchain4j-mistral-ai:0.35.0")
+    testImplementation("net.datafaker:datafaker:2.4.0")
+    testImplementation("com.google.guava:guava:33.3.1-jre")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.auth0:java-jwt:4.4.0")
@@ -46,6 +46,7 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
     compileOnly("org.projectlombok:lombok")
+    implementation("org.springframework.ai:spring-ai-mistral-ai-spring-boot-starter")
     testCompileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
@@ -54,8 +55,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
 
-    testImplementation("com.graphql-java-kickstart:graphql-spring-boot-starter-test:$graphqlKickstartVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.graphql:spring-graphql-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")

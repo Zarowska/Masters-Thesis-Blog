@@ -95,6 +95,11 @@ public class UserServiceImpl implements UserService {
 		return pageUsers(pageable, user.getFriends());
 	}
 
+	@Override
+	public Long totalUsers() {
+		return userRepository.count();
+	}
+
 	private static Page<User> pageUsers(Pageable pageable, Set<User> userSet) {
 		int start = (int) pageable.getOffset();
 		int end = Math.min((start + pageable.getPageSize()), userSet.size());

@@ -12,7 +12,9 @@ import blog.cirkle.app.facade.PostsFacade;
 import blog.cirkle.app.model.entity.Comment;
 import blog.cirkle.app.model.entity.Image;
 import blog.cirkle.app.model.entity.Post;
+import blog.cirkle.app.model.entity.Reaction;
 import blog.cirkle.app.service.*;
+import java.util.Collection;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -91,7 +93,8 @@ public class PostsFacadeImpl implements PostsFacade {
 	@Override
 	public ReactionsDto createReactionByPostId(UUID postId, CreateReactionDto request) {
 		Post post = postService.findById(postId);
-		return mapper.toReactionDto(reactionService.createReaction(getCurrentUser(), post, request));
+		Collection<Reaction> reactions = reactionService.createReaction(getCurrentUser(), post, request);
+		return mapper.toReactionDto(reactions);
 	}
 
 	@Override

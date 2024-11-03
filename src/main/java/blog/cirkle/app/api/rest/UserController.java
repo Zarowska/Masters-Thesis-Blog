@@ -1,9 +1,7 @@
 package blog.cirkle.app.api.rest;
 
-import blog.cirkle.app.api.rest.model.ImageDto;
-import blog.cirkle.app.api.rest.model.ParticipantDto;
-import blog.cirkle.app.api.rest.model.PostDto;
-import blog.cirkle.app.api.rest.model.RequestDto;
+import blog.cirkle.app.api.rest.model.*;
+import blog.cirkle.app.api.rest.model.request.UpdateUserProfileDto;
 import blog.cirkle.app.facade.ImageFacade;
 import blog.cirkle.app.facade.UserFacade;
 import io.swagger.v3.oas.annotations.Operation;
@@ -92,5 +90,12 @@ public class UserController {
 			"user"})
 	Page<PostDto> feed(Pageable pageable) {
 		return userFacade.listCurrentUserFeed(pageable);
+	}
+
+	@PostMapping(path = "/profile")
+	@Operation(summary = "Updates user profile", description = "Updates user profile", operationId = "updateUserProfile", tags = {
+			"user"})
+	UserProfileDto updateProfile(@RequestBody UpdateUserProfileDto profileUpdate) {
+		return userFacade.updateProfile(profileUpdate);
 	}
 }

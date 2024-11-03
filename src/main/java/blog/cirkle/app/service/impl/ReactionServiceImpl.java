@@ -24,8 +24,8 @@ public class ReactionServiceImpl implements ReactionService {
 		reactable.getReactions().remove(userReactions);
 		reactionRepository.deleteAll(userReactions);
 		if (request.getValue() > 0) {
-			Reaction newReaction = reactionRepository
-					.save(Reaction.builder().value(request.getValue()).user(currentUser).build());
+			Reaction reaction = Reaction.builder().value(request.getValue()).user(currentUser).build();
+			Reaction newReaction = reactionRepository.save(reaction);
 			reactable.getReactions().add(newReaction);
 		}
 		return reactable.getReactions();

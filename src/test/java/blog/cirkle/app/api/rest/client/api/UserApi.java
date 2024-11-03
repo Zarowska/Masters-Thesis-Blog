@@ -1,10 +1,8 @@
 package blog.cirkle.app.api.rest.client.api;
 
 import blog.cirkle.app.api.rest.client.model.PaginatedResponse;
-import blog.cirkle.app.api.rest.model.ImageDto;
-import blog.cirkle.app.api.rest.model.ParticipantDto;
-import blog.cirkle.app.api.rest.model.PostDto;
-import blog.cirkle.app.api.rest.model.RequestDto;
+import blog.cirkle.app.api.rest.model.*;
+import blog.cirkle.app.api.rest.model.request.UpdateUserProfileDto;
 import java.util.Map;
 import java.util.UUID;
 import okhttp3.MultipartBody;
@@ -42,4 +40,7 @@ public interface UserApi {
 
 	@GET("/api/v1/user/friends")
 	Call<PaginatedResponse<ParticipantDto>> listFriends(@QueryMap Map<String, String> pageable);
+
+	@POST("/api/v1/user/profile")
+	Call<UserProfileDto> updateProfile(@Body UpdateUserProfileDto userProfileDto);
 }

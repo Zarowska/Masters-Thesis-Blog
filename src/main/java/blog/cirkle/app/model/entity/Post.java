@@ -44,7 +44,7 @@ public class Post implements Authored, Media, Reactable {
 	@Column(name = "text_content", nullable = false)
 	private String textContent;
 
-	@OneToMany(orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "post_reactions", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "reaction_id"))
 	@Builder.Default
 	private Set<Reaction> reactions = new LinkedHashSet<>();

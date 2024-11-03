@@ -10,6 +10,7 @@ import blog.cirkle.app.api.rest.model.ParticipantDto;
 import blog.cirkle.app.api.rest.model.PostDto;
 import blog.cirkle.app.api.rest.model.RequestDto;
 import blog.cirkle.app.api.rest.model.UserProfileDto;
+import blog.cirkle.app.api.rest.model.request.CreatePostDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -146,6 +147,23 @@ class UsersControllerTest extends AbstractApiTest {
 
 				PaginatedResponse<ParticipantDto> aliceFriends2 = alice.user.listFriends(Pageable.DEFAULT);
 				assertEquals(0, aliceFriends2.getContent().size());
+			});
+		});
+	}
+
+	@Test
+	void userShouldGetPostFromFeed() {
+		asAlice(alice -> {
+			asEve(eve -> {
+				eve.users.followUser(alice.getUserId());
+				alice.posts.createPost(CreatePostDto.builder().text("This is alice post").build());
+				List<PostDto> allFeedPosts = eve.user.getUserFeed(Pageable.DEFAULT).getContent();
+
+				Optional<PostDto> alicePostInFeed = allFeedPosts.stream()
+						.filter(post -> post.getText().equals("This is alice post")).findFirst();
+
+				assertTrue(alicePostInFeed.isPresent());
+
 			});
 		});
 	}

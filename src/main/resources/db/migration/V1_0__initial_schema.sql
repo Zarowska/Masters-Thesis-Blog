@@ -10,7 +10,7 @@ CREATE TABLE comments
     updated_at        TIMESTAMP(6) WITH TIME ZONE,
     author_id         UUID,
     post_id           UUID         NOT NULL,
-    text_content      VARCHAR(255) NOT NULL,
+    text_content      TEXT NOT NULL,
     parent_comment_id BIGINT,
     PRIMARY KEY (id)
 );
@@ -57,8 +57,8 @@ CREATE TABLE groups
     cover_photo_id   UUID,
     id               UUID         NOT NULL,
     profile_image_id UUID,
-    handle           VARCHAR(255) NOT NULL UNIQUE,
-    name             VARCHAR(255) NOT NULL,
+    handle           TEXT NOT NULL UNIQUE,
+    name             TEXT NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -75,7 +75,7 @@ CREATE TABLE images
     created_at TIMESTAMP(6) WITH TIME ZONE,
     id         UUID         NOT NULL,
     owner_id   UUID         NOT NULL,
-    mime_type  VARCHAR(255) NOT NULL,
+    mime_type  TEXT NOT NULL,
     content    BYTEA,
     PRIMARY KEY (id)
 );
@@ -94,7 +94,7 @@ CREATE TABLE messages
     updated_at   TIMESTAMP(6) WITH TIME ZONE,
     receiver_id  UUID         NOT NULL,
     sender_id    UUID         NOT NULL,
-    text_content VARCHAR(255) NOT NULL,
+    text_content TEXT NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -111,7 +111,7 @@ CREATE TABLE participant_request
     id          UUID         NOT NULL,
     receiver_id UUID         NOT NULL,
     sender_id   UUID         NOT NULL,
-    type        VARCHAR(255) NOT NULL CHECK (type IN ('FOLLOW', 'FRIEND', 'JOIN')),
+    type        TEXT NOT NULL CHECK (type IN ('FOLLOW', 'FRIEND', 'JOIN')),
     PRIMARY KEY (id)
 );
 
@@ -138,7 +138,7 @@ CREATE TABLE post
     author_id    UUID,
     id           UUID         NOT NULL,
     space_id     UUID         NOT NULL,
-    text_content VARCHAR(255) NOT NULL,
+    text_content TEXT NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -174,8 +174,8 @@ CREATE TABLE reactions
 CREATE TABLE system_config
 (
     id    UUID         NOT NULL,
-    key   VARCHAR(255) NOT NULL UNIQUE,
-    value VARCHAR(255),
+    key   TEXT NOT NULL UNIQUE,
+    value TEXT,
     PRIMARY KEY (id)
 );
 
@@ -184,15 +184,15 @@ CREATE TABLE users
     cover_photo_id   UUID,
     id               UUID         NOT NULL,
     profile_image_id UUID,
-    bio              VARCHAR(255),
-    city             VARCHAR(255),
-    country          VARCHAR(255),
-    email            VARCHAR(255) NOT NULL UNIQUE,
-    full_name        VARCHAR(255) NOT NULL,
-    handle           VARCHAR(255) NOT NULL UNIQUE,
-    hometown         VARCHAR(255),
-    password_hash    VARCHAR(255),
-    phone_number     VARCHAR(255),
+    bio              TEXT,
+    city             TEXT,
+    country          TEXT,
+    email            TEXT NOT NULL UNIQUE,
+    full_name        TEXT NOT NULL,
+    handle           TEXT NOT NULL UNIQUE,
+    hometown         TEXT,
+    password_hash    TEXT,
+    phone_number     TEXT,
     PRIMARY KEY (id)
 );
 
@@ -203,7 +203,7 @@ ALTER TABLE IF EXISTS comments
     ADD CONSTRAINT comment_post_fk FOREIGN KEY (post_id) REFERENCES post;
 
 ALTER TABLE IF EXISTS comment_images
-    ADD CONSTRAINT comment_images_image_fk FOREIGN KEY (image_id) REFERENCES images;
+    ADD CONSTRAINT comment_images_image_fk FOREIGN KEY (image_id)  REFERENCES images ON DELETE SET null;
 
 ALTER TABLE IF EXISTS comment_images
     ADD CONSTRAINT comment_images_comment_fk FOREIGN KEY (comment_id) REFERENCES comments;
@@ -233,10 +233,10 @@ ALTER TABLE IF EXISTS friends
     ADD CONSTRAINT friends_user_1_fk FOREIGN KEY (user_1_id) REFERENCES users;
 
 ALTER TABLE IF EXISTS groups
-    ADD CONSTRAINT groups_cover_photo_fk FOREIGN KEY (cover_photo_id) REFERENCES images;
+    ADD CONSTRAINT groups_cover_photo_fk FOREIGN KEY (cover_photo_id)  REFERENCES images ON DELETE SET null;
 
 ALTER TABLE IF EXISTS groups
-    ADD CONSTRAINT groups_profile_image_fk FOREIGN KEY (profile_image_id) REFERENCES images;
+    ADD CONSTRAINT groups_profile_image_fk FOREIGN KEY (profile_image_id)  REFERENCES images ON DELETE SET null;
 
 ALTER TABLE IF EXISTS groups
     ADD CONSTRAINT groups_participant_fk FOREIGN KEY (id) REFERENCES participants;
@@ -254,7 +254,7 @@ ALTER TABLE IF EXISTS image_reactions
     ADD CONSTRAINT image_reactions_reaction_fk FOREIGN KEY (reaction_id) REFERENCES reactions;
 
 ALTER TABLE IF EXISTS image_reactions
-    ADD CONSTRAINT image_reactions_image_fk FOREIGN KEY (image_id) REFERENCES images;
+    ADD CONSTRAINT image_reactions_image_fk FOREIGN KEY (image_id)  REFERENCES images ON DELETE SET null;
 
 ALTER TABLE IF EXISTS message
     ADD CONSTRAINT message_receiver_fk FOREIGN KEY (receiver_id) REFERENCES users;
@@ -263,7 +263,7 @@ ALTER TABLE IF EXISTS message
     ADD CONSTRAINT message_sender_fk FOREIGN KEY (sender_id) REFERENCES users;
 
 ALTER TABLE IF EXISTS message_images
-    ADD CONSTRAINT message_images_image_fk FOREIGN KEY (image_id) REFERENCES images;
+    ADD CONSTRAINT message_images_image_fk FOREIGN KEY (image_id)  REFERENCES images ON DELETE SET null;
 
 ALTER TABLE IF EXISTS message_images
     ADD CONSTRAINT message_images_message_fk FOREIGN KEY (message_id) REFERENCES messages;
@@ -287,7 +287,7 @@ ALTER TABLE IF EXISTS post
     ADD CONSTRAINT post_space_fk FOREIGN KEY (space_id) REFERENCES participants ON DELETE CASCADE;
 
 ALTER TABLE IF EXISTS post_images
-    ADD CONSTRAINT post_images_image_fk FOREIGN KEY (image_id) REFERENCES images;
+    ADD CONSTRAINT post_images_image_fk FOREIGN KEY (image_id)  REFERENCES images ON DELETE SET null;
 
 ALTER TABLE IF EXISTS post_images
     ADD CONSTRAINT post_images_post_fk FOREIGN KEY (post_id) REFERENCES post;
@@ -308,10 +308,10 @@ ALTER TABLE IF EXISTS reactions
     ADD CONSTRAINT reaction_user_fk FOREIGN KEY (user_id) REFERENCES users;
 
 ALTER TABLE IF EXISTS users
-    ADD CONSTRAINT users_cover_photo_fk FOREIGN KEY (cover_photo_id) REFERENCES images;
+    ADD CONSTRAINT users_cover_photo_fk FOREIGN KEY (cover_photo_id)  REFERENCES images ON DELETE SET null;
 
 ALTER TABLE IF EXISTS users
-    ADD CONSTRAINT users_profile_image_fk FOREIGN KEY (profile_image_id) REFERENCES images;
+    ADD CONSTRAINT users_profile_image_fk FOREIGN KEY (profile_image_id)  REFERENCES images ON DELETE SET null;
 
 ALTER TABLE IF EXISTS users
     ADD CONSTRAINT users_participant_fk FOREIGN KEY (id) REFERENCES participants;

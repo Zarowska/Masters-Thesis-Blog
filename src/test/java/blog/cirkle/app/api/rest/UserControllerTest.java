@@ -1,15 +1,14 @@
 package blog.cirkle.app.api.rest;
 
+import static blog.cirkle.app.api.rest.RestTestUtils.bunnyImages;
 import static blog.cirkle.app.api.rest.RestTestUtils.twoBunniesPost;
 import static org.junit.jupiter.api.Assertions.*;
 
 import blog.cirkle.app.api.rest.client.model.Pageable;
 import blog.cirkle.app.api.rest.client.model.PaginatedResponse;
-import blog.cirkle.app.api.rest.model.ImageDto;
-import blog.cirkle.app.api.rest.model.ParticipantDto;
-import blog.cirkle.app.api.rest.model.PostDto;
-import blog.cirkle.app.api.rest.model.RequestDto;
+import blog.cirkle.app.api.rest.model.*;
 import blog.cirkle.app.api.rest.model.request.CreatePostDto;
+import blog.cirkle.app.api.rest.model.request.UpdateUserProfileDto;
 import blog.cirkle.app.model.entity.ParticipantRequest;
 import java.util.List;
 import java.util.UUID;
@@ -138,6 +137,22 @@ class UserControllerTest extends AbstractApiTest {
 					assertTrue(evesFeed.getContent().contains(alicePost));
 				});
 			});
+		});
+	}
+
+	@Test
+	void shouldUpdateProfile() {
+		asAlice(alice -> {
+			List<ImageDto> images = bunnyImages(alice);
+			UserProfileDto updatedProfile = alice.user
+					.updateUserProfile(UpdateUserProfileDto.builder().name("Alice Cooper").bio("Bio of Alice Cooper")
+							.profileImageId(images.get(0).getId()).coverPhotoImageId(images.get(1).getId())
+							.phoneNumber("1234567890").city("Testvile").country("Wounderworld").build());
+
+			UserProfileDto actual = alice.users.getUserProfileById(alice.getUserId());
+
+			assertEquals(updatedProfile, actual);
+
 		});
 	}
 }

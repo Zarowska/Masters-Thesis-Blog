@@ -3,6 +3,7 @@ package blog.cirkle.app.facade;
 import blog.cirkle.app.api.rest.model.*;
 import blog.cirkle.app.api.rest.model.UserProfileDto;
 import blog.cirkle.app.api.rest.model.request.CreateUserDto;
+import blog.cirkle.app.api.rest.model.request.UpdateUserProfileDto;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,4 +47,6 @@ public interface UserFacade {
 	Page<ParticipantDto> listCurrentUserFollowers(Pageable pageable);
 
 	Page<ParticipantDto> listCurrentUserFriends(Pageable pageable);
+
+	UserProfileDto updateProfile(UpdateUserProfileDto profileUpdate);
 }

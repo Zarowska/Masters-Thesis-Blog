@@ -5,10 +5,8 @@ import blog.cirkle.app.api.rest.client.api.UserApi;
 import blog.cirkle.app.api.rest.client.endpoints.utils.PageableQueryMapConverter;
 import blog.cirkle.app.api.rest.client.model.Pageable;
 import blog.cirkle.app.api.rest.client.model.PaginatedResponse;
-import blog.cirkle.app.api.rest.model.ImageDto;
-import blog.cirkle.app.api.rest.model.ParticipantDto;
-import blog.cirkle.app.api.rest.model.PostDto;
-import blog.cirkle.app.api.rest.model.RequestDto;
+import blog.cirkle.app.api.rest.model.*;
+import blog.cirkle.app.api.rest.model.request.UpdateUserProfileDto;
 import java.util.Map;
 import java.util.UUID;
 import lombok.SneakyThrows;
@@ -16,10 +14,10 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import org.apache.tika.Tika;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public class UserEndpoint extends AbstractEndpoint<UserApi> {
-	private Tika tika = new Tika();
+	private final Tika tika = new Tika();
 
 	public UserEndpoint(ApiClient.ClientContext context) {
 		super(context, UserApi.class);
@@ -49,7 +47,7 @@ public class UserEndpoint extends AbstractEndpoint<UserApi> {
 	}
 
 	@SneakyThrows
-	public ImageDto uploadImage(ClassPathResource resource) {
+	public ImageDto uploadImage(Resource resource) {
 		byte[] content = resource.getContentAsByteArray();
 		MediaType mediaType = MediaType.parse(tika.detect(content));
 		return uploadImage(resource.getFilename(), mediaType, content);
@@ -83,5 +81,9 @@ public class UserEndpoint extends AbstractEndpoint<UserApi> {
 	public PaginatedResponse<ParticipantDto> listFriends(Pageable pageable) {
 		Map<String, String> pageableMap = PageableQueryMapConverter.toMap(pageable);
 		return call(api.listFriends(pageableMap)).body();
+	}
+
+	public UserProfileDto updateUserProfile(UpdateUserProfileDto userProfileDto) {
+		return call(api.updateProfile(userProfileDto)).body();
 	}
 }

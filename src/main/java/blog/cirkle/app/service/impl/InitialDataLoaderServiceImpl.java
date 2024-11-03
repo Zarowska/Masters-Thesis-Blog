@@ -11,12 +11,15 @@ import blog.cirkle.app.service.SystemConfigService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-//@Service
+@Service
 @Transactional
 @RequiredArgsConstructor
+@Profile("!test")
 public class InitialDataLoaderServiceImpl implements InitialDataLoaderService, ApplicationRunner {
 
 	private final SystemConfigService systemConfigService;

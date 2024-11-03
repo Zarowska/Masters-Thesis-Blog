@@ -6,12 +6,12 @@ import static blog.cirkle.app.utils.SecurityUtils.getCurrentUser;
 import blog.cirkle.app.api.rest.model.*;
 import blog.cirkle.app.api.rest.model.UserProfileDto;
 import blog.cirkle.app.api.rest.model.request.CreateUserDto;
+import blog.cirkle.app.api.rest.model.request.UpdateUserProfileDto;
 import blog.cirkle.app.exception.BadRequestException;
 import blog.cirkle.app.exception.NotFoundException;
 import blog.cirkle.app.facade.AuthFacade;
 import blog.cirkle.app.facade.UserFacade;
-import blog.cirkle.app.model.entity.PasswordChangeRequest;
-import blog.cirkle.app.model.entity.User;
+import blog.cirkle.app.model.entity.*;
 import blog.cirkle.app.repository.PasswordChangeRequestRepository;
 import blog.cirkle.app.service.*;
 import blog.cirkle.app.utils.UUIDExtractor;
@@ -35,6 +35,7 @@ public class UserFacadeImpl implements UserFacade {
 	private final RelationService relationService;
 	private final FeedService feedService;
 	private final PasswordChangeRequestRepository passwordChangeRequestRepository;
+	private final ImageService imageService;
 
 	@Override
 	public NewUserDto registerUser(CreateUserDto request) {
@@ -148,5 +149,47 @@ public class UserFacadeImpl implements UserFacade {
 	@Override
 	public Page<ParticipantDto> listCurrentUserFriends(Pageable pageable) {
 		return userService.listFriendsByUserId(getCurrentUser().getId(), pageable).map(modelMapper::toParticipantDto);
+	}
+
+	@Override
+	@Transactional
+	public UserProfileDto updateProfile(UpdateUserProfileDto profileUpdate) {
+		User currentUser = userService.findById(getCurrentUser().getId());
+		UserProfile profile = currentUser.getProfile();
+		Optional.ofNullable(profileUpdate.getBio()).ifPresent(profile::setBio);
+		Optional.ofNullable(profileUpdate.getHandle()).ifPresent(profile::setHandle);
+		Optional.ofNullable(profileUpdate.getProfileImageId()).ifPresent(imageId -> {
+			Image image = imageService.findById(imageId);
+			if (image.getOwner().getId().equals(currentUser.getId())) {
+				profile.setProfileImage(image);
+			} else {
+				throw new BadRequestException(
+						"Image with " + imageId + " not belongs to userId=" + currentUser.getId());
+			}
+		});
+		Optional.ofNullable(profileUpdate.getCoverPhotoImageId()).ifPresent(imageId -> {
+			Image image = imageService.findById(imageId);
+			if (image.getOwner().getId().equals(currentUser.getId())) {
+				profile.setCoverPhoto(image);
+			} else {
+				throw new BadRequestException(
+						"Image with " + imageId + " not belongs to userId=" + currentUser.getId());
+			}
+		});
+		Optional.ofNullable(profileUpdate.getPhoneNumber())
+				.ifPresent(phoneNumber -> profile.setPhoneNumber(phoneNumber));
+		Optional.ofNullable(profileUpdate.getCountry()).ifPresent(country -> {
+			if (profile.getAddress() == null) {
+				profile.setAddress(new Address());
+			}
+			profile.getAddress().setCountry(country);
+		});
+		Optional.ofNullable(profileUpdate.getCity()).ifPresent(city -> {
+			if (profile.getAddress() == null) {
+				profile.setAddress(new Address());
+			}
+			profile.getAddress().setCity(city);
+		});
+		return modelMapper.toUserProfileDto(profile);
 	}
 }

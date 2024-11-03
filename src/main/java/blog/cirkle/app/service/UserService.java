@@ -28,4 +28,6 @@ public interface UserService {
 	Page<User> listFollowersByUserId(UUID id, Pageable pageable);
 
 	Page<User> listFriendsByUserId(UUID id, Pageable pageable);
+
+	Long totalUsers();
 }

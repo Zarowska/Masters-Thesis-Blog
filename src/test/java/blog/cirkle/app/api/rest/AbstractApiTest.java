@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 public abstract class AbstractApiTest {
 
 	@LocalServerPort
-	private int port;
+	protected int port;
 
 	@SneakyThrows
 	protected void as(String name, UnsafeConsumer<ApiClient> action) {
@@ -33,9 +33,9 @@ public abstract class AbstractApiTest {
 	protected void as(String name, String email, String password, UnsafeConsumer<ApiClient> action) {
 		ApiClient client = createClient();
 		try {
-			client.register(CreateUserDto.builder().email(email).fullName(name).build(), password);
-		} catch (ClientResponseException e) {
 			client.login(email, password);
+		} catch (ClientResponseException e) {
+			client.register(CreateUserDto.builder().email(email).fullName(name).build(), password);
 		}
 		assertTrue(client.isLoggedIn());
 		action.accept(client);

@@ -26,6 +26,7 @@ public class ApiClient {
 	public final PostsEndpoint posts;
 	public final UserEndpoint user;
 	public final UsersEndpoint users;
+	public final GraphQlEndpoint graphql;
 	private final ClientContext context;
 
 	public ApiClient(String baseUrl) {
@@ -37,7 +38,7 @@ public class ApiClient {
 		posts = new PostsEndpoint(context);
 		user = new UserEndpoint(context);
 		users = new UsersEndpoint(context);
-
+		graphql = new GraphQlEndpoint(context);
 	}
 
 	public boolean isLoggedIn() {
