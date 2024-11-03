@@ -1,11 +1,13 @@
 package blog.cirkle.app.facade;
 
 import blog.cirkle.app.api.rest.model.*;
-import blog.cirkle.app.api.rest.model.UserProfileDto;
 import blog.cirkle.app.api.rest.model.request.CreateUserDto;
 import blog.cirkle.app.api.rest.model.request.UpdateUserProfileDto;
+import blog.cirkle.app.model.entity.User;
+import blog.cirkle.app.utils.SecurityUtils;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +32,7 @@ public interface UserFacade {
 
 	void friendUserByUserId(UUID userId);
 
-	void unfriendUserByUserId(UUID userId);
+	void unFriendUserByUserId(UUID userId);
 
 	ParticipantDto getCurrentUserInfo();
 
@@ -49,4 +51,31 @@ public interface UserFacade {
 	Page<ParticipantDto> listCurrentUserFriends(Pageable pageable);
 
 	UserProfileDto updateProfile(UpdateUserProfileDto profileUpdate);
+
+	default Page<ParticipantDto> listUserFriends(UUID id, PageRequest pageRequest) {
+		User currentUser = SecurityUtils.getCurrentUser();
+		if (currentUser.getId().equals(id)) {
+			return listCurrentUserFriends(pageRequest);
+		} else {
+			return Page.empty();
+		}
+	}
+
+	default Page<ParticipantDto> listUserFollowers(UUID id, PageRequest pageRequest) {
+		User currentUser = SecurityUtils.getCurrentUser();
+		if (currentUser.getId().equals(id)) {
+			return listCurrentUserFollowers(pageRequest);
+		} else {
+			return Page.empty();
+		}
+	}
+
+	default Page<RequestDto> listUserRequests(UUID id, PageRequest pageRequest) {
+		User currentUser = SecurityUtils.getCurrentUser();
+		if (currentUser.getId().equals(id)) {
+			return listCurrentUserRequests(pageRequest);
+		} else {
+			return Page.empty();
+		}
+	}
 }

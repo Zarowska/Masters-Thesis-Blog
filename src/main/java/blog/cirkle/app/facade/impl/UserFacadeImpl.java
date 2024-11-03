@@ -105,7 +105,7 @@ public class UserFacadeImpl implements UserFacade {
 	}
 
 	@Override
-	public void unfriendUserByUserId(UUID userId) {
+	public void unFriendUserByUserId(UUID userId) {
 		User receiver = userService.findById(userId);
 		relationService.unfriend(userService.findById(getCurrentUser().getId()), receiver);
 	}
@@ -156,6 +156,7 @@ public class UserFacadeImpl implements UserFacade {
 	public UserProfileDto updateProfile(UpdateUserProfileDto profileUpdate) {
 		User currentUser = userService.findById(getCurrentUser().getId());
 		UserProfile profile = currentUser.getProfile();
+		Optional.ofNullable(profileUpdate.getName()).ifPresent(profile::setName);
 		Optional.ofNullable(profileUpdate.getBio()).ifPresent(profile::setBio);
 		Optional.ofNullable(profileUpdate.getHandle()).ifPresent(profile::setHandle);
 		Optional.ofNullable(profileUpdate.getProfileImageId()).ifPresent(imageId -> {

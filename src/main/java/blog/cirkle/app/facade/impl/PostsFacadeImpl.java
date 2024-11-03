@@ -37,6 +37,15 @@ public class PostsFacadeImpl implements PostsFacade {
 	}
 
 	@Override
+	public PostDto getPostByUserIdAndPostId(UUID userId, UUID postId) {
+		PostDto post = getPostById(postId);
+		if (!post.getAuthor().getId().equals(userId)) {
+			throw NotFoundException.post(postId);
+		}
+		return post;
+	}
+
+	@Override
 	public PostDto createPost(CreatePostDto request) {
 		Post post = postService.createPost(userService.findById(getCurrentUser().getId()), request);
 		feedService.sendToFeeds(post);

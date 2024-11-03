@@ -1,7 +1,232 @@
-type User {
-    id: ID!
-    name:String
-    avatarUrl:String
-    isGroup:Boolean
+# Enums
+enum RequestType {
+    FOLLOW
+    FRIEND
+    JOIN
 }
 
+type User {
+    id: ID!
+    name: String!
+    avatarUrl: String
+    isGroup: Boolean!
+    profile: UserProfile!
+    friends(page: Int, size: Int): UserPage!
+    followers(page: Int, size: Int): UserPage!
+    requests(page: Int, size: Int): RequestPage!
+    feed(page: Int, size: Int): PostPage!
+    post(postId:ID!): Post
+    posts(page: Int, size: Int): PostPage!
+}
+
+# Participant Types
+type Participant {
+    id: ID!
+    name: String!
+    avatarUrl: String
+    isGroup: Boolean!
+}
+
+# Reaction Types
+type ReactionList {
+    reactionValue: Int!
+    reactionCount: Int!
+    participants: [User!]!
+}
+
+# Image Type
+type Image {
+    id: ID!
+    uri: String!
+    reactions: [ReactionList!]!
+}
+
+# Message Types
+type Message {
+    id: ID!
+    author: Participant!
+    text: String!
+    images: [Image!]!
+    reactions: [ReactionList!]!
+}
+
+input CreateMessageInput {
+    text: String!
+    images: [ID!]!
+}
+
+input UpdateMessageInput {
+    text: String!
+    images: [ID!]!
+}
+
+# Dialog Info Type
+type DialogInfo {
+    opponent: Participant!
+    newMessageCount: Int!
+}
+
+# Post Types
+type Post {
+    id: ID!
+    author: User!
+    text: String!
+    images: [Image!]!
+    reactions: [ReactionList!]!
+    comments(page: Int, size: Int): CommentPage!
+}
+
+input CreatePostInput {
+    text: String!
+    images: [ID!]!
+}
+
+input UpdatePostInput {
+    text: String!
+    images: [ID!]!
+}
+
+# Comment Types
+type Comment {
+    id: ID!
+    postId: ID!
+    parentCommentId: ID
+    author: Participant!
+    text: String!
+    images: [Image!]!
+    reactions: [ReactionList!]!
+    comments(page: Int, size: Int): CommentPage!
+}
+
+input CreateCommentInput {
+    text: String!
+    images: [ID!]!
+}
+
+input UpdateCommentInput {
+    text: String!
+    images: [ID!]!
+}
+
+# Reaction Input
+input CreateReactionInput {
+    value: Int!
+}
+
+# User Profile Types
+type UserProfile {
+    name: String!
+    handle: String!
+    profileImage: Image
+    coverPhoto: Image
+    phoneNumber: String
+    bio: String
+    country: String
+    city: String
+}
+
+input UpdateUserProfileInput {
+    name: String
+    handle: String
+    profileImageId: ID
+    coverPhotoImageId: ID
+    phoneNumber: String
+    bio: String
+    country: String
+    city: String
+}
+
+# Group Profile Types
+type GroupProfile {
+    name: String!
+    handle: String!
+    profileImage: Image
+    coverPhoto: Image
+}
+
+input CreateGroupInput {
+    name: String!
+    isPrivate: Boolean
+}
+
+# Request Types
+type Request {
+    id: ID!
+    sender: User!
+    type: RequestType!
+}
+
+# Pagination Types
+type PageInfo {
+    totalElements: Int!
+    totalPages: Int!
+    pageNumber: Int!
+    pageSize: Int!
+    first: Boolean!
+    last: Boolean!
+}
+
+type PostPage {
+    content: [Post!]!
+    pageInfo: PageInfo!
+}
+
+type CommentPage {
+    content: [Comment!]!
+    pageInfo: PageInfo!
+}
+
+type UserPage {
+    content: [User!]!
+    pageInfo: PageInfo!
+}
+
+type ImagePage {
+    content: [Image!]!
+    pageInfo: PageInfo!
+}
+
+type MessagePage {
+    content: [Message!]!
+    pageInfo: PageInfo!
+}
+
+type DialogInfoPage {
+    content: [DialogInfo!]!
+    pageInfo: PageInfo!
+}
+
+type RequestPage {
+    content: [Request!]!
+    pageInfo: PageInfo!
+}
+
+# Authentication Types
+type AuthenticateResponse {
+    token: String!
+}
+
+type NewUser {
+    id: ID!
+    username: String!
+    fullName: String!
+    avatarUrl: String!
+    passwordResetId: String!
+}
+
+input CreateUserInput {
+    email: String!
+    fullName: String!
+}
+
+input AuthenticateInput {
+    email: String
+    username: String
+    password: String
+    token: String
+}
+
+input ResetPasswordInput {
+    passwordResetToken:String!
+    password: String!
+}

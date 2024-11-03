@@ -78,6 +78,6 @@ public class UsersController {
 	@Operation(summary = "Remove friendship with a user by ID", description = "Remove friendship with a user by their ID", operationId = "unfriendUser", tags = {
 			"users", "relations"})
 	void unfriend(@PathVariable UUID userId) {
-		userFacade.unfriendUserByUserId(userId);
+		userFacade.unFriendUserByUserId(userId);
 	}
 }

@@ -1,6 +1,97 @@
+# Queries
 type Query {
-    user(id: ID!): User
-    users(limit: Int!, offset: Int!): [User]
+    # User and Authentication Queries
+    getCurrentUserInfo: User!
+    getUser(userId: ID!): User
+    listUsers(query: String, page: Int, size: Int): UserPage!
+
+
+    # Messages Queries
+    getDialogs(page: Int, size: Int): DialogInfoPage!
+    getMessagesByUserId(userId: ID!, page: Int, size: Int): MessagePage!
+
+    # Groups Queries
+    listGroups(query: String, page: Int, size: Int): UserPage!
+    getGroup(groupId: ID!): Participant!
+    getGroupProfile(groupId: ID!): GroupProfile!
+    listGroupMembers(groupId: ID!, page: Int, size: Int): UserPage!
+    listGroupPosts(groupId: ID!, page: Int, size: Int): PostPage!
+    listGroupJoinRequests(
+        groupId: ID!
+        page: Int
+        size: Int
+        sort: [String]
+    ): RequestPage!
+
+    # Images Queries
+    getImage(imageId: ID!): Image!
+    listUserImages(page: Int, size: Int): ImagePage!
 }
 
+# Mutations
+type Mutation {
+    # Authentication and User Management
+    registerUser(input: CreateUserInput!): NewUser!
+    resetPassword(input: ResetPasswordInput!): AuthenticateResponse!
+    authenticateByBasic(username: String!, password: String!): AuthenticateResponse!
 
+    updateUserProfile(input: UpdateUserProfileInput!): UserProfile!
+
+    # Posts and Comments
+    createPost(input: CreatePostInput!): Post!
+    updatePost(postId: ID!, input: UpdatePostInput!): Post!
+    deletePost(postId: ID!): Boolean!
+    addReactionToPost(postId: ID!, input: CreateReactionInput!): [ReactionList!]!
+
+    createComment(postId: ID!, input: CreateCommentInput!): Comment!
+    updateComment(postId: ID!, commentId: ID!, input: UpdateCommentInput!): Comment!
+    deleteComment(postId: ID!, commentId: ID!): Boolean!
+    addReactionToComment(postId: ID!, commentId: ID!, input: CreateReactionInput!): [ReactionList!]!
+
+    createNestedComment(
+        postId: ID!
+        commentId: ID!
+        input: CreateCommentInput!
+    ): Comment!
+
+    # Messages
+    createMessage(userId: ID!, input: CreateMessageInput!): Message!
+    updateMessage(
+        userId: ID!
+        messageId: ID!
+        input: UpdateMessageInput!
+    ): Message!
+    deleteMessage(userId: ID!, messageId: ID!): Boolean!
+    addReactionToMessage(
+        userId: ID!
+        messageId: ID!
+        input: CreateReactionInput!
+    ): [ReactionList]!
+    addReactionToMessageImage(
+        userId: ID!
+        messageId: ID!
+        imageId: ID!
+        input: CreateReactionInput!
+    ): [ReactionList]!
+
+    # Relationships
+    followUser(userId: ID!): Boolean!
+    unfollowUser(userId: ID!): Boolean!
+    friendUser(userId: ID!): Boolean!
+    unfriendUser(userId: ID!): Boolean!
+
+    # Groups
+    createGroup(input: CreateGroupInput!): Participant!
+    joinGroup(groupId: ID!): Boolean!
+    leaveGroup(groupId: ID!): Boolean!
+    createGroupPost(groupId: ID!, input: CreatePostInput!): Post!
+    acceptGroupJoinRequest(groupId: ID!, requestId: ID!): Boolean!
+    rejectGroupJoinRequest(groupId: ID!, requestId: ID!): Boolean!
+
+    # User Requests
+    acceptUserRequest(requestId: ID!): Boolean!
+    rejectUserRequest(requestId: ID!): Boolean!
+
+    # Images
+    uploadImage: Image!
+}

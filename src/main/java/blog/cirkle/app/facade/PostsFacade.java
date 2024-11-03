@@ -14,6 +14,8 @@ public interface PostsFacade {
 
 	PostDto getPostById(UUID postId);
 
+	PostDto getPostByUserIdAndPostId(UUID userId, UUID postId);
+
 	@Transactional
 	PostDto createPost(CreatePostDto request);
 
