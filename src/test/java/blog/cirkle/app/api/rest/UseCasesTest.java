@@ -83,9 +83,8 @@ class UseCasesTest extends AbstractApiTest {
 		});
 	}
 
-
 	@Test
-	void RetrieveListOfUsersAndUserProfile () {
+	void RetrieveListOfUsersAndUserProfile() {
 		asAlice(alice -> {
 			asMichael(michael -> {
 				asJessica(jessica -> {
@@ -97,8 +96,7 @@ class UseCasesTest extends AbstractApiTest {
 					PaginatedResponse<ParticipantDto> allUsers = alice.users.findAllUsers(Pageable.DEFAULT);
 
 					ParticipantDto userParticipan = allUsers.getContent().stream()
-							.filter(it -> it.getName().startsWith("Michael") )
-												.findFirst().orElseThrow();
+							.filter(it -> it.getName().startsWith("Michael")).findFirst().orElseThrow();
 
 					alice.logComment("Get a Michael Smith's profile");
 					UserProfileDto foundMichaelProfile = alice.users.getUserProfileById(userParticipan.getId());

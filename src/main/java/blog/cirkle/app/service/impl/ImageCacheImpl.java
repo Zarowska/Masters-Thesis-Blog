@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,25 +80,27 @@ public class ImageCacheImpl implements ImageCache {
 		AtomicLong cacheRemain = new AtomicLong();
 		AtomicLong cacheDeleted = new AtomicLong();
 
-		Files.walk(directory).filter(Files::isRegularFile).filter(path -> {
-			try {
-				boolean shouldBeDeleted = Files.getLastModifiedTime(path).toInstant().isBefore(cutoff);
-				if (shouldBeDeleted) {
-					cacheDeleted.addAndGet(Files.size(path));
-				} else {
-					cacheRemain.addAndGet(Files.size(path));
+		try (Stream<Path> pathStream = Files.walk(directory)) {
+			pathStream.filter(Files::isRegularFile).filter(path -> {
+				try {
+					boolean shouldBeDeleted = Files.getLastModifiedTime(path).toInstant().isBefore(cutoff);
+					if (shouldBeDeleted) {
+						cacheDeleted.addAndGet(Files.size(path));
+					} else {
+						cacheRemain.addAndGet(Files.size(path));
+					}
+					return shouldBeDeleted;
+				} catch (IOException e) {
+					return false;
 				}
-				return shouldBeDeleted;
-			} catch (IOException e) {
-				return false;
-			}
-		}).forEach(path -> {
-			try {
-				Files.delete(path);
-			} catch (IOException e) {
-				log.error("Unable to delete file: {}, due: {}", path, e.getMessage());
-			}
-		});
+			}).forEach(path -> {
+				try {
+					Files.delete(path);
+				} catch (IOException e) {
+					log.error("Unable to delete file: {}, due: {}", path, e.getMessage());
+				}
+			});
+		}
 		log.info("Cache size: {}, deleted {}", cacheRemain.get(), cacheDeleted.get());
 	}
 }

@@ -33,6 +33,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-graphql")
+    implementation("org.springframework.boot:spring-boot-docker-compose")
 
     testImplementation("dev.langchain4j:langchain4j:0.35.0")
     testImplementation("dev.langchain4j:langchain4j-mistral-ai:0.35.0")

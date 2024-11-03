@@ -1,9 +1,9 @@
 
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:6432/cirkle
-    username: devuser
-    password: secret
+#  datasource:
+#    url: jdbc:postgresql://localhost:6432/cirkle
+#    username: devuser
+#    password: secret
 
   jpa:
     hibernate:
@@ -21,10 +21,15 @@ spring:
   ai:
     mistralai:
       api-key: VysNnlKPEVP5ngTLasUqCbxczQk736fB
+  docker:
+    compose:
+      lifecycle-management: start_only
+      file: ops/local/docker-compose.yaml
 
 springdoc:
   swagger-ui:
     path: /openapi
+
 
 #graphql:
 #  servlet:
