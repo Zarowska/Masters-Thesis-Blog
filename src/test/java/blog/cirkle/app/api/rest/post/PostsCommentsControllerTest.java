@@ -5,7 +5,7 @@ import static blog.cirkle.app.api.rest.RestTestUtils.twoBunniesPost;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import blog.cirkle.app.api.rest.AbstractApiTest;
+import blog.cirkle.app.api.rest.AbstractRestApiTest;
 import blog.cirkle.app.api.rest.client.model.PaginatedResponse;
 import blog.cirkle.app.api.rest.model.CommentDto;
 import blog.cirkle.app.api.rest.model.ImageDto;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-class PostsCommentsControllerTest extends AbstractApiTest {
+class PostsCommentsControllerTest extends AbstractRestApiTest {
 
 	@Test
 	void createCommentByPostId() {

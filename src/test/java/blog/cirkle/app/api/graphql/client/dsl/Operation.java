@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
 
 public class Operation {
 	private final String type;
+	@Getter
 	private final String name;
 	private final boolean allowArguments;
 
@@ -113,14 +115,6 @@ public class Operation {
 			builder.append("}");
 		}
 		return builder.toString();
-	}
-
-	public static void main(String[] args) {
-		Operation operation = mutation().withField(new Operation("", "resetPassword")
-				.withArgument(objectOp("input").append(stringOp("passwordResetToken")).append(stringOp("password")))
-				.withFields("token"));
-
-		System.out.println(operation.build(Map.of("passwordResetToken", "12345", "password", "password")));
 	}
 
 	public static Operation field(String name) {

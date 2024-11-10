@@ -2,6 +2,7 @@ package blog.cirkle.app.api.rest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import blog.cirkle.app.api.AbstractApiTest;
 import blog.cirkle.app.api.rest.client.ApiClient;
 import blog.cirkle.app.api.rest.client.exception.ClientResponseException;
 import blog.cirkle.app.api.rest.model.request.CreateUserDto;
@@ -9,18 +10,8 @@ import blog.cirkle.app.utils.UnsafeConsumer;
 import java.util.UUID;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:sql/clear_tables.sql", "classpath:sql/sample_data.sql"})
-public abstract class AbstractApiTest {
-
-	@LocalServerPort
-	protected int port;
+public abstract class AbstractRestApiTest extends AbstractApiTest {
 
 	@SneakyThrows
 	protected void as(String name, UnsafeConsumer<ApiClient> action) {

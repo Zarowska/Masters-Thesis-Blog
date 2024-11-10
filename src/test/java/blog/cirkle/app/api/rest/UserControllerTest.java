@@ -16,7 +16,7 @@ import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
-class UserControllerTest extends AbstractApiTest {
+class UserControllerTest extends AbstractRestApiTest {
 	@Test
 	void getCurrentUserInfo() {
 		asEve(eve -> {

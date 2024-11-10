@@ -27,7 +27,7 @@ public class AuthenticationController {
 	}
 
 	@MutationMapping
-	public AuthenticateResponse authenticate(@Argument String username, @Argument String password) {
+	public AuthenticateResponse authenticateByBasic(@Argument String username, @Argument String password) {
 		return facade.authenticate(username, password);
 	}
 }

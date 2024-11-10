@@ -3,14 +3,14 @@ package blog.cirkle.app.api.rest.post;
 import static blog.cirkle.app.api.rest.RestTestUtils.twoBunniesPost;
 import static org.junit.jupiter.api.Assertions.*;
 
-import blog.cirkle.app.api.rest.AbstractApiTest;
+import blog.cirkle.app.api.rest.AbstractRestApiTest;
 import blog.cirkle.app.api.rest.model.*;
 import blog.cirkle.app.api.rest.model.request.CreateCommentDto;
 import blog.cirkle.app.api.rest.model.request.CreateReactionDto;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
-class PostsReactionsControllerTest extends AbstractApiTest {
+class PostsReactionsControllerTest extends AbstractRestApiTest {
 
 	@Test
 	void addReactionToPost() {

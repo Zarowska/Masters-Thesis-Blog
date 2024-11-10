@@ -10,7 +10,7 @@ import blog.cirkle.app.api.rest.model.ResetPasswordDto;
 import blog.cirkle.app.api.rest.model.request.CreateUserDto;
 import org.junit.jupiter.api.Test;
 
-class AuthControllerTest extends AbstractApiTest {
+class AuthControllerTest extends AbstractRestApiTest {
 
 	@Test
 	void shouldRegister() {

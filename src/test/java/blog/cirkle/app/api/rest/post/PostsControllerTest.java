@@ -3,7 +3,7 @@ package blog.cirkle.app.api.rest.post;
 import static blog.cirkle.app.api.rest.RestTestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import blog.cirkle.app.api.rest.AbstractApiTest;
+import blog.cirkle.app.api.rest.AbstractRestApiTest;
 import blog.cirkle.app.api.rest.model.CommentDto;
 import blog.cirkle.app.api.rest.model.ImageDto;
 import blog.cirkle.app.api.rest.model.PostDto;
@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
-class PostsControllerTest extends AbstractApiTest {
+class PostsControllerTest extends AbstractRestApiTest {
 
 	@Test
 	void createPost() {

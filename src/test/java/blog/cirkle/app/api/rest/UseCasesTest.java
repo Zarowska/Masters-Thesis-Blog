@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-class UseCasesTest extends AbstractApiTest {
+class UseCasesTest extends AbstractRestApiTest {
 
 	@Test
 	void CreateNestedCommentCreation() {

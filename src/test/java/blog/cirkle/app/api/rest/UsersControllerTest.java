@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
-class UsersControllerTest extends AbstractApiTest {
+class UsersControllerTest extends AbstractRestApiTest {
 
 	@Test
 	void findAll() {
