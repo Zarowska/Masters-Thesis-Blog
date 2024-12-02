@@ -1,47 +1,57 @@
 package blog.cirkle.app.service.impl;
 
-import static blog.cirkle.app.model.entity.SystemConfigEntry.*;
-
-import blog.cirkle.app.model.entity.Image;
-import blog.cirkle.app.model.entity.User;
 import blog.cirkle.app.repository.UserRepository;
-import blog.cirkle.app.service.ImageService;
 import blog.cirkle.app.service.InitialDataLoaderService;
-import blog.cirkle.app.service.SystemConfigService;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Profile("!test")
+@Slf4j
 public class InitialDataLoaderServiceImpl implements InitialDataLoaderService, ApplicationRunner {
 
-	private final SystemConfigService systemConfigService;
 	private final UserRepository userRepository;
-	private final ImageService imageService;
+	private final JdbcTemplate jdbcTemplate;
 
 	@Override
 	@Transactional
 	public void run(ApplicationArguments args) throws Exception {
-		if (userRepository.count() == 0) {
-			User adminUser = new User("admin@cirkle.blog");
-			adminUser.getProfile().setName("admin");
-			adminUser.getProfile().setHandle("admin");
-			userRepository.save(adminUser);
-			Image profileImage = imageService.uploadImage(adminUser,
-					new ClassPathResource("default-data/profile-photo.svg"));
-			Image coverPhoto = imageService.uploadImage(adminUser,
-					new ClassPathResource("default-data/cover-photo.svg"));
-			systemConfigService.setValue(ADMIN_USER_ID, adminUser.getId().toString());
-			systemConfigService.setValue(DEFAULT_IMAGE_PROFILE, profileImage.getId().toString());
-			systemConfigService.setValue(DEFAULT_IMAGE_COVER, coverPhoto.getId().toString());
+		if (userRepository.count() == 1) {
+			// initial data
+			Stream.of("V1_0_1__initial_data_disable_constraints.sql", "V1_0_2__initial_data_participants.sql",
+					"V1_0_3__initial_data_users.sql", "V1_0_4__initial_data_images.sql",
+					"V1_0_10__initial_data_enable_constraints.sql").map("initial-data/"::concat)
+					.map(ClassPathResource::new).forEach(this::executeSqlScript);
 		}
+	}
 
+	private void executeSqlScript(Resource scriptFile) {
+		try {
+			// Read the SQL script content
+			String sql = new BufferedReader(new InputStreamReader(scriptFile.getInputStream(), StandardCharsets.UTF_8))
+					.lines().collect(Collectors.joining("\n"));
+
+			// Execute the SQL script
+			jdbcTemplate.execute(sql);
+			log.info("SQL script {} executed successfully.", scriptFile.getFilename());
+		} catch (Exception e) {
+			log.error("Failed to execute SQL script {} : {}", scriptFile.getFilename(), e.getMessage());
+		}
 	}
 }
