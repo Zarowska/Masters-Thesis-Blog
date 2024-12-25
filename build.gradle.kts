@@ -26,17 +26,20 @@ repositories {
     maven { url = uri("https://repo.spring.io/milestone") }
 }
 
-extra["springAiVersion"] = "1.0.0-M3"
-
 dependencies {
+    val langchain4j = "0.36.2"
+    implementation("dev.langchain4j:langchain4j:$langchain4j")
+    implementation("dev.langchain4j:langchain4j-core:$langchain4j")
+    implementation("dev.langchain4j:langchain4j-mistral-ai:$langchain4j")
+    implementation("dev.langchain4j:langchain4j-open-ai:$langchain4j")
+    implementation("dev.langchain4j:langchain4j-local-ai:$langchain4j")
+
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("org.springframework.boot:spring-boot-docker-compose")
 
-    testImplementation("dev.langchain4j:langchain4j:0.35.0")
-    testImplementation("dev.langchain4j:langchain4j-mistral-ai:0.35.0")
     testImplementation("net.datafaker:datafaker:2.4.0")
     testImplementation("com.google.guava:guava:33.3.1-jre")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -47,7 +50,6 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
     compileOnly("org.projectlombok:lombok")
-    implementation("org.springframework.ai:spring-ai-mistral-ai-spring-boot-starter")
     testCompileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
@@ -64,12 +66,6 @@ dependencies {
     testImplementation("com.squareup.retrofit2:retrofit:2.11.0")
     testImplementation("com.squareup.retrofit2:converter-gson:2.11.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.ai:spring-ai-bom:${property("springAiVersion")}")
-    }
 }
 
 hibernate {
