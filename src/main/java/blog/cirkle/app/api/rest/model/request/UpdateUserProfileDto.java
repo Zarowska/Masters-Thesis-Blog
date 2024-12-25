@@ -38,4 +38,6 @@ public class UpdateUserProfileDto {
 	@Schema(description = "City where user is currently residing")
 	private String city;
 
+	@Schema(description = "Place where user was born")
+	private String hometown;
 }

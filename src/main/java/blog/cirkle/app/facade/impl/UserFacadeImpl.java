@@ -177,8 +177,7 @@ public class UserFacadeImpl implements UserFacade {
 						"Image with " + imageId + " not belongs to userId=" + currentUser.getId());
 			}
 		});
-		Optional.ofNullable(profileUpdate.getPhoneNumber())
-				.ifPresent(phoneNumber -> profile.setPhoneNumber(phoneNumber));
+		Optional.ofNullable(profileUpdate.getPhoneNumber()).ifPresent(profile::setPhoneNumber);
 		Optional.ofNullable(profileUpdate.getCountry()).ifPresent(country -> {
 			if (profile.getAddress() == null) {
 				profile.setAddress(new Address());
@@ -190,6 +189,12 @@ public class UserFacadeImpl implements UserFacade {
 				profile.setAddress(new Address());
 			}
 			profile.getAddress().setCity(city);
+		});
+		Optional.ofNullable(profileUpdate.getHometown()).ifPresent(hometown -> {
+			if (profile.getAddress() == null) {
+				profile.setAddress(new Address());
+			}
+			profile.getAddress().setHometown(hometown);
 		});
 		return modelMapper.toUserProfileDto(profile);
 	}

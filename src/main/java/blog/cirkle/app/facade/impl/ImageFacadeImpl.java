@@ -7,8 +7,10 @@ import blog.cirkle.app.service.ImageCache;
 import blog.cirkle.app.service.ImageService;
 import blog.cirkle.app.service.ModelMapperService;
 import blog.cirkle.app.utils.SecurityUtils;
+import java.io.File;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,5 +43,11 @@ public class ImageFacadeImpl implements ImageFacade {
 	@Override
 	public ImageDto uploadImage(MultipartFile file) {
 		return modelMapperService.toImageDto(imageService.uploadImage(SecurityUtils.getCurrentUser(), file));
+	}
+
+	@Override
+	public ImageDto uploadImage(File file) {
+		return modelMapperService
+				.toImageDto(imageService.uploadImage(SecurityUtils.getCurrentUser(), new FileSystemResource(file)));
 	}
 }

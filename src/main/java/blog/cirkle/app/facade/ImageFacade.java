@@ -1,6 +1,7 @@
 package blog.cirkle.app.facade;
 
 import blog.cirkle.app.api.rest.model.ImageDto;
+import java.io.File;
 import java.util.UUID;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -19,4 +20,6 @@ public interface ImageFacade {
 	Page<ImageDto> listCurrentUserImages(Pageable pageable);
 
 	ImageDto uploadImage(MultipartFile file);
+
+	ImageDto uploadImage(File file);
 }
