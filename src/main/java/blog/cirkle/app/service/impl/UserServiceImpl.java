@@ -11,7 +11,6 @@ import blog.cirkle.app.repository.UserRepository;
 import blog.cirkle.app.service.ImageService;
 import blog.cirkle.app.service.UserService;
 import java.util.*;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -104,7 +103,7 @@ public class UserServiceImpl implements UserService {
 		int start = (int) pageable.getOffset();
 		int end = Math.min((start + pageable.getPageSize()), userSet.size());
 
-		List<User> followersList = userSet.stream().collect(Collectors.toList()).subList(start, end);
+		List<User> followersList = userSet.stream().toList().subList(start, end);
 
 		return new PageImpl<>(followersList, pageable, userSet.size());
 	}
@@ -113,7 +112,7 @@ public class UserServiceImpl implements UserService {
 		String base = generateHandle(fullName);
 		String handle = base;
 		int counter = 0;
-		while (userRepository.existsByFollowers_Profile_Handle(handle)) {
+		while (userRepository.existsByProfile_Handle(handle)) {
 			handle = base + (++counter);
 		}
 		return handle;
