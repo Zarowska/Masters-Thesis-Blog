@@ -10,7 +10,8 @@ CREATE TABLE ai_person_description (
                                        live_country VARCHAR(100),
                                        email VARCHAR(255),
                                        bio TEXT,
-                                       appearance TEXT
+                                       appearance TEXT,
+                                       last_feed UUID default null
 );
 
 -- Create table for PersonInterestEntity
