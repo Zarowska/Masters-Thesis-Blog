@@ -1,0 +1,3 @@
+ALTER TABLE IF EXISTS users
+DROP CONSTRAINT IF EXISTS users_profile_image_fk;
+
