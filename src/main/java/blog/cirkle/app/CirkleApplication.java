@@ -9,7 +9,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class CirkleApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CirkleApplication.class, args);
+		SpringApplication app = new SpringApplication(CirkleApplication.class);
+		app.setAdditionalProfiles("data-import");
+		app.run(args);
 	}
 
 }
