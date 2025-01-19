@@ -47,8 +47,8 @@ CREATE TABLE followers
 CREATE TABLE friends
 (
     user_1_id  UUID NOT NULL,
-    users_2_id UUID NOT NULL,
-    PRIMARY KEY (user_1_id, users_2_id)
+    user_2_id UUID NOT NULL,
+    PRIMARY KEY (user_1_id, user_2_id)
 );
 
 CREATE TABLE groups
@@ -229,7 +229,7 @@ ALTER TABLE IF EXISTS followers
     ADD CONSTRAINT followers_participant_fk FOREIGN KEY (participant_id) REFERENCES participants;
 
 ALTER TABLE IF EXISTS friends
-    ADD CONSTRAINT friends_users_2_fk FOREIGN KEY (users_2_id) REFERENCES users;
+    ADD CONSTRAINT friends_users_2_fk FOREIGN KEY (user_2_id) REFERENCES users;
 
 ALTER TABLE IF EXISTS friends
     ADD CONSTRAINT friends_user_1_fk FOREIGN KEY (user_1_id) REFERENCES users;

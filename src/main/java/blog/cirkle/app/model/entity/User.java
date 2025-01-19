@@ -23,7 +23,7 @@ public class User extends Participant {
 	@Column(name = "email", nullable = false, unique = true)
 	private String email;
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "friends", joinColumns = @JoinColumn(name = "user_1_id"), inverseJoinColumns = @JoinColumn(name = "users_2_id"))
+	@JoinTable(name = "friends", joinColumns = @JoinColumn(name = "user_1_id"), inverseJoinColumns = @JoinColumn(name = "user_2_id"))
 
 	private Set<User> friends = new LinkedHashSet<>();
 
