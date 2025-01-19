@@ -187,8 +187,9 @@ public class GraphQlFacadeImpl implements GraphQlFacade {
 	}
 
 	private Post toDto(PostDto dto) {
-		return Post.builder().text(dto.getText()).images(dto.getImages().stream().map(this::toDto).toList())
-				.author(toUser(dto.getAuthor())).reactions(toDto(dto.getReactions())).build();
+		return Post.builder().id(dto.getId()).text(dto.getText())
+				.images(dto.getImages().stream().map(this::toDto).toList()).author(toUser(dto.getAuthor()))
+				.reactions(toDto(dto.getReactions())).build();
 	}
 
 	private Request toDto(RequestDto requestDto) {
