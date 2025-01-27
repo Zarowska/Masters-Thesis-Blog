@@ -296,3 +296,14 @@ INSERT INTO public.friends (user_1_id, user_2_id) VALUES ('99e6700c-593e-497c-8b
 
 INSERT INTO public.friends (user_1_id, user_2_id) VALUES ('99e6700c-593e-497c-8b6a-9f00b53e05ff', 'a14092e3-cf86-4337-b75e-b76df514385f');
 INSERT INTO public.friends (user_1_id, user_2_id) VALUES ('a14092e3-cf86-4337-b75e-b76df514385f', '99e6700c-593e-497c-8b6a-9f00b53e05ff');
+
+
+INSERT INTO public.followers (participant_id, users_id) VALUES ('99e6700c-593e-497c-8b6a-9f00b53e05ff', 'a14092e3-cf86-4337-b75e-b76df514385f');
+INSERT INTO public.followers (participant_id, users_id) VALUES ('a14092e3-cf86-4337-b75e-b76df514385f', '99e6700c-593e-497c-8b6a-9f00b53e05ff');
+
+
+
+INSERT INTO public.feed (id, post_id, user_id) VALUES (385363, 'a79e9614-768e-4336-883a-79c6873f1609', '99e6700c-593e-497c-8b6a-9f00b53e05ff');
+INSERT INTO public.feed (id, post_id, user_id) VALUES (385364, '265e6175-a0e3-4b0b-8bfa-4820b8d65862', '99e6700c-593e-497c-8b6a-9f00b53e05ff');
+INSERT INTO public.feed (id, post_id, user_id) VALUES (385365, 'fd378d60-f32a-482e-9d74-1076c8ba59bd', '99e6700c-593e-497c-8b6a-9f00b53e05ff');
+INSERT INTO public.feed (id, post_id, user_id) VALUES (385366, '6db9d714-1527-40b7-85ec-e7c7e30f4a33', '99e6700c-593e-497c-8b6a-9f00b53e05ff');
