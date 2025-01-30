@@ -7,15 +7,14 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "participants")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Participant {
+@EntityListeners(CustomTimestampListener.class)
+public abstract class Participant implements TimeStamped {
 	@Id
 	@Column(name = "id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.UUID)
@@ -28,10 +27,8 @@ public abstract class Participant {
 	@OneToMany(mappedBy = "receiver", orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<ParticipantRequest> receivedRequests = new LinkedHashSet<>();
 
-	@CreationTimestamp
 	private Instant createdAt;
 
-	@UpdateTimestamp
 	private Instant updatedAt;
 
 	public abstract Profile getProfile();

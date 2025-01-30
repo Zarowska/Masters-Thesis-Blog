@@ -9,7 +9,6 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
 @Getter
@@ -17,7 +16,8 @@ import org.hibernate.proxy.HibernateProxy;
 @Entity
 @Table(name = "images")
 @NoArgsConstructor
-public class Image implements Reactable {
+@EntityListeners(CustomTimestampListener.class)
+public class Image implements Reactable, TimeStamped {
 	@Id
 	@Column(name = "id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.UUID)
@@ -37,8 +37,10 @@ public class Image implements Reactable {
 	@Basic(fetch = FetchType.LAZY)
 	private byte[] content;
 
-	@CreationTimestamp
 	private Instant createdAt;
+
+	@Transient
+	private Instant updatedAt;
 
 	@OneToMany(orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinTable(name = "image_reactions", joinColumns = @JoinColumn(name = "image_id"), inverseJoinColumns = @JoinColumn(name = "reaction_id"))

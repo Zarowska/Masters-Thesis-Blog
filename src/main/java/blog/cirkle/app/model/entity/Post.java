@@ -6,8 +6,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
@@ -16,7 +14,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Post implements Authored, Media, Reactable {
+@EntityListeners(CustomTimestampListener.class)
+public class Post implements Authored, Media, Reactable, TimeStamped {
 	@Id
 	@Column(name = "id", nullable = false)
 	@GeneratedValue(strategy = GenerationType.UUID)
@@ -30,10 +29,8 @@ public class Post implements Authored, Media, Reactable {
 	@JoinColumn(name = "space_id", nullable = false)
 	private Participant space;
 
-	@CreationTimestamp
 	private Instant createdAt;
 
-	@UpdateTimestamp
 	private Instant updatedAt;
 
 	@ManyToMany(fetch = FetchType.LAZY)

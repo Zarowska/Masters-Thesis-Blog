@@ -5,8 +5,6 @@ import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
@@ -15,7 +13,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Comment implements Authored, Media, Reactable {
+@EntityListeners(CustomTimestampListener.class)
+public class Comment implements Authored, Media, Reactable, TimeStamped {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "id", nullable = false)
@@ -25,10 +24,8 @@ public class Comment implements Authored, Media, Reactable {
 	@JoinColumn(name = "author_id")
 	private User author;
 
-	@CreationTimestamp
 	private Instant createdAt;
 
-	@UpdateTimestamp
 	private Instant updatedAt;
 
 	@ManyToMany(fetch = FetchType.LAZY)

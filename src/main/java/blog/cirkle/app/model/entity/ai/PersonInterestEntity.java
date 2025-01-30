@@ -1,44 +1,37 @@
-package blog.cirkle.app.model.entity;
+package blog.cirkle.app.model.entity.ai;
 
-import jakarta.persistence.*;
-import java.time.Instant;
+import blog.cirkle.app.ai.generator.api.PersonDescription;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-@Getter
-@Setter
 @Entity
-@Table(name = "participant_request")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ParticipantRequest implements TimeStamped {
+@Getter
+@Setter
+@Table(name = "person_interests")
+public class PersonInterestEntity {
 	@Id
-	@Column(name = "id", nullable = false)
-	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID id;
+	@Builder.Default
+	private UUID id = UUID.randomUUID();
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "sender_id", nullable = false)
-	private Participant sender;
+	private String title;
+	private String description;
 
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "receiver_id", nullable = false)
-	private Participant receiver;
+	// Method to convert DTO to Entity
+	public static PersonInterestEntity fromDto(PersonDescription.PersonInterest dto) {
+		return PersonInterestEntity.builder().title(dto.getTitle()).description(dto.getDescription()).build();
+	}
 
-	@Column(name = "type", nullable = false)
-	@Enumerated(EnumType.STRING)
-	private ParticipantRequestType type;
-
-	private Instant createdAt;
-
-	@Transient
-	private Instant updatedAt;
-
-	public enum ParticipantRequestType {
-		FOLLOW, FRIEND, JOIN
+	// Method to convert Entity to DTO
+	public PersonDescription.PersonInterest toDto() {
+		return PersonDescription.PersonInterest.builder().title(this.title).description(this.description).build();
 	}
 
 	@Override
@@ -55,7 +48,7 @@ public class ParticipantRequest implements TimeStamped {
 				: this.getClass();
 		if (thisEffectiveClass != oEffectiveClass)
 			return false;
-		ParticipantRequest that = (ParticipantRequest) o;
+		PersonInterestEntity that = (PersonInterestEntity) o;
 		return getId() != null && Objects.equals(getId(), that.getId());
 	}
 

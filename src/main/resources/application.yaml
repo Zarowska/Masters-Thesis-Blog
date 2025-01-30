@@ -1,14 +1,14 @@
 
 spring:
-#  datasource:
-#    url: jdbc:postgresql://localhost:6432/cirkle
-#    username: devuser
-#    password: secret
+  datasource:
+    url: jdbc:postgresql://localhost:6432/cirkle
+    username: devuser
+    password: secret
 
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: true
+#    show-sql: true
     open-in-view: false
     properties:
       hibernate:
