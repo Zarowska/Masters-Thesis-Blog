@@ -31,6 +31,7 @@ import blog.cirkle.app.facade.GraphQlFacade;
 import blog.cirkle.app.facade.PostsFacade;
 import blog.cirkle.app.facade.UserFacade;
 import jakarta.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -197,7 +198,7 @@ public class GraphQlFacadeImpl implements GraphQlFacade {
 				.sender(toUser(requestDto.getSender())).build();
 	}
 
-	private PageInfo toDto(Page all) {
+	private <T> PageInfo toDto(Page<T> all) {
 		return PageInfo.builder().totalElements((int) all.getTotalElements()).totalPages(all.getTotalPages())
 				.pageNumber(all.getNumber()).pageSize(all.getSize()).first(all.isFirst()).last(all.isLast()).build();
 	}
@@ -214,7 +215,7 @@ public class GraphQlFacadeImpl implements GraphQlFacade {
 
 	private List<ReactionList> toDto(ReactionsDto reactions) {
 		if (reactions == null) {
-			return null;
+			return Collections.emptyList();
 		}
 		return toReactionListDto(reactions.getReactions());
 	}
@@ -228,7 +229,7 @@ public class GraphQlFacadeImpl implements GraphQlFacade {
 
 	private List<User> toDto(List<ParticipantDto> participants) {
 		if (participants == null) {
-			return null;
+			return Collections.emptyList();
 		}
 		return participants.stream().map(this::toUser).toList();
 	}
@@ -339,4 +340,12 @@ public class GraphQlFacadeImpl implements GraphQlFacade {
 			return false;
 		}
 	}
+
+	@Override
+	public PostPage feed(PageRequest of) {
+		Page<PostDto> page = userFacade.listCurrentUserFeed(of);
+		return PostPage.builder().pageInfo(toDto(page)).content(page.getContent().stream().map(this::toDto).toList())
+				.build();
+	}
+
 }

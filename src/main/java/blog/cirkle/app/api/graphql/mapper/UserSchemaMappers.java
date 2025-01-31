@@ -49,4 +49,9 @@ public class UserSchemaMappers {
 	PostPage postsByUser(User user, @Argument Integer page, @Argument Integer size) {
 		return facade.postsByUserId(user.getId(), PageRequest.of(page, size));
 	}
+
+	@SchemaMapping(field = "feed", typeName = "User")
+	PostPage feedByUser(User user, @Argument Integer page, @Argument Integer size) {
+		return facade.feed(PageRequest.of(page, size));
+	}
 }

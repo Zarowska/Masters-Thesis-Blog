@@ -29,4 +29,5 @@ public class User {
 	private RequestPage requests;
 	private Post post;
 	private PostPage posts;
+	private PostPage feed;
 }

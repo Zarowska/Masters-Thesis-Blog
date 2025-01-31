@@ -80,4 +80,6 @@ public interface GraphQlFacade {
 	Boolean friendUser(UUID userId);
 
 	Boolean unFriendUser(UUID userId);
+
+	PostPage feed(PageRequest of);
 }
