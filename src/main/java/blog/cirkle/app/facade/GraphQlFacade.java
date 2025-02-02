@@ -82,4 +82,6 @@ public interface GraphQlFacade {
 	Boolean unFriendUser(UUID userId);
 
 	PostPage feed(PageRequest of);
+
+	Comment commentByPostIdAndId(UUID postId, Long commentId);
 }

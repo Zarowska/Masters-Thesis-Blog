@@ -348,4 +348,9 @@ public class GraphQlFacadeImpl implements GraphQlFacade {
 				.build();
 	}
 
+	@Override
+	public Comment commentByPostIdAndId(UUID postId, Long commentId) {
+		return toCommentDto(postsFacade.getCommentByPostIdAndCommentId(postId, commentId));
+	}
+
 }

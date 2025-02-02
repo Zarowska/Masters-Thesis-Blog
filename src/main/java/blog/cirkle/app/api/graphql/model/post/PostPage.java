@@ -1,8 +1,12 @@
 package blog.cirkle.app.api.graphql.model.post;
 
 import blog.cirkle.app.api.graphql.model.PageInfo;
+import java.util.ArrayList;
 import java.util.List;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
@@ -11,6 +15,8 @@ import lombok.experimental.Accessors;
 @Builder
 @Accessors(chain = true)
 public class PostPage {
-	private List<Post> content;
-	private PageInfo pageInfo;
+	@Builder.Default
+	private List<Post> content = new ArrayList<>();
+	@Builder.Default
+	private PageInfo pageInfo = new PageInfo(0, 0, 0, 0, true, true);
 }

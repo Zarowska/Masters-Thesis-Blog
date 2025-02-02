@@ -14,9 +14,9 @@ type User {
     friends(page: Int, size: Int): UserPage!
     followers(page: Int, size: Int): UserPage!
     requests(page: Int, size: Int): RequestPage!
-    feed(page: Int, size: Int): PostPage!
     post(postId:ID!): Post
     posts(page: Int, size: Int): PostPage!
+    feed(page: Int, size: Int): PostPage!
 }
 
 # Participant Types
@@ -74,6 +74,7 @@ type Post {
     images: [Image!]!
     reactions: [ReactionList!]!
     comments(page: Int, size: Int): CommentPage!
+    comment(commentId:ID!): Comment
 }
 
 input CreatePostInput {

@@ -26,4 +26,8 @@ public class PostSchemaMappers {
 		return facade.commentsByCommentIdAndPostId(comment.getPostId(), comment.getId(), PageRequest.of(page, size));
 	}
 
+	@SchemaMapping(field = "comment", typeName = "Post")
+	Comment commentById(Post post, @Argument Long commentId) {
+		return facade.commentByPostIdAndId(post.getId(), commentId);
+	}
 }

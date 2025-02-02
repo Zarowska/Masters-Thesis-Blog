@@ -1,5 +1,6 @@
 package blog.cirkle.app.api.graphql.model.post;
 
+import blog.cirkle.app.api.graphql.model.comment.Comment;
 import blog.cirkle.app.api.graphql.model.comment.CommentPage;
 import blog.cirkle.app.api.graphql.model.image.Image;
 import blog.cirkle.app.api.graphql.model.reaction.ReactionList;
@@ -21,4 +22,5 @@ public class Post {
 	private List<Image> images;
 	private List<ReactionList> reactions;
 	private CommentPage comments;
+	private Comment comment;
 }

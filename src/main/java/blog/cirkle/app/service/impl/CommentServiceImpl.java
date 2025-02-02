@@ -49,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public Comment findByPostIdAndId(UUID postId, Long commentId) {
 		return commentRepository.findByPost_IdAndId(postId, commentId)
-				.orElseThrow(() -> NotFoundException.resource("Comment", Map.of("id", commentId)));
+				.orElseThrow(() -> NotFoundException.resource("Comment", Map.of("postId", postId, "id", commentId)));
 	}
 
 	@Override

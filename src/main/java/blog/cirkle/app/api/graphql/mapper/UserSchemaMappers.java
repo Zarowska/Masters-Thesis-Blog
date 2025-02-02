@@ -7,6 +7,7 @@ import blog.cirkle.app.api.graphql.model.user.User;
 import blog.cirkle.app.api.graphql.model.user.UserPage;
 import blog.cirkle.app.api.graphql.model.user.UserProfile;
 import blog.cirkle.app.facade.GraphQlFacade;
+import blog.cirkle.app.utils.SecurityUtils;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -52,6 +53,9 @@ public class UserSchemaMappers {
 
 	@SchemaMapping(field = "feed", typeName = "User")
 	PostPage feedByUser(User user, @Argument Integer page, @Argument Integer size) {
-		return facade.feed(PageRequest.of(page, size));
+		if (SecurityUtils.getCurrentUser().getId().equals(user.getId())) {
+			return facade.feed(PageRequest.of(page, size));
+		}
+		return PostPage.builder().build();
 	}
 }
