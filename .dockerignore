@@ -1,2 +1,4 @@
-*
-!cirkle/app/build/libs
+.gradle
+build
+#*
+#!cirkle/app/build/libs

@@ -41,7 +41,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-graphql")
-    implementation("org.springframework.boot:spring-boot-docker-compose")
+//    implementation("org.springframework.boot:spring-boot-docker-compose")
 
     implementation("io.gatling:gatling-core:3.13.3")
     implementation("io.gatling:gatling-http:3.13.3")
@@ -102,7 +102,4 @@ spotless {
         eclipse()
         formatAnnotations()
     }
-
-
-
 }
