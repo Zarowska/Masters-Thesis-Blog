@@ -4,7 +4,9 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
     id("org.hibernate.orm") version "6.6.1.Final"
     id("com.diffplug.spotless") version "7.0.0.BETA3"
-    id("io.gatling.gradle") version "3.9.5"
+    id("io.gatling.gradle") version "3.13.3"
+    id("com.github.ben-manes.versions") version "0.51.0"
+    id("scala")
 }
 
 group = "blog.cirkle"
@@ -41,11 +43,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("org.springframework.boot:spring-boot-docker-compose")
 
-    implementation("io.gatling:gatling-core:3.9.5")
-    implementation("io.gatling:gatling-http:3.9.5")
-    implementation("io.gatling:gatling-core-java:3.9.5")
-    implementation("io.gatling:gatling-http-java:3.9.5")
-
+    implementation("io.gatling:gatling-core:3.13.3")
+    implementation("io.gatling:gatling-http:3.13.3")
+    implementation("org.scala-lang:scala-library:2.13.11")
+    implementation("org.scala-lang:scala-reflect:2.13.11")
+    implementation("org.scala-lang:scala-compiler:2.13.11")
 
     testImplementation("net.datafaker:datafaker:2.4.0")
     testImplementation("com.google.guava:guava:33.3.1-jre")
@@ -73,7 +75,6 @@ dependencies {
     testImplementation("com.squareup.retrofit2:retrofit:2.11.0")
     testImplementation("com.squareup.retrofit2:converter-gson:2.11.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
 }
 
 hibernate {
@@ -101,4 +102,7 @@ spotless {
         eclipse()
         formatAnnotations()
     }
+
+
+
 }
