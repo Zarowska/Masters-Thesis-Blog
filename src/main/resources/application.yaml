@@ -1,9 +1,9 @@
 
 spring:
-#  datasource:
-#    url: jdbc:postgresql://localhost:6432/cirkle
-#    username: devuser
-#    password: secret
+  datasource:
+    url: jdbc:postgresql://localhost:6432/cirkle
+    username: devuser
+    password: secret
 
   jpa:
     hibernate:
@@ -23,58 +23,10 @@ spring:
   threads:
     virtual:
       enabled: true
-  docker:
-    compose:
-      lifecycle-management: start_only
-      file: ops/local/docker-compose.yaml
 
 springdoc:
   swagger-ui:
     path: /openapi
-
-
-#graphql:
-#  servlet:
-#    enabled: true
-#    mapping: /graphql
-#    cors-enabled: false
-#    exception-handlers-enabled: true
-#    context-setting: PER_REQUEST_WITH_INSTRUMENTATION
-#
-#  graphiql:
-#    mapping: /graphiql
-#    endpoint:
-#      graphql: /graphql
-#      subscriptions: /subscriptions
-#    subscriptions:
-#      timeout: 30
-#      reconnect: false
-#    basePath: /
-#    enabled: true
-#    pageTitle: GraphiQL
-#    cdn:
-#      enabled: false
-#      version: latest
-#    props:
-#      resources:
-#        query: graphql/queries.graphqls
-##        defaultQuery: defaultQuery.graphql
-##        variables: variables.json
-#      variables:
-#        editorTheme: "solarized light"
-##    headers:
-##      Authorization: "Bearer <your-token>"
-#
-#
-
-#app:
-#  security:
-#    jwt:
-#      issuer: ${C_JWT_ISSUER}
-#      algorithm: ${C_JWT_ALGORITHM}
-#      ttl: ${C_JWT_TTL}
-#      publicKey: ${C_JWT_PUBLIC_KEY}
-#      privateKey: ${C_JWT_PRIVATE_KEY}
 
 app:
   security:

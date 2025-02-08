@@ -4,9 +4,6 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
     id("org.hibernate.orm") version "6.6.1.Final"
     id("com.diffplug.spotless") version "7.0.0.BETA3"
-    id("io.gatling.gradle") version "3.13.3"
-    id("com.github.ben-manes.versions") version "0.51.0"
-    id("scala")
 }
 
 group = "blog.cirkle"
