@@ -17,6 +17,8 @@ services:
 
   db:
     image: postgres:15-alpine
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-mydb}
       POSTGRES_USER: ${POSTGRES_USER:-user}
@@ -43,7 +45,7 @@ services:
       - nginx_certbot_certs:/etc/letsencrypt
       - nginx_certbot_challenges:/var/www/certbot
     entrypoint: >
-      sh -c "trap exit TERM; while :; do certbot renew; sleep 12h & wait ${!}; done;"
+      sh -c "trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;"
 
 volumes:
   postgres_data:
