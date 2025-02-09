@@ -22,7 +22,7 @@ public class GraphQLHelper {
     static String queryString = GraphQLHelper.query2json(
             """
                     query {
-                      getUser(userId: "54c14d99-e974-49a7-9cdc-56c5d0f60167") {
+                      getUser(userId: "a14092e3-cf86-4337-b75e-b76df514385f") {
                         name
                         posts(page: 0, size: 10) {
                           content {

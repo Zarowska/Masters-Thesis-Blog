@@ -11,11 +11,13 @@ import static io.gatling.javaapi.http.HttpDsl.http;
 
 public class Authentication {
 
-    static final String host = "https://dev.cirkle.blog";
-//    static final String host = "http://localhost:8080";
+//    static final String host = "https://dev.cirkle.blog";
+    static final String host = "http://localhost:8080";
 //    static final String host = "http://10.10.10.7:8080";
-    static final String user = "jeanpierre.leclair%40live.com";
-    static final String password = "jeanpierre.leclair%40live.com";
+//    static final String user = "jeanpierre.leclair%40live.com";
+    static final String user = "oksana.zarowska%40gmail.com"; //oksana.zarowska@gmail.com
+    static final String password = "string";
+//    static final String password = "jeanpierre.leclair%40live.com";
     static final String bearerToken = getBearer(host, user, password);
 
     public static HttpProtocolBuilder httpProtocol = http.baseUrl(Authentication.host).acceptHeader("application/json")

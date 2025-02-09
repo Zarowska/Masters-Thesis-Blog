@@ -11,7 +11,11 @@ public class RestHelper {
     // Example of a GET request to retrieve a specific post
     public static ChainBuilder getPostById = exec(
             http("GetPostById").get("/api/v1/posts/" +
-                    "2c59ff59-70e2-4f63-9d39-6d339627d995").check(status().is(200)));
+                    "6a803ea9-d828-455f-8713-e037fcedf09e").check(status().is(200)));
+
+    public static ChainBuilder getUsersPosts = exec(
+            http("GetUsersPosts").get("/api/v1/users/" +
+                    "a14092e3-cf86-4337-b75e-b76df514385f" + "/posts?page=0&size=10").check(status().is(200)));
 
 
 }
