@@ -6,6 +6,7 @@ import blog.cirkle.app.api.rest.model.request.UpdateUserProfileDto;
 import blog.cirkle.app.model.entity.User;
 import blog.cirkle.app.utils.SecurityUtils;
 import java.util.UUID;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,12 +19,15 @@ public interface UserFacade {
 
 	AuthenticateResponse resetPassword(String key, ResetPasswordDto request);
 
+	@Cacheable(cacheNames = "allUsers")
 	Page<ParticipantDto> findAll(String query, Pageable pageable);
 
+	@Cacheable(cacheNames = "findUserById")
 	ParticipantDto findByUserId(UUID userId);
 
 	UserProfileDto getProfileByUserId(UUID userId);
 
+	@Cacheable(cacheNames = "postsPage")
 	Page<PostDto> findPostsByUserId(UUID userId, Pageable pageable);
 
 	void followUserByUserId(UUID userId);
