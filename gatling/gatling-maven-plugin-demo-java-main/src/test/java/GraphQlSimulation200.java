@@ -3,11 +3,13 @@ import io.gatling.javaapi.core.Simulation;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static utils.Authentication.httpProtocol;
-import static utils.GraphQLHelper.getUserData;
+import static utils.GraphQLHelper.getUser;
+//import static utils.GraphQLHelper.getUserData;
 
 public class GraphQlSimulation200 extends Simulation {
 
-    ScenarioBuilder scn = scenario("GraphQL_Api_Scenario").exec(getUserData).pause(1);
+    //  ScenarioBuilder scn = scenario("GraphQL_Api_Scenario").exec(getUserData).pause(1);
+    ScenarioBuilder scn = scenario("GraphQL_Api_Scenario").exec(getUser).pause(1);
 
     static int concurrency = 200;
 

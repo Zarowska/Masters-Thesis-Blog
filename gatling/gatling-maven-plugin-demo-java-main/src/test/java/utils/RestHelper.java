@@ -18,4 +18,7 @@ public class RestHelper {
                     "a14092e3-cf86-4337-b75e-b76df514385f" + "/posts?page=0&size=10").check(status().is(200)));
 
 
+    public static ChainBuilder getUsers = exec(
+            http("GetUsers").get("/api/v1/users?page=0&size=100").check(status().is(200)));
+
 }

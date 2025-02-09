@@ -3,14 +3,14 @@ import io.gatling.javaapi.core.Simulation;
 import utils.Authentication;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
-import static utils.RestHelper.getPostById;
-import static utils.RestHelper.getUsersPosts;
+import static utils.RestHelper.*;
 
 public class RestApiSimulation200 extends Simulation {
 
 	// Scenario that exercises multiple REST endpoints
 //	public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getPostById).pause(1);
-	public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getUsersPosts).pause(1);
+//  public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getUsersPosts).pause(1);
+	public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getUsers).pause(1);
 	static int concurrency = 200;
 
 	{

@@ -10,7 +10,7 @@ public class CirkleApplication {
 
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(CirkleApplication.class);
-//		 app.setAdditionalProfiles("data-import");
+		// app.setAdditionalProfiles("data-import");
 		app.run(args);
 	}
 
