@@ -5,6 +5,7 @@ import blog.cirkle.app.api.rest.model.PostDto;
 import blog.cirkle.app.api.rest.model.ReactionsDto;
 import blog.cirkle.app.api.rest.model.request.*;
 import java.util.UUID;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface PostsFacade {
 
+	@Cacheable(cacheNames = "posts")
 	PostDto getPostById(UUID postId);
 
 	PostDto getPostByUserIdAndPostId(UUID userId, UUID postId);
