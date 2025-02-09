@@ -19,34 +19,34 @@ public class GraphQLHelper {
         return "{\"query\":\"" + json + "\", \"variables\":{}}";
     }
 
-//    static String queryString = GraphQLHelper.query2json(
-//            """
-//                    query {
-//                      getUser(userId: "a14092e3-cf86-4337-b75e-b76df514385f") {
-//                        name
-//                        posts(page: 0, size: 10) {
-//                          content {
-//                            id
-//                            text
-//                            images {
-//                              id
-//                              uri
-//                            }
-//                            reactions {
-//                              reactionValue
-//                              reactionCount
-//                            }
-//                          }
-//                        }
-//                      }
-//                    }
-//
-//                    """
-//    );
-//
-//    public static ChainBuilder getUserData = exec(http("GraphQL_GetPosts").post("/graphql").header("Content-Type", "application/json")
-//            .body(StringBody(queryString)).check(status().is(200)));
-//
+    static String queryString = GraphQLHelper.query2json(
+            """
+                    query {
+                      getUser(userId: "a14092e3-cf86-4337-b75e-b76df514385f") {
+                        name
+                        posts(page: 0, size: 10) {
+                          content {
+                            id
+                            text
+                            images {
+                              id
+                              uri
+                            }
+                            reactions {
+                              reactionValue
+                              reactionCount
+                            }
+                          }
+                        }
+                      }
+                    }
+
+                    """
+    );
+
+    public static ChainBuilder getUserData = exec(http("GraphQL_GetPosts").post("/graphql").header("Content-Type", "application/json")
+            .body(StringBody(queryString)).check(status().is(200)));
+
 
     static String queryStringGetUser = GraphQLHelper.query2json(
             """
