@@ -19,7 +19,7 @@ public class GraphQLHelper {
         return "{\"query\":\"" + json + "\", \"variables\":{}}";
     }
 
-    static String queryString = GraphQLHelper.query2json(
+    static String queryStringGetUserPosts = GraphQLHelper.query2json(
             """
                     query {
                       getUser(userId: "a14092e3-cf86-4337-b75e-b76df514385f") {
@@ -44,11 +44,11 @@ public class GraphQLHelper {
                     """
     );
 
-    public static ChainBuilder getUserData = exec(http("GraphQL_GetPosts").post("/graphql").header("Content-Type", "application/json")
-            .body(StringBody(queryString)).check(status().is(200)));
+    public static ChainBuilder getUserPosts = exec(http("GraphQL_GetUserPosts").post("/graphql").header("Content-Type", "application/json")
+            .body(StringBody(queryStringGetUserPosts)).check(status().is(200)));
 
 
-    static String queryStringGetUser = GraphQLHelper.query2json(
+    static String queryStringListUsers = GraphQLHelper.query2json(
             """
                 query {
                     listUsers(page: 0, size: 100) {
@@ -65,7 +65,7 @@ public class GraphQLHelper {
     );
 
 
-    public static ChainBuilder getUser = exec(http("GraphQL_GetUsers").post("/graphql").header("Content-Type", "application/json")
-            .body(StringBody(queryStringGetUser)).check(status().is(200)));
+    public static ChainBuilder listUsers = exec(http("GraphQL_GetUsers").post("/graphql").header("Content-Type", "application/json")
+            .body(StringBody(queryStringListUsers)).check(status().is(200)));
 
 }

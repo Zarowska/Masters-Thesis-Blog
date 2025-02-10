@@ -11,7 +11,7 @@ public class RestApiSimulation500 extends Simulation {
 	//	public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getPostById).pause(1);
 //	public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getPostById).pause(1);
 //  public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getUsersPosts).pause(1);
-	public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getUsers).pause(1);
+	public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(listUsers).pause(1);
 	static int concurrency = 500;
 
 	{
