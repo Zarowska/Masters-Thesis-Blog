@@ -9,8 +9,8 @@ public class RestApiSimulation10 extends Simulation {
 
     // Scenario that exercises multiple REST endpoints
 //	public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getPostById).pause(1);
-//  public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getUsersPosts).pause(1);
-    public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(listUsers).pause(1);
+  public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(getUsersPosts).pause(1);
+//    public static ScenarioBuilder scn = scenario("REST_Api_Scenario").exec(listUsers).pause(1);
 
     static int concurrency = 10;
 
