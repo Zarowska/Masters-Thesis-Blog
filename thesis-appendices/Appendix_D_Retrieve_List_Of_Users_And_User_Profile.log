@@ -1,0 +1,106 @@
+// Find all users
+
+GET /api/v1/users
+Request:
+null
+Response: HTTP-200
+{
+  "content" : [ {
+    "id" : "94f450a6-b420-4288-9267-dce5f3b72bc5",
+    "name" : "admin",
+    "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "isGroup" : false
+  }, {
+    "id" : "d24c2b06-4d57-4453-8970-60e674219827",
+    "name" : "Alice",
+    "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "isGroup" : false
+  }, {
+    "id" : "4527581a-c8df-415e-886c-f90e9c32fc8c",
+    "name" : "Michael",
+    "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "isGroup" : false
+  }, {
+    "id" : "62354ab6-4cdd-4715-8fce-8339d20d3e5a",
+    "name" : "Jessica",
+    "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "isGroup" : false
+  } ],
+  "totalElements" : 4,
+  "totalPages" : 1,
+  "number" : 0,
+  "numberOfElements" : 4,
+  "empty" : false
+}
+
+
+// Get a Michael Smith's profile
+
+GET /api/v1/users/4527581a-c8df-415e-886c-f90e9c32fc8c/profile
+Request:
+null
+Response: HTTP-200
+{
+  "name" : "Michael",
+  "handle" : "michael",
+  "profileImage" : {
+    "id" : "fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "uri" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "reactions" : {
+      "reactions" : [ ]
+    }
+  },
+  "coverPhoto" : {
+    "id" : "2faefd57-a40c-4a8e-8135-e62e0c2a5612",
+    "uri" : "/public/api/images/2faefd57-a40c-4a8e-8135-e62e0c2a5612",
+    "reactions" : {
+      "reactions" : [ ]
+    }
+  },
+  "phoneNumber" : null,
+  "bio" : null,
+  "country" : null,
+  "city" : null
+}
+
+
+GET /api/v1/user
+Request:
+null
+Response: HTTP-200
+{
+  "id" : "4527581a-c8df-415e-886c-f90e9c32fc8c",
+  "name" : "Michael",
+  "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+  "isGroup" : false
+}
+
+
+GET /api/v1/users/4527581a-c8df-415e-886c-f90e9c32fc8c/profile
+Request:
+null
+Response: HTTP-200
+{
+  "name" : "Michael",
+  "handle" : "michael",
+  "profileImage" : {
+    "id" : "fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "uri" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "reactions" : {
+      "reactions" : [ ]
+    }
+  },
+  "coverPhoto" : {
+    "id" : "2faefd57-a40c-4a8e-8135-e62e0c2a5612",
+    "uri" : "/public/api/images/2faefd57-a40c-4a8e-8135-e62e0c2a5612",
+    "reactions" : {
+      "reactions" : [ ]
+    }
+  },
+  "phoneNumber" : null,
+  "bio" : null,
+  "country" : null,
+  "city" : null
+}
+
+

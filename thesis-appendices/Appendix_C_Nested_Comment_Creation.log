@@ -1,0 +1,213 @@
+// Alice creates initial post
+
+POST /api/v1/posts
+Request:
+{
+  "text": "Grateful for the little moments in life – a cup of coffee, a good conversation, and a peaceful walk in the park.",
+  "images": []
+}
+Response: HTTP-200
+{
+  "id" : "dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7",
+  "author" : {
+    "id" : "85c80ea0-b04c-43af-8ca1-736f8db30ca1",
+    "name" : "Alice",
+    "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "isGroup" : false
+  },
+  "text" : "Grateful for the little moments in life – a cup of coffee, a good conversation, and a peaceful walk in the park.",
+  "images" : [ ],
+  "reactions" : {
+    "reactions" : [ ]
+  }
+}
+
+
+// Michael comments Alice post
+
+POST /api/v1/posts/dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7/comments
+Request:
+{
+  "text": "Absolutely! It\u0027s the small moments that make life beautiful.",
+  "images": []
+}
+Response: HTTP-200
+{
+  "id" : 1,
+  "postId" : "dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7",
+  "parentCommentId" : null,
+  "author" : {
+    "id" : "21dd5b7c-f39d-437f-ae59-f08feb43855d",
+    "name" : "Michael",
+    "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "isGroup" : false
+  },
+  "text" : "Absolutely! It's the small moments that make life beautiful.",
+  "images" : [ ],
+  "reactions" : {
+    "reactions" : [ ]
+  }
+}
+
+
+// Jessica comments Michael comment under Alice post
+
+POST /api/v1/posts/dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7/comments/1/comments
+Request:
+{
+  "text": "I completely agree! Those little moments make life feel so meaningful.",
+  "images": []
+}
+Response: HTTP-200
+{
+  "id" : 2,
+  "postId" : "dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7",
+  "parentCommentId" : 1,
+  "author" : {
+    "id" : "3bf91c9a-fbdd-413c-854c-5944e09f3506",
+    "name" : "Jessica",
+    "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "isGroup" : false
+  },
+  "text" : "I completely agree! Those little moments make life feel so meaningful.",
+  "images" : [ ],
+  "reactions" : {
+    "reactions" : [ ]
+  }
+}
+
+
+// Now, Alice wants to add a reply to Jessica Green’s comment.
+
+// Alice fetches her userId
+
+GET /api/v1/user
+Request:
+null
+Response: HTTP-200
+{
+  "id" : "85c80ea0-b04c-43af-8ca1-736f8db30ca1",
+  "name" : "Alice",
+  "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+  "isGroup" : false
+}
+
+
+// Find all posts
+
+GET /api/v1/users/85c80ea0-b04c-43af-8ca1-736f8db30ca1/posts
+Request:
+null
+Response: HTTP-200
+{
+  "content" : [ {
+    "id" : "dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7",
+    "author" : {
+      "id" : "85c80ea0-b04c-43af-8ca1-736f8db30ca1",
+      "name" : "Alice",
+      "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+      "isGroup" : false
+    },
+    "text" : "Grateful for the little moments in life – a cup of coffee, a good conversation, and a peaceful walk in the park.",
+    "images" : [ ],
+    "reactions" : {
+      "reactions" : [ ]
+    }
+  } ],
+  "totalElements" : 1,
+  "totalPages" : 1,
+  "number" : 0,
+  "numberOfElements" : 1,
+  "empty" : false
+}
+
+
+// Get root comments
+
+GET /api/v1/posts/dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7/comments
+Request:
+null
+Response: HTTP-200
+{
+  "content" : [ {
+    "id" : 1,
+    "postId" : "dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7",
+    "parentCommentId" : null,
+    "author" : {
+      "id" : "21dd5b7c-f39d-437f-ae59-f08feb43855d",
+      "name" : "Michael",
+      "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+      "isGroup" : false
+    },
+    "text" : "Absolutely! It's the small moments that make life beautiful.",
+    "images" : [ ],
+    "reactions" : {
+      "reactions" : [ ]
+    }
+  } ],
+  "totalElements" : 1,
+  "totalPages" : 1,
+  "number" : 0,
+  "numberOfElements" : 1,
+  "empty" : false
+}
+
+
+// Look for Jessica's comment
+
+GET /api/v1/posts/dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7/comments/1/comments
+Request:
+null
+Response: HTTP-200
+{
+  "content" : [ {
+    "id" : 2,
+    "postId" : "dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7",
+    "parentCommentId" : 1,
+    "author" : {
+      "id" : "3bf91c9a-fbdd-413c-854c-5944e09f3506",
+      "name" : "Jessica",
+      "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+      "isGroup" : false
+    },
+    "text" : "I completely agree! Those little moments make life feel so meaningful.",
+    "images" : [ ],
+    "reactions" : {
+      "reactions" : [ ]
+    }
+  } ],
+  "totalElements" : 1,
+  "totalPages" : 1,
+  "number" : 0,
+  "numberOfElements" : 1,
+  "empty" : false
+}
+
+
+// Add comment under jessica's comment
+
+POST /api/v1/posts/dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7/comments/2/comments
+Request:
+{
+  "text": "Thanks, Jessica! It is those little things that really bring joy to everyday life.",
+  "images": []
+}
+Response: HTTP-200
+{
+  "id" : 3,
+  "postId" : "dafbd4af-b8c2-40cc-9e83-a2f2c509ddb7",
+  "parentCommentId" : 2,
+  "author" : {
+    "id" : "85c80ea0-b04c-43af-8ca1-736f8db30ca1",
+    "name" : "Alice",
+    "avatarUrl" : "/public/api/images/fe542c1e-bb03-4e45-9ee7-79668aac18c9",
+    "isGroup" : false
+  },
+  "text" : "Thanks, Jessica! It is those little things that really bring joy to everyday life.",
+  "images" : [ ],
+  "reactions" : {
+    "reactions" : [ ]
+  }
+}
+
+
