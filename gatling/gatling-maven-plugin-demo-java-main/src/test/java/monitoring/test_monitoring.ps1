@@ -46,3 +46,4 @@ while ((Get-Date) -lt $endTime) {
 # Dźwiękowy sygnał zakończenia testu
 [console]::beep(1000, 500)
 Write-Host "Monitoring finished. Results saved in: $logFile"
+
