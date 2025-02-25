@@ -5,24 +5,22 @@ services:
     build: .
     image: my-spring-boot-app:latest
     environment:
-      # Pass in your active Spring profiles (default is "docker")
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-"docker,data-import"}
-      # Configure datasource parameters pointing to the db service
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-mydb}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-user}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      SPRING_PROFILES_ACTIVE: "docker,data-import"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/cirkle
+      SPRING_DATASOURCE_USERNAME: devuser
+      SPRING_DATASOURCE_PASSWORD: secret
     depends_on:
       - db
-    # We removed the port mapping since Nginx will handle external traffic.
+      # We removed the port mapping since Nginx will handle external traffic.
 
   db:
     image: postgres:15-alpine
     ports:
-      - "5432:5432"
+      - "6432:5432"  # Mapujemy port 5432 na 6432 hosta
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-mydb}
-      POSTGRES_USER: ${POSTGRES_USER:-user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: cirkle
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: secret
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
