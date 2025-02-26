@@ -1,29 +1,33 @@
+# Test Configuration
 $logFile = "C:\repository\Masters-Thesis-Blog\gatling\gatling-maven-plugin-demo-java-main\src\test\java\monitoring\gatling_results.csv"
-$testName = "GraphQlSimulation500"  # Stała nazwa testu – zmień ręcznie przed uruchomieniem
+#$testName = "RestApiSimulation100"  # Manually change before running the test
 
-# Token autoryzacyjny (zmień na swój!)
-$token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJzdWIiOiI5OWU2NzAwYy01OTNlLTQ5N2MtOGI2YS05ZjAwYjUzZTA1ZmYiLCJleHAiOjE3NDA0NDcwODQsIm5iZiI6MTc0MDQ0MzQ4NH0.YTrFD6fRJPWDgIgqvWjjH8IqZiv9QgHVNQ6ci2LJl_KcMRb0Ggg8lB-etFiBlPoa_t_2UKju-sq1qgq6xQS4YA9nN8eE12IBAHhKlX9ppnMTITfrodRunJUZFZfPoZdEoRtvzXJHnxWWqo0gzgu5t7-7V9FW6h2QIh_52-yU8gxz-0nQdtKnv2XGo0zk50-69lYaxnvrLneIlALtxCv2stJI_JJMqbfaud_CiNWxPXEqQUWyBz8MHIGqYxW_jmD6djZ5r4q_17c2N6d2gkNSmiZA03vXSF8ftb29nj-KbawAir8vU1zm2Mr8dM_eTxzwx8ZPCvzSVRJJireVsdbvYw"
+# Authorization token (change to your own!)
+$token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJzdWIiOiI5OWU2NzAwYy01OTNlLTQ5N2MtOGI2YS05ZjAwYjUzZTA1ZmYiLCJleHAiOjE3NDA1MzE1MTYsIm5iZiI6MTc0MDUyNzkxNn0.gk-rLR0NegSnRg2YyVEo2hh5jAKw3LeAmpzSE-hUGaQvNVB4E2Vkl59dsG_Uk37SFEHAqjn9N-NHhlC9PuqxZijczMxodZAHnlhW-dXC2liS6GwSP92VKp3VsDQwEGjHGg0BjjBR0Y1WWwjRR8NusWKkVAqfOpnoaUNwwICckdlxyci2QP6dW9tcAmgaQ7-pWG7xWNBFjH_r_hwYYL6d5HqPFQTbsbDJY-IBupV4wppR2dIYJK9ib0Gc71463eXBiS0_bdur5UtflrbTO9ZAUby_8At4q4uZjZT5ZDWnCb_DKosrBoKP7NNraAyr8Epl2fnbT9O2DouLMiTV0kCQCA"
 $headers = @{
     "Authorization" = "Bearer $token"
     "Content-Type" = "application/json"
     "Accept" = "application/json"
 }
 
-# **Dodanie nazwy testu do pliku CSV**
-"$testName" | Out-File -FilePath $logFile -Append -Encoding utf8
-"Monitoring started..." | Out-File -FilePath $logFile -Append -Encoding utf8
-
-# Nagłówek CSV (tylko dla pierwszego wiersza)
+# Adding the test name to the CSV file
+"" | Out-File -FilePath $logFile -Append -Encoding utf8    
+#"$testName" | Out-File -FilePath $logFile -Append -Encoding utf8
 "Timestamp;CPU (%);RAM (MB);Network Sent (KB);Network Received (KB);REST Response Time (ms);REST Status;GraphQL Response Time (ms);GraphQL Status" | Out-File -FilePath $logFile -Append -Encoding utf8
 
-# Monitoring działa do momentu naciśnięcia Ctrl + C
+# Adding CSV header (only if the file is empty)
+# if ((Get-Content $logFile).Count -eq 3) {
+#     "Timestamp;CPU (%);RAM (MB);Network Sent (KB);Network Received (KB);REST Response Time (ms);REST Status;GraphQL Response Time (ms);GraphQL Status" | Out-File -FilePath $logFile -Append -Encoding utf8
+# }
+
+# Monitoring - runs until Ctrl + C is pressed
 try {
     while ($true) {
         $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
         $cpu = [math]::Round((Get-Counter "\Processor(_Total)\% Processor Time").CounterSamples.CookedValue, 2)
         $ram = [math]::Round((Get-Counter "\Memory\Available MBytes").CounterSamples.CookedValue, 2)
 
-        # Pobranie statystyk sieciowych
+        # Fetching network statistics
         $interfaceName = (Get-NetAdapter | Where-Object { $_.Status -eq "Up" }).Name
         if ($null -eq $interfaceName) {
             $netSent = 0
@@ -37,10 +41,12 @@ try {
             $netRecv = [math]::Round(($netAfter.ReceivedBytes[0] - $netBefore.ReceivedBytes[0]) / 1024, 2)
         }
 
-        # **Testowanie REST API**
+        # Testing REST API
         $startTimeRest = Get-Date
         try {
             $responseRest = Invoke-RestMethod -Uri "http://localhost:8080/api/v1/users?page=0&size=100" -Method Get -Headers $headers -ErrorAction Stop
+			#$apiUrl = "http://localhost:8080/api/v1/users/a14092e3-cf86-4337-b75e-b76df514385f/posts?page=0&size=10"
+			#$apiUrl = http://localhost:8080/api/v1/users?page=0&size=100"
             $restStatus = "OK"
         } catch {
             $restStatus = "Failed"
@@ -49,7 +55,7 @@ try {
         $endTimeRest = Get-Date
         $restResponseTime = ($endTimeRest - $startTimeRest).TotalMilliseconds
 
-        # **Testowanie GraphQL API**
+        # Testing GraphQL API
         $startTimeGraphQL = Get-Date
         $graphQLBody = @{
             query = "query { listUsers(page: 0, size: 100) { content { id name } } }"
@@ -65,10 +71,10 @@ try {
         $endTimeGraphQL = Get-Date
         $graphQLResponseTime = ($endTimeGraphQL - $startTimeGraphQL).TotalMilliseconds
 
-        # **Dopisanie wyników do pliku CSV**
+        # Appending results to the CSV file
         "$timestamp;$cpu;$ram;$netSent;$netRecv;$restResponseTime;$restStatus;$graphQLResponseTime;$graphQLStatus" | Out-File -FilePath $logFile -Append -Encoding utf8
 
-        # Pasek postępu
+        # Progress bar
         Write-Progress -Activity "Monitoring system" -Status "Running... Press Ctrl + C to stop."
 
         Start-Sleep -Seconds 2

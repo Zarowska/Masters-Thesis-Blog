@@ -9,8 +9,8 @@ import static utils.GraphQLHelper.listUsers;
 
 public class GraphQlSimulation10 extends Simulation {
 
-    ScenarioBuilder scn = scenario("GraphQL_Api_Scenario").exec(getUserPosts).pause(1);
-//    ScenarioBuilder scn = scenario("GraphQL_Api_Scenario").exec(listUsers).pause(1);
+//    ScenarioBuilder scn = scenario("GraphQL_Api_Scenario").exec(getUserPosts).pause(1);
+    ScenarioBuilder scn = scenario("GraphQL_Api_Scenario").exec(listUsers).pause(1);
 
     static int concurrency = 10;
 
