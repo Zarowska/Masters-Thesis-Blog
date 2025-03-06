@@ -1,9 +1,9 @@
 # Test Configuration
-$logFile = "C:\repository\Masters-Thesis-Blog\gatling\gatling-maven-plugin-demo-java-main\src\test\java\monitoring\gatling_results.csv"
+$logFile = "C:\repository\Masters-Thesis-Blog\gatling\gatling-maven-plugin-demo-java-main\src\test\java\monitoring\200UsersTest.csv"
 #$testName = "RestApiSimulation100"  # Manually change before running the test
 
 # Authorization token (change to your own!)
-$token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJzdWIiOiI5OWU2NzAwYy01OTNlLTQ5N2MtOGI2YS05ZjAwYjUzZTA1ZmYiLCJleHAiOjE3NDA1MzE1MTYsIm5iZiI6MTc0MDUyNzkxNn0.gk-rLR0NegSnRg2YyVEo2hh5jAKw3LeAmpzSE-hUGaQvNVB4E2Vkl59dsG_Uk37SFEHAqjn9N-NHhlC9PuqxZijczMxodZAHnlhW-dXC2liS6GwSP92VKp3VsDQwEGjHGg0BjjBR0Y1WWwjRR8NusWKkVAqfOpnoaUNwwICckdlxyci2QP6dW9tcAmgaQ7-pWG7xWNBFjH_r_hwYYL6d5HqPFQTbsbDJY-IBupV4wppR2dIYJK9ib0Gc71463eXBiS0_bdur5UtflrbTO9ZAUby_8At4q4uZjZT5ZDWnCb_DKosrBoKP7NNraAyr8Epl2fnbT9O2DouLMiTV0kCQCA"
+$token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJzdWIiOiI5OWU2NzAwYy01OTNlLTQ5N2MtOGI2YS05ZjAwYjUzZTA1ZmYiLCJleHAiOjE3NDExMzY3NzQsIm5iZiI6MTc0MTEzMzE3NH0.rAub8ESj2jwRk2xFX8lEdOZKgTCsZIE7my_PLW-xsC5ziDygms-BjmocQf42-vakpZte-qx8A5hX0yN2s1456_2j1RWFeh0mkoQaEemFUB1b1PnrMfHFogz4bNSqbMoMa_zud5epK2QHw_d4dOir2IvaLd7QlJlaCj_UiSc0YQBzM8J4iRYgSr_3olH2ERzovkBuXojSUJRuabAe2-Og-GEfayI79W5YO2XFfmUATCi2YcWtWCdKsPo1tWV7iE85QUdssjlsltMpuQce8bjybZMoKThBC7eyTsaCNmZj5qY09Bpik6GMhFOSPWyDW_VGm4HRfG5Wtl07TizIAhsnVA"
 $headers = @{
     "Authorization" = "Bearer $token"
     "Content-Type" = "application/json"

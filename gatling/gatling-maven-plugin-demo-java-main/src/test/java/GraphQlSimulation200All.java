@@ -7,7 +7,7 @@ import static utils.GraphQLHelper.listUsers;
 import static utils.GraphQLHelper.getUserPosts;
 //import static utils.GraphQLHelper.getUserData;
 
-public class GraphQlSimulation1000All extends Simulation {
+public class GraphQlSimulation200All extends Simulation {
 
     //  ScenarioBuilder scn = scenario("GraphQL_Api_Scenario").exec(getUserData).pause(1);
     ScenarioBuilder scn = scenario("GraphQL_Api_Scenario")
@@ -15,7 +15,7 @@ public class GraphQlSimulation1000All extends Simulation {
             .exec(getUserPosts).pause(1);
 
 
-    static int concurrency = 1000;
+    static int concurrency = 200;
 
     {
         setUp(
